@@ -4,19 +4,19 @@ Study and Implementations of Numerical Algorithms on Apple M1 and A* Devices
 
 # Table of Contents (Sections)
 
-* [Memcpy](01_memcpy/README.md) 
-* [Saxpy](02_saxpy/README.md)
-* [Dot Product](03_dot/README.md)
-* [Prefix-Sum/Prefix-Scan](04_prefix_sum/README.md)
-* [Sort (GPU radix Sort on int and float)](05_radix_sort/README.md)
-* [N-Body (particle simulation)](06_nbody/README.md)
-* [2D convolution with 5x5 kernel](07_2d_filter/README.md)
-* [Sparse Matrix-Vector Multiplication](08_sparse_matrix_vector_mul/README.md)
-* [Dense Matrix-Vector Multiplication](09_dense_matrix_vector_mul/README.md)
-* [Cholesky Decomposition](10_cholesky_decomp/README.md)
-* [Jacobi Iterative Solver](11_jacobi_solver/README.md)
-* [Gauss-Seidel Iterative Solver](12_gauss_seidel_solver/README.md)
-* [512-point FFT](13_fft/README.md)
+* [Memcpy](./01_memcpy) 
+* [Saxpy](./02_saxpy)
+* [Dot Product](./03_dot)
+* [Prefix-Sum/Prefix-Scan](./04_prefix_sum)
+* [Sort (GPU radix Sort on int and float)](./05_radix_sort)
+* [N-Body (particle simulation)](./06_nbody)
+* [2D convolution with 5x5 kernel](./07_2d_filter)
+* [Sparse Matrix-Vector Multiplication](./08_sparse_matrix_vector_mul)
+* [Dense Matrix-Vector Multiplication](./09_dense_matrix_vector_mul)
+* [Cholesky Decomposition](./10_cholesky_decomp)
+* [Jacobi Iterative Solver](./11_jacobi_solver)
+* [Gauss-Seidel Iterative Solver](./12_gauss_seidel_solver)
+* [512-point FFT](./13_fft)
 
 # Background Context
 
