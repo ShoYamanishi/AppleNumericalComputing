@@ -75,7 +75,7 @@ The sparsity occurs in many scientific and engineering applications, and BLAS ha
 * To measure the performance of multiple implementations on both CPU and GPU and find characteristics.
 
 # 4. Results on Running Time
-The following experiments are done with [test_sparse_matrix_vector.cpp](test_sparse_matrix_vector.cpp) in this directory.
+The following experiments are done with [test_sparse_matrix_vector.cpp](./test_sparse_matrix_vector.cpp) in this directory.
 
 Compiler: Apple clang version 13.0.0 (clang-1300.0.29.3) Target: arm64-apple-darwin20.6.0 Thread model: posix
 
@@ -197,7 +197,7 @@ However, this should work as a good indication of the advantage/disadvantage of 
 
 # 5. Implementations
 This section brefly describes each of the implementations tested with some key points in the code.
-Those are executed as part of the test program in [test_sparse_matrix_vector.cpp](test_sparse_matrix_vector.cpp).
+Those are executed as part of the test program in [test_sparse_matrix_vector.cpp](./test_sparse_matrix_vector.cpp).
 The top-level object in the 'main()' function is **TestExecutorSPMV**, which is a subclass of **TestExecutor found**
  in [../common/test_case_with_time_measurements.h](../common/test_case_with_time_measurements.h).
 It manages one single test suite, which consists of test cases.
@@ -208,7 +208,7 @@ The main part is implemented in **TestCaseSPMV::run()**, and it is the subject f
 
 
 ## 5.1. BLOCK 1 1: C++ implementation - baseline
-[**class TestCaseSPMV_baseline** in test_sparse_matrix_vector.cpp](test_sparse_matrix_vector.cpp)
+[**class TestCaseSPMV_baseline** in test_sparse_matrix_vector.cpp](./test_sparse_matrix_vector.cpp)
 
 This is a straightforward C++ implementation with a loop as follows.
 ```
@@ -224,7 +224,7 @@ for (int i = 0; i < this->m_M; i++) {
 ```
 
 ## 5.2. BLOCK 1 X: C++ with multithreads
-[**class TestCaseSPMV_multithread** in test_sparse_matrix_vector.cpp](test_sparse_matrix_vector.cpp)
+[**class TestCaseSPMV_multithread** in test_sparse_matrix_vector.cpp](./test_sparse_matrix_vector.cpp)
 
 This is based on BLOCK 1 1 and rows are distributed over multiple threads as follows.
 ```
@@ -258,7 +258,7 @@ auto thread_lambda = [ this, num_rows_per_thread ]( const size_t thread_index ) 
 ```
 
 ## 5.3. BLAS 1 1:
-[**class TestCaseSPMV_blas** in test_sparse_matrix_vector.cpp](test_sparse_matrix_vector.cpp)
+[**class TestCaseSPMV_blas** in test_sparse_matrix_vector.cpp](./test_sparse_matrix_vector.cpp)
 
 This implementation uses **sparse_matrix_vector_product_dense_double()** and **sparse_matrix_vector_product_dense_double()**.
 
@@ -266,7 +266,7 @@ The time taken in **sparse_matrix_create_float()**,  **sparse_matrix_create_doub
  and **sparse_insert_entry_double()** are not counted in the time measurements.
 
 ## 5.4. METAL NAIVE 0 0:
-[**class TestCaseSPMV_metal** in test_sparse_matrix_vector.cpp](test_sparse_matrix_vector.cpp)
+[**class TestCaseSPMV_metal** in test_sparse_matrix_vector.cpp](./test_sparse_matrix_vector.cpp)
 
 One thread is allocated to one row.
 ```
@@ -296,11 +296,11 @@ kernel void sparse_matrix_vector_row_per_thread (
 ```
 This does not utilize the threads fully, as some threads are idle, while other threads have to process many columns.
 
-See  `sparse_matrix_vector_row_per_thread()` in [metal/sparse_matrix_vector.metal](metal/sparse_matrix_vector.metal) for details.
-The kernel is managed by the c++ and objc code found in [metal/](metal/).
+See  `sparse_matrix_vector_row_per_thread()` in [metal/sparse_matrix_vector.metal](./metal/sparse_matrix_vector.metal) for details.
+The kernel is managed by the c++ and objc code found in [metal/](./metal/).
 
 ## 5.5. METAL ADAPTIVE 0 0:
-[**class TestCaseSPMV_metal** in test_sparse_matrix_vector.cpp](test_sparse_matrix_vector.cpp)
+[**class TestCaseSPMV_metal** in test_sparse_matrix_vector.cpp](./test_sparse_matrix_vector.cpp)
 
 This aims at achieving a better overall thread utilization by clustering consecutive rows into blocks.
 In literature some adaptive techniques are proposed, but they rearrange rows such that similar rows are grouped together.
@@ -332,7 +332,7 @@ and *block_ptrs[i+1] - block_ptrs[i]* is the number of rows in *i*-th block.
 
 * **max_iters** : max_iters[i] is the number of iterations required per thread in the i-th block.
 
-See **class TestCaseSPMV_metal::create_blocks()** in [test_sparse_matrix_vector.cpp](test_sparse_matrix_vector.cpp) for details.
+See **class TestCaseSPMV_metal::create_blocks()** in [test_sparse_matrix_vector.cpp](./test_sparse_matrix_vector.cpp) for details.
 This process of splitting the rows into blocks is performed in CPU, and counted as the running time as well as the GPU kernel execution.
 
 ### Metal Compute Kernel
@@ -401,8 +401,8 @@ kernel void sparse_matrix_vector_adaptive (
     }
 }
 ```
-See  `sparse_matrix_vector_adaptive()` in [metal/sparse_matrix_vector.metal](metal/sparse_matrix_vector.metal) for details.
-The kernel is managed by the C++ and objc code found in [metal/](metal/).
+See  `sparse_matrix_vector_adaptive()` in [metal/sparse_matrix_vector.metal](./metal/sparse_matrix_vector.metal) for details.
+The kernel is managed by the C++ and objc code found in [metal/](./metal/).
 
 
 # 6. Reference 

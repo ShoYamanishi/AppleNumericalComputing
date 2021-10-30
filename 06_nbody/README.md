@@ -29,7 +29,7 @@ Therefore the complexity is in the order of O(N^2).
 N-Body is known to be a type of problem suitable for GPU. The computation can be parallelizable over N outputs, and each body-body computation is complex enough to make
 the whole problem less I/O-bound.
 The formula for the body-body interaction is based on Coulomb's law described in 14.1 of CUDA Handbook.
-Please see `TestCaseNBody_baselineSOA::bodyBodyInteraction()` in [test_nbody.cpp](test_nbody.cpp).
+Please see `TestCaseNBody_baselineSOA::bodyBodyInteraction()` in [test_nbody.cpp](./test_nbody.cpp).
 After the body-body interactions accumulate all the accelerations (forces/mass) to each particle for the current time step, then a simple Euler integration step is performed to update the velocity and the position of each particle.
 
 # 3. Purpose
@@ -40,7 +40,7 @@ as to how many particles can be processed at the frame rates.
 # 4. Problem Formulation
 
 Following is the data structure of one particle for AOS (array of structures).
-Please see [nbody_elements_impl.h](nbody_elements_impl.h).
+Please see [nbody_elements_impl.h](./nbody_elements_impl.h).
 ```
 template<>
 class NBodyElem<float> {
@@ -108,7 +108,7 @@ as follows.
          particle_i.m_p1.z = particle_i.m_p0.z + particle_i.m_v.z * this->m_delta_t;
      }
 ```
-Please see `class TestCaseNBody_baselineAOS` in [test_nbody.cpp](test_nbody.cpp) for details..
+Please see `class TestCaseNBody_baselineAOS` in [test_nbody.cpp](./test_nbody.cpp) for details..
 
 For the implementations with the data type SOA (structure of arrays), 
 following data structure with 13 arrays is used.
@@ -139,11 +139,11 @@ class NBodySOA {
 };
 ```
 This type of data organization is suitable for NEON SIMD.
-Please see [nbody_elements.h](nbody_elements.h) for details.
+Please see [nbody_elements.h](./nbody_elements.h) for details.
 
 
 # 5. Results on Running Time
-The following experiments are done with [test_nbody.cpp](test_nbody.cpp) in this directory.
+The following experiments are done with [test_nbody.cpp](./test_nbody.cpp) in this directory.
 
 Compiler: Apple clang version 13.0.0 (clang-1300.0.29.3) Target: arm64-apple-darwin20.6.0 Thread model: posix
 
@@ -215,7 +215,7 @@ The sweet spot seems to be the implementation with with 4 threads, which runs ap
 
 # 6. Implementations
 This section briefly describes each of the implementations tested with some key points in the code.
-Those are executed as part of the test program in [test_nbody.cpp](test_nbody.cpp).
+Those are executed as part of the test program in [test_nbody.cpp](./test_nbody.cpp).
 The top-level object in the 'main()' function is **TestExecutorNBody**, which is a subclass of **TestExecutor found** in [here](../common/test_case_with_time_measurements.h).
 It manages one single test suite, which consists of test cases.
 It arranges the input data, allocates memory, executes each test case multiple times and measures the running times, cleans up, and reports the results.
@@ -224,7 +224,7 @@ The main part is implemented in **TestCaseNBody::run()**, and it is the subject 
 
 
 ## 6.1. SOA CPP_BLOCK 1 1
-[class TestCaseNBody_baselineSOA](test_nbody.cpp)
+[class TestCaseNBody_baselineSOA](./test_nbody.cpp)
 
 This is the baseline plain C++ implementation with SOA.
 
@@ -261,7 +261,7 @@ and the velocity and the acceleration are updated with the Euler step.
 ```
 
 ## 6.2. AOS CPP_BLOCK 1 1
-[class TestCaseNBody_baselineAOS](test_nbody.cpp)
+[class TestCaseNBody_baselineAOS](./test_nbody.cpp)
 
 Following is the core part of the one time step.
 For each body *i*, the acceleration is reset to 0, and the calls to `bodyBodyInteraction_P0toP1()`
@@ -294,7 +294,7 @@ accumulate the acceleration. And then velocity and the position are updated with
 ```
 
 ## 6.3. SOA NEON X 1
-[class TestCaseNBody_SOA_NEON](test_nbody.cpp)
+[class TestCaseNBody_SOA_NEON](./test_nbody.cpp)
 
 This is based on SOA CPP_BLOCK 1 1, and the body-body interaction is replaced with the following NEON version
 where there is no overlap between *i* and *{j, j+1, j+2, j+3}*.
@@ -395,7 +395,7 @@ is called, if not, the plain C++ version `bodyBodyInteraction_neon()` is called.
 ```
 
 ## 6.4. SOA NEON X Y
-[class TestCaseNBody_neon_multithread_block](test_nbody.cpp)
+[class TestCaseNBody_neon_multithread_block](./test_nbody.cpp)
 
 This is based on SOA NEON X 1 with multithreading.
 The definition of the worker thread is as follows.
@@ -424,7 +424,7 @@ It uses [ThreadSynchronizer](https://github.com/ShoYamanishi/ThreadSynchronizer)
 ```
 
 ## 6.5. AOS METAL DEFAULT 0 0
-This is a simple implementation in Metal shader [metal/nbody.metal](metal/nbody.metal).
+This is a simple implementation in Metal shader [metal/nbody.metal](./metal/nbody.metal).
 Each thread takes one body *i* and the kernel loops through over *j* to accumulate the accelerations.
 Then it updates the velocity and the position of body *i*.
 
@@ -496,7 +496,7 @@ onstants& c )
     a.z = d.z * s;
 }
 ```
-The kernel is managed by the cpp & obj code in [metal/](metal/)
+The kernel is managed by the cpp & obj code in [metal/](./metal/)
 
 # References
 

@@ -39,7 +39,7 @@ The Metal implementations are compared against the following 3 CPU implementatio
 * boost sample_sort
 
 # 4. Results on Running Time
-The following experiments are done with [test_radix_sort.cpp](test_radix_sort.cpp) in this directory.
+The following experiments are done with [test_radix_sort.cpp](./test_radix_sort.cpp) in this directory.
 
 Compiler: Apple clang version 13.0.0 (clang-1300.0.29.3) Target: arm64-apple-darwin20.6.0 Thread model: posix
 
@@ -178,7 +178,7 @@ and it should be used only if the array is almost sorted, in the sense that the 
 
 The chart also shows that there is no significant disadvantage in uncoalesced write to the device memory.
 The implementations with the coalesced memory arrange the elements to write coalesced using an intermediate threadgroup memory to align the write to the device memory.
-See `coalesced_block_mapping_for_the_n_chunk_input()` in [metal/radix_sort.metal](metal/radix_sort.metal).
+See `coalesced_block_mapping_for_the_n_chunk_input()` in [metal/radix_sort.metal](./metal/radix_sort.metal).
 It uses the following threadgroup memory.
 
 ```
@@ -235,7 +235,7 @@ and the following part handles the coalesced writes (for int) to the device memo
     }
 ```
 In contrast to the coalesced writes, the uncoalesced version uses the function
-`uncoalesced_block_mapping_for_the_n_chunk_input()` in [metal/radix_sort.metal](metal/radix_sort.metal).
+`uncoalesced_block_mapping_for_the_n_chunk_input()` in [metal/radix_sort.metal](./metal/radix_sort.metal).
 The following is an excerpt from the function, where the uncoalesced write to target_array is performed.
 
 ```
@@ -266,7 +266,7 @@ array will become sorted halfway through the loop.
 [HKS 09] proposes a use of reduction-based algorithm in *Algorithm 3 Parallel order checking*.
 'METAL UNCOALESCED_WRITE_EARLY_OUT' has a similar reduction-based algorithm utilizing `simd_shuffle_up()` and `simd_sum()`.
 Please see `is_sorted_within_threadgroups()` and `are_all_less_than_equal()` in 
-[metal/parallel_order_checking.metal](metal/parallel_order_checking.metal).
+[metal/parallel_order_checking.metal](./metal/parallel_order_checking.metal).
 
 As the chart shows, the overhead of the extra check is around 70% for the problems with size less than 1M, and 25% for greater than 1M.
 It implies that the early-out must occur approximately before the 4th and 6th iteration respectively.
@@ -274,7 +274,7 @@ It implies that the early-out must occur approximately before the 4th and 6th it
 
 # 5. Implementations
 This section briefly describes each of the implementations tested with some key points in the code.
-Those are executed as part of the test program in [test_radix_sort.cpp](test_radix_sort.cpp).
+Those are executed as part of the test program in [test_radix_sort.cpp](./test_radix_sort.cpp).
 The top-level object in the 'main()' function is **TestExecutorRadixSort**, which is a subclass of **TestExecutor found** 
 in [../common/test_case_with_time_measurements.h](../common/test_case_with_time_measurements.h).
 It manages one single test suite, which consists of test cases.
@@ -284,14 +284,14 @@ in [../common/test_case_with_time_measurements.h](../common/test_case_with_time_
 The main part is implemented in **TestCaseRadixSort::run()**, and it is the subject for the running time measurements.
 
 ## 5.1. CPP_STDLIB 1 1 - baseline (std::sort())
-[**class TestCaseRadixSort_baseline** in test_radix_sort.cpp](test_radix_sort.cpp)
+[**class TestCaseRadixSort_baseline** in test_radix_sort.cpp](./test_radix_sort.cpp)
 
 ```
 std::sort( this->m_array, this->m_array + this->m_num_elements );
 ```
 
 ## 5.2. BOOST_SPREAD_SORT 1 1 - boost::spread_sort
-[**class TestCaseRadixSort_boost_spread_sort** in test_radix_sort.cpp](test_radix_sort.cpp)
+[**class TestCaseRadixSort_boost_spread_sort** in test_radix_sort.cpp](./test_radix_sort.cpp)
 
 ### Int
 ```
@@ -304,16 +304,16 @@ boost::sort::spreadsort::float_sort ( array, array + N );
 ```
 
 ## 5.3. BOOST_SAMPLE_SORT 1 X
-[**class TestCaseRadixSort_boost_sample_sort** in test_radix_sort.cpp](test_radix_sort.cpp)
+[**class TestCaseRadixSort_boost_sample_sort** in test_radix_sort.cpp](./test_radix_sort.cpp)
 
 ```
 boost::sort::block_indirect_sort( array, array + N , X );
 ```
 
 ## 5.4. METAL Implementations
-[**class TestCaseRadixSort_Metal** in test_radix_sort.cpp](test_radix_sort.cpp)
+[**class TestCaseRadixSort_Metal** in test_radix_sort.cpp](./test_radix_sort.cpp)
 
-The top-level routine of the radix sort is the following loop in [metal/radix_sort_metal_objc.mm](metal/radix_sort_metal_objc.mm).
+The top-level routine of the radix sort is the following loop in [metal/radix_sort_metal_objc.mm](./metal/radix_sort_metal_objc.mm).
 It corresponds to *Algorithm 1 Four-way radix sorting* in [HKS 09].
 ```
 - (void) performComputation
@@ -341,18 +341,18 @@ It corresponds to *Algorithm 1 Four-way radix sorting* in [HKS 09].
 The main part of the loop body is the function  `performComputationForOneShift:(uint)shift`.
 It launches the following two kernels:
 
-- **four_way_prefix_sum_with_inblock_shuffle()** in [metal/radix_sort.metal](metal/radix_sort.metal).
+- **four_way_prefix_sum_with_inblock_shuffle()** in [metal/radix_sort.metal](./metal/radix_sort.metal).
 This corresponds to *Algorithm 2 4-way prefix sum with in-block shuffle*
 
 - **coalesced_block_mapping_for_the_n_chunk_input()** or **uncoalesced_block_mapping_for_the_n_chunk_input()**
- in [metal/radix_sort.metal](metal/radix_sort.metal).
+ in [metal/radix_sort.metal](./metal/radix_sort.metal).
 This corresponds to *Algorithm 4 Coalesced block mapping for the n chunk input*
 
 The early-out is performed in the function `isArraySorted:`, which uses two kernels
-**is_sorted_within_threadgroups()** and **are_all_less_than_equal()** defined in [metal/parallel_order_checking.metal](metal/parallel_order_checking.metal).
+**is_sorted_within_threadgroups()** and **are_all_less_than_equal()** defined in [metal/parallel_order_checking.metal](./metal/parallel_order_checking.metal).
 It uses a similar technique with the log-step reduction described in *'Algorithm 5 Build 4 ways sum tree'* and *'Algorithm 6 Down-Sweep 4 ways'* in [HKS 09].
 
-Please refer to the code in [metal/](metal/), and the literature [[HKS 09]](https://onlinelibrary.wiley.com/doi/10.1111/j.1467-8659.2009.01542.x) for details.
+Please refer to the code in [metal/](./metal/), and the literature [[HKS 09]](https://onlinelibrary.wiley.com/doi/10.1111/j.1467-8659.2009.01542.x) for details.
 
 # 6. Reference:
 

@@ -45,7 +45,7 @@ in comparison to a plain Metal shader implementation as well as **memcpy()** in 
 - Study how **memcpy()** achieves its running time.
 
 # 4. Results on Running Time
-The following experiments are done with [test_memcpy.cpp](test_memcpy.cpp) in this directory.
+The following experiments are done with [./test_memcpy.cpp](./test_memcpy.cpp) in this directory.
 
 * **Compiler:** Apple clang version 13.0.0 (clang-1300.0.29.3) Target: arm64-apple-darwin20.6.0 Thread model: posix
 
@@ -325,13 +325,13 @@ The cache prefetch is described in [Arm C/C++ Compiler reference guide](https://
 It seems to emit **prfm** machine instruction for the cache-line prefetch.
 
 I have tried it in the body of the for-loop in various timings with various parameters, but no improvement has been observed.
-As far as the code in [test_memcpy.cpp](test_memcpy.cpp) is concerned, there is no **prfm** instruction emitted,
+As far as the code in [test_memcpy.cpp](./test_memcpy.cpp) is concerned, there is no **prfm** instruction emitted,
 and the optimized **memcpy.S** above do not have them either.
 I would appreciate any help on how to appropriately use the cache prefetch.
 
 # 6. Implementations
 This section briefly describes each of the implementations tested with some key points in the code.
-Those are executed as part of the test program in [test_memcpy.cpp](test_memcpy.cpp).
+Those are executed as part of the test program in [test_memcpy.cpp](./test_memcpy.cpp).
 
 The top-level object in the 'main()' function is **TestExecutorMemcpy**,
 which is a subclass of **TestExecutor** found in [../common/test_case_with_time_measurements.h](../common/test_case_with_time_measurements.h).
@@ -345,7 +345,7 @@ The main part is implemented in **TestCaseMemcpy::run()**, and it is the subject
 
 
 ## 6.1. **CPP BLOCK 1 1** - baseline
-[**class TestCaseMemcpy_baseline** in test_memcpy.cpp](test_memcpy.cpp)
+[**class TestCaseMemcpy_baseline** in test_memcpy.cpp](./test_memcpy.cpp)
 
 This is a plain 'for-loop' and generates a code with **ldp** & **stp** with the loop unrolling factor of 4.
 
@@ -356,7 +356,7 @@ for ( size_t i = 0; i < NUM ; i++ ) {
 ```
 
 ## 6.2. CPP BLOCK X 1 - loop unrolling
-[**class TestCaseMemcpy_loop_unrolled** in test_memcpy.cpp](test_memcpy.cpp)
+[**class TestCaseMemcpy_loop_unrolled** in test_memcpy.cpp](./test_memcpy.cpp)
 
 This is an attempt to increase the factor of loop unrolling.
 The main part of the implementation is the following function.
@@ -424,7 +424,7 @@ inline void process_block(const int elem_begin, const int elem_end_past_one ) {
 ```
 
 ## 6.3. CPP BLOCK X Y - loop unrolling & multithreads
-[**class TestCaseMemcpy_multithread** in test_memcpy.cpp](test_memcpy.cpp)
+[**class TestCaseMemcpy_multithread** in test_memcpy.cpp](./test_memcpy.cpp)
 
 This is a multithreaded version of 'CPP BLOCK X 1'.
 The worker threads are managed by [ThreadSynchrnizer](https://github.com/ShoYamanishi/ThreadSynchronizer).
@@ -432,7 +432,7 @@ The overhead of synchronization is around 5.2 [μs] for 4 worker threads per ite
 
 
 ## 6.4. MEMCPY 1 1 - memcpy()
-[**class TestCaseMemcpy_memcpy** in test_memcpy.cpp](test_memcpy.cpp)
+[**class TestCaseMemcpy_memcpy** in test_memcpy.cpp](./test_memcpy.cpp)
 
 This is just a call to the standard library function **memcpy()** as follows.
 
@@ -441,7 +441,7 @@ This is just a call to the standard library function **memcpy()** as follows.
 ```
 
 ## 6.5. MEMCPY 1 Y - memcpy() with multithreads
-[**class TestCaseMemcpy_memcpy_multithread** in test_memcpy.cpp](test_memcpy.cpp)
+[**class TestCaseMemcpy_memcpy_multithread** in test_memcpy.cpp](./test_memcpy.cpp)
 
 This is a multithreaded version of 'MEMCPY 1 1'.
 The worker threads are managed by [ThreadSynchrnizer](https://github.com/ShoYamanishi/ThreadSynchronizer).
@@ -449,9 +449,9 @@ The overhead of synchronization is around 5.2 [μs] for 4 worker threads per ite
 As the chart above shows, there does not seem to be any significant benefit in using multithreads.
 
 ## 6.6. METAL DEFAULT_SHARED & METAL DEFAULT_MANAGED
-[**class TestCaseMemcpy_metal_kernel** in test_memcpy.cpp](test_memcpy.cpp)
+[**class TestCaseMemcpy_metal_kernel** in test_memcpy.cpp](./test_memcpy.cpp)
 
-This is a Metal Compute kernel found in [metal/memcpy.metal](metal/memcpy.metal).
+This is a Metal Compute kernel found in [metal/memcpy.metal](./metal/memcpy.metal).
 ```
 kernel void my_memcpy(
     device const int*            in                             [[ buffer(0) ]],
@@ -464,8 +464,8 @@ kernel void my_memcpy(
     }
 }
 ```
-This kernel is launched by [metal/memcpy_metal_objc.h](metal/memcpy_metal_objc.h) and
- [metal/memcpy_metal_objc.mm](metal/memcpy_metal_objc.mm).
+This kernel is launched by [metal/memcpy_metal_objc.h](./metal/memcpy_metal_objc.h) and
+ [metal/memcpy_metal_objc.mm](./metal/memcpy_metal_objc.mm).
 Please see `performComputationKernel`.
 
 If the MTLBuffers are **managed**, instead of **shared**, then they are explicitly synchronized as follows:
@@ -487,7 +487,7 @@ The number of threads per thread-group is aligned at 32, with minimum 32 and max
 The number of thread-groups per grid is ⌈|V| / 1024⌉, where |V| denotes the number of ints copied.
 
 ## 6.7. METAL BLIT_SHARED & METAL BLIT_MANAGED
-[**class TestCaseMemcpy_metal_blit** in test_memcpy.cpp](test_memcpy.cpp)
+[**class TestCaseMemcpy_metal_blit** in test_memcpy.cpp](./test_memcpy.cpp)
 
 This is similar to **METAL DEFAULT_SHARED** & **DEFAULT_MANAGED**, but uses the built-in function **blitCommandEncoder** instead.
 
@@ -500,7 +500,7 @@ This is similar to **METAL DEFAULT_SHARED** & **DEFAULT_MANAGED**, but uses the 
                             size: sizeof(int)*_mNumElementsInt  ];
 ```
 Please see **performComputationBlit:** in 
-[metal/memcpy_metal_objc.h](metal/memcpy_metal_objc.h) and [metal/memcpy_metal_objc.mm](metal/memcpy_metal_objc.mm).
+[metal/memcpy_metal_objc.h](./metal/memcpy_metal_objc.h) and [metal/memcpy_metal_objc.mm](./metal/memcpy_metal_objc.mm).
 
 
 # 7. References

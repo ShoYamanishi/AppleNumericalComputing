@@ -73,7 +73,7 @@ As long as [Metal Shading Language Specification Version 2.4](https://developer.
 
 # 5. Results on Running Time
 
-The following experiments are done with [test_prefix_sum.cpp](test_prefix_sum.cpp) in this directory.
+The following experiments are done with [test_prefix_sum.cpp](./test_prefix_sum.cpp) in this directory.
 
 Compiler: Apple clang version 13.0.0 (clang-1300.0.29.3) Target: arm64-apple-darwin20.6.0 Thread model: posix
 
@@ -152,7 +152,7 @@ The explicit loop unrolling improves the performance, and the factor of 4 seems 
 
 # 6. Implementations
 This section briefly describes each of the implementations tested with some key points in the code.
-Those are executed as part of the test program in [test_prefix_sum.cpp](test_prefix_sum.cpp).
+Those are executed as part of the test program in [test_prefix_sum.cpp](./test_prefix_sum.cpp).
 The top-level object in the 'main()' function is **TestExecutorPrefixSum**, which is a subclass of **TestExecutor found**
 in [../common/test_case_with_time_measurements.h](../common/test_case_with_time_measurements.h).
 It manages one single test suite, which consists of test cases.
@@ -164,7 +164,7 @@ The main part is implemented in **TestCaseDOT::run()**, and it is the subject fo
 
 
 ## 6.1. CPP BLOCK 1 1
-[**class TestCasePrefixSum_baseline** in test_prefix_sum.cpp](test_prefix_sum.cpp)
+[**class TestCasePrefixSum_baseline** in test_prefix_sum.cpp](./test_prefix_sum.cpp)
 
 This is a simple C++ implementation.
 ```
@@ -184,7 +184,7 @@ This is a simple C++ implementation.
 ```
 
 ## 6.2. CPP BLOCK Y 1
-[**class TestCasePrefixSum_baseline** in test_prefix_sum.cpp](test_prefix_sum.cpp)
+[**class TestCasePrefixSum_baseline** in test_prefix_sum.cpp](./test_prefix_sum.cpp)
 
 This is a C++ implementation with the explicit loop unrolling as follows.
 This is part of `TestCasePrefixSum_baseline::run()`.
@@ -240,7 +240,7 @@ This is part of `TestCasePrefixSum_baseline::run()`.
 ```
 
 ## 6.3. CPP_STDLIB 1 1
-[**class TestCasePrefixSum_stdcpp** in test_prefix_sum.cpp](test_prefix_sum.cpp)
+[**class TestCasePrefixSum_stdcpp** in test_prefix_sum.cpp](./test_prefix_sum.cpp)
 
 This implementation uses two `std::vectors`, and `std::inclusive_scan()`, which is available as of *C++17*.
 
@@ -254,14 +254,14 @@ This implementation uses two `std::vectors`, and `std::inclusive_scan()`, which 
 ```
 
 ## 6.4. METAL_SCAN_THEN_FAN 0 0 - Metal *scan-then-fan* algorithm
-[**class TestCasePrefixSum_Metal** in test_prefix_sum.cpp](test_prefix_sum.cpp)
+[**class TestCasePrefixSum_Metal** in test_prefix_sum.cpp](./test_prefix_sum.cpp)
 
 Please see *13.4.1. Scan-then-fan* of the [CUDA Handbook](http://www.cudahandbook.com/) for algorithm details.
 
 The original algorithms is recursive, but in this implementation the recursion is limited to 3.
 Hence, the maximum problem size is limited to 1G elements. In reality it is impossible to allocate that amount of consecutive memory on Mac Mini with 8GB memory.
 The kernel launch sequence depends on the problem size N and it is shown below.
-Please see [metal/prefix_sum_metal_objc_recursive.mm](metal/prefix_sum_metal_objc_recursive.mm) for details.
+Please see [metal/prefix_sum_metal_objc_recursive.mm](./metal/prefix_sum_metal_objc_recursive.mm) for details.
 
 * 0 < N <= 1K
 
@@ -289,18 +289,18 @@ Please see [metal/prefix_sum_metal_objc_recursive.mm](metal/prefix_sum_metal_obj
    5. add_base_32_32
 
 Those kernels use `simd_shuffle_up()` and `simd_sum()` wherever applicable for efficiency.
-Please see [metal/prefix_sum_recursive.metal](metal/prefix_sum_recursive.metal) for details.
+Please see [metal/prefix_sum_recursive.metal](./metal/prefix_sum_recursive.metal) for details.
 
 
 ## 6.5. METAL_REDUCE_THEN_SCAN 0 0 - Metal *reduce-then-scan* algorithm
-[**class TestCasePrefixSum_Metal** in test_prefix_sum.cpp](test_prefix_sum.cpp)
+[**class TestCasePrefixSum_Metal** in test_prefix_sum.cpp](./test_prefix_sum.cpp)
 
 Please see *13.4.2. Reduce-then_scan [Recursive]* of the [CUDA Handbook](http://www.cudahandbook.com/) for algorithm details.
 
 The original algorithms is recursive, but in this implementation the recursion is limited to 3.
 Hence, the maximum problem size is limited to 1G elements. In reality it is impossible to allocate that amount of consecutive memory on Mac Mini with 8GB memory.
 The kernel launch sequence depends on the problem size N and it is shown below.
-Please see [metal/prefix_sum_metal_objc_recursive.mm](metal/prefix_sum_metal_objc_recursive.mm) for details.
+Please see [metal/prefix_sum_metal_objc_recursive.mm](./metal/prefix_sum_metal_objc_recursive.mm) for details.
 
 * 0 < N <= 1K
 
@@ -328,11 +328,11 @@ Please see [metal/prefix_sum_metal_objc_recursive.mm](metal/prefix_sum_metal_obj
     5. scan_with_base_threadgroupw
 
 Those kernels use `simd_shuffle_up()` and `simd_sum()` wherever applicable for efficiency.
-Please see [metal/prefix_sum_recursive.metal](metal/prefix_sum_recursive.metal) for details.
+Please see [metal/prefix_sum_recursive.metal](./metal/prefix_sum_recursive.metal) for details.
 
 
 ## 6.6. Metal Merrill-Grimshaw
-[**class TestCasePrefixSum_Metal** in test_prefix_sum.cpp](test_prefix_sum.cpp)
+[**class TestCasePrefixSum_Metal** in test_prefix_sum.cpp](./test_prefix_sum.cpp)
 
 Please see https://libraopen.lib.virginia.edu/downloads/6t053g00z for algorithm details.
 
@@ -346,8 +346,8 @@ The kernel launch sequence is as follows:
 
     3. scan_final_32_32
 
-Please see [metal/prefix_sum_metal_objc_merrill_grimshaw.mm](metal/prefix_sum_metal_objc_merrill_grimshaw.mm) for the preparation and launch sequence,
-and [metal/prefix_sum_merrill_grimshaw.metal ](metal/prefix_sum_merrill_grimshaw.metal ) for kernel code details.
+Please see [metal/prefix_sum_metal_objc_merrill_grimshaw.mm](./metal/prefix_sum_metal_objc_merrill_grimshaw.mm) for the preparation and launch sequence,
+and [metal/prefix_sum_merrill_grimshaw.metal ](./metal/prefix_sum_merrill_grimshaw.metal ) for kernel code details.
 
 # 7. References
 

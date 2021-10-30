@@ -44,7 +44,7 @@ The decision whether to use Jacobi-based solver or GS-based depends on the time 
 
 
 # 4. Results on Running Time
-The following experiments are done with [test_gauss_seidel_solver.cpp](test_gauss_seidel_solver.cpp) in this directory.
+The following experiments are done with [test_gauss_seidel_solver.cpp](./test_gauss_seidel_solver.cpp) in this directory.
 
 Compiler: Apple clang version 13.0.0 (clang-1300.0.29.3) Target: arm64-apple-darwin20.6.0 Thread model: posix
 
@@ -148,7 +148,7 @@ There is a clear benefit in using NEON intrinsics and also the explicit loop unr
 
 # 5. Implementations
 This section briefly describes each of the implementations tested with some key points in the code.
-Those are executed as part of the test program in [test_gauss_seidel_solver.cpp](test_gauss_seidel_solver.cpp).
+Those are executed as part of the test program in [test_gauss_seidel_solver.cpp](./test_gauss_seidel_solver.cpp).
 The top-level object in the 'main()' function is **TestExecutorGaussSeidelSolver**, which is a subclass of **TestExecutor found** 
 in [../common/test_case_with_time_measurements.h](../common/test_case_with_time_measurements.h).
 It manages one single test suite, which consists of test cases.
@@ -159,7 +159,7 @@ The main part is implemented in **TestCaseGaussSeidelSolver::run()**, and it is 
 
 
 ## 5.1. CPP_BLOCK 1 1 - plain C++ implementation - baseline
-[**class TestCaseGaussSeidelSolver_baseline** in test_gauss_seidel_solver.cpp](test_gauss_seidel_solver.cpp).
+[**class TestCaseGaussSeidelSolver_baseline** in test_gauss_seidel_solver.cpp](./test_gauss_seidel_solver.cpp).
 
 This is a plain C++ implementation as the baseline for the experiments. The main part is shown as follows.
 
@@ -180,10 +180,10 @@ for ( int i = 0; i < dim; i++ ) {
 }
 ```
 
-Please see `TestCaseGaussSeidelSolver_baseline` in [test_gauss_seidel_solver.cpp](test_gauss_seidel_solver.cpp) for details.
+Please see `TestCaseGaussSeidelSolver_baseline` in [test_gauss_seidel_solver.cpp](./test_gauss_seidel_solver.cpp) for details.
 
 ## 5.2. NEON 1 1 : NEON Intrinsics
-[**class TestCaseGaussSeidelSolver_NEON** in test_gauss_seidel_solver.cpp](test_gauss_seidel_solver.cpp).
+[**class TestCaseGaussSeidelSolver_NEON** in test_gauss_seidel_solver.cpp](./test_gauss_seidel_solver.cpp).
 
 First, to avoid division, it calculates the reciprocal of the diagonal elements as follows.
 
@@ -311,11 +311,11 @@ for ( int i = 0; i < dim; i+=2 ) {
 double err = sqrt( sum_sq_dist );
 ```
 
-Please see `TestCaseGaussSeidelSolver_NEON` in [test_gauss_seidel_solver.cpp](test_gauss_seidel_solver.cpp) for details.
+Please see `TestCaseGaussSeidelSolver_NEON` in [test_gauss_seidel_solver.cpp](./test_gauss_seidel_solver.cpp) for details.
 
 
 ## 5.3. NEON X 1 - NEON intrinsics with loop unrolling factor X
-[**class TestCaseGaussSeidelSolver_NEON** in test_gauss_seidel_solver.cpp](test_gauss_seidel_solver.cpp).
+[**class TestCaseGaussSeidelSolver_NEON** in test_gauss_seidel_solver.cpp](./test_gauss_seidel_solver.cpp).
 
 This is based on 'NEON 1 1' with the loop bodies unrolled according to the given factor.
 
@@ -389,10 +389,10 @@ for ( int i = row_begin; i < row_end_past_one; i++ ) {
 }
 ```
 
-Please see `TestCaseGaussSeidelSolver_NEON` in [test_gauss_seidel_solver.cpp](test_gauss_seidel_solver.cpp) for details.
+Please see `TestCaseGaussSeidelSolver_NEON` in [test_gauss_seidel_solver.cpp](./test_gauss_seidel_solver.cpp) for details.
 
 ## 5.4. VDSP 1 1 - implementation with vDSP_vsub(), vDSP_dotpr(), and vDSP_vdiv().
-[**class TestCaseGaussSeidelSolver_vDSP** in test_gauss_seidel_solver.cpp](test_gauss_seidel_solver.cpp)
+[**class TestCaseGaussSeidelSolver_vDSP** in test_gauss_seidel_solver.cpp](./test_gauss_seidel_solver.cpp)
 
 First, as a preparation, the inverse of the diagonal elements are calculated as follows.
 ```
@@ -448,10 +448,10 @@ vDSP_dotprD(sums_err, 1, sums_err, 1, &dot_err, dim );
 double err = sqrt(dot_err);
 ```
 
-Please see `class TestCaseGaussSeidelSolver_vDSP` in [test_gauss_seidel_solver.cpp](test_gauss_seidel_solver.cpp) for details.
+Please see `class TestCaseGaussSeidelSolver_vDSP` in [test_gauss_seidel_solver.cpp](./test_gauss_seidel_solver.cpp) for details.
 
 ## 5.5. METAL 0 0 - Metal implementation with reduction per row.
-[**class TestCaseGaussSeidelSolver_metal** in test_gauss_seidel_solver.cpp](test_gauss_seidel_solver.cpp)
+[**class TestCaseGaussSeidelSolver_metal** in test_gauss_seidel_solver.cpp](./test_gauss_seidel_solver.cpp)
 
 This is a METAL kernel implementation The inverse of the diagonal elements are pre-calculated in C++.
 
@@ -545,4 +545,4 @@ void atomic_add_float( device atomic_uint* atom_var, const float val )
 }
 ```
 
-See [metal/gauss_seidel_solver.metal](metal/gauss_seidel_solver.metal) for details.
+See [metal/gauss_seidel_solver.metal](./metal/gauss_seidel_solver.metal) for details.

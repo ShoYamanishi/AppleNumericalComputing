@@ -32,7 +32,7 @@ The purpose of this section is as follows:
 * To measure the running time of the implementation on Metal.
 
 # 4. Results on Running Time
-The following experiments are done with [test_saxpy.cpp](test_saxpy.cpp) in this directory.
+The following experiments are done with [test_saxpy.cpp](./test_saxpy.cpp) in this directory.
 
 * **Compiler:** Apple clang version 13.0.0 (clang-1300.0.29.3) Target: arm64-apple-darwin20.6.0 Thread model: posix
 
@@ -420,7 +420,7 @@ However, the multithreaded implementations lose the advantage for the problem si
 
 # 5. Implementations
 This section briefly describes each of the implementations tested with some key points in the code.
-Those are executed as part of the test program in [test_saxpy.cpp](test_saxpy.cpp).
+Those are executed as part of the test program in [test_saxpy.cpp](./test_saxpy.cpp).
 The top-level object in the 'main()' function is **TestExecutorSAXPY**, which is a subclass of **TestExecutor** found in 
 [../common/test_case_with_time_measurements.h](../common/test_case_with_time_measurements.h).
 It manages one single test suite, which consists of test cases.
@@ -431,7 +431,7 @@ The main part is implemented in **TestCaseSAXPY::run()**, and it is the subject 
 
 
 ## 5.1. CPP BLOCK 1 1 - baseline
-[**class TestCaseSAXPY_baseline** in test_saxpy.cpp](test_saxpy.cpp)
+[**class TestCaseSAXPY_baseline** in test_saxpy.cpp](./test_saxpy.cpp)
 
 This is a plain for-loop as follows.
 The Clang++ compiler generates an optimized code with SIMD instructions ( **fmul.{4s,2d}** &  **fadd.{4s,2d}**) 
@@ -446,7 +446,7 @@ for ( size_t i = 0; i < N; i++ ) {
 ```
 
 ## 5.2. NEON X 1 - NEON Intrinsics with loop unrolling of factor X
-[**class TestCaseSAXPY_neon** in test_saxpy.cpp](test_saxpy.cpp)
+[**class TestCaseSAXPY_neon** in test_saxpy.cpp](./test_saxpy.cpp)
 
 This is a C++ code with NEON intrinsics for numerical operations.
 The code below is the main part of for the loop unrolling factor of 1.
@@ -490,7 +490,7 @@ As stated above, increasing the factor of loop unrolling improves the performanc
 due to its optimized instruction emission, and the register allocation.
 
 ## 5.3. CPP_BLOCK 1 Y - C++ with multithreading & memory blocks
-[**class TestCaseSAXPY_multithread_block** in test_saxpy.cpp](test_saxpy.cpp)
+[**class TestCaseSAXPY_multithread_block** in test_saxpy.cpp](./test_saxpy.cpp)
 
 This is based on CPP_BLOCK 1 1 with multiple threads, each of which is allocated a consecutive range of elements of X and Y.
 Each thread accesses a consecutive range of memory, and a higher cache locality is expected.
@@ -523,7 +523,7 @@ Following is the definition of the worker threads.
 The worker threads are managed by [ThreadSynchrnizer](https://github.com/ShoYamanishi/ThreadSynchronizer). The overhead of synchronization is around 5.2 [μs] for 4 worker threads per iteration.
 
 ## 5.4. CPP_INTERLEAVED 1 Y - C++ with multithreading & interleaved memory access
-[**class TestCaseSAXPY_multithread_interleave** in test_saxpy.cpp](test_saxpy.cpp)
+[**class TestCaseSAXPY_multithread_interleave** in test_saxpy.cpp](./test_saxpy.cpp)
 
 This is based on CPP_BLOCK 1 1 with multiple threads, each of which accesses the interleaved memory locations.
 Each thread accesses almost the entire range of the allocated memory, and a lower cache locality is expected.
@@ -558,14 +558,14 @@ The worker threads are managed by [ThreadSynchrnizer](https://github.com/ShoYama
 
 
 ## 5.5. NEON 8 Y - NEON, loop unrolling factor 8 & multithreading, & memory blocks
-[**class TestCaseSAXPY_neon_multithread_block** in test_saxpy.cpp](test_saxpy.cpp)
+[**class TestCaseSAXPY_neon_multithread_block** in test_saxpy.cpp](./test_saxpy.cpp)
 
 This is based on CPP_BLOCK 1 Y, and the body of the loop is replaced with the NEON intrinsics of loop unrolling factor 8.
 The performance is similar to CPP_BLOCK 1 Y.
 
 
 ## 5.6. VDSP 1 1 - Accelerate vDSP
-[**class TestCaseSAXPY_vDSP** in test_saxpy.cpp](test_saxpy.cpp)
+[**class TestCaseSAXPY_vDSP** in test_saxpy.cpp](./test_saxpy.cpp)
 
 For float:
 ```
@@ -578,7 +578,7 @@ vDSP_vsmaD ( x, 1, &alpha, y, 1, y, 1, N );
 ```
 
 ## 5.7. BLAS 1 1 - Accelerate CBLAS
-[**class TestCaseSAXPY_BLAS** in test_saxpy.cpp](test_saxpy.cpp)
+[**class TestCaseSAXPY_BLAS** in test_saxpy.cpp](./test_saxpy.cpp)
 
 For float:
 ```
@@ -591,7 +591,7 @@ cblas_daxpy( N, alpha, x, 1, y, 1 );
 ```
 
 ## 5.8. METAL DEFAULT 0 0 (float only)
-[**class TestCaseSAXPY_Metal** in test_saxpy.cpp](test_saxpy.cpp)
+[**class TestCaseSAXPY_Metal** in test_saxpy.cpp](./test_saxpy.cpp)
 
 The number of thread-groups is ⌈|V| / 1024⌉.
 
@@ -603,8 +603,8 @@ for ( uint i = thread_position_in_grid; i < N; i += threads_per_grid ) {
     Y[i] = X[i] * a + Y[i];
 }
 ```
-Please see [metal/saxpy.metal](metal/saxpy.metal) for the complete shader code.
-The OBJ-C and C++ code that manages the shader is found under the directory [metal/](metal/).
+Please see [metal/saxpy.metal](./metal/saxpy.metal) for the complete shader code.
+The OBJ-C and C++ code that manages the shader is found under the directory [metal/](./metal/).
 
 # 6. References
 

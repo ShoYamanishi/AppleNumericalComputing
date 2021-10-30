@@ -123,7 +123,7 @@ kernel void dot_type7_atomic_thread_group_counter(...) {
     }
 }
 ```
-See [metal/dot.metal](metal/dot.metal) for the complete shader code.
+See [metal/dot.metal](./metal/dot.metal) for the complete shader code.
 
 Even if the memory barrier is called at point **A** above, the last thread-group at point **B** does not see the changes made to the device memory before point **A**.
 The threadgroup_barrier() ensures the changes made before point **A** are visible to all the threads **in the same thread-group**, not in the other thread-groups.
@@ -132,7 +132,7 @@ Even if it is guaranteed that all the thread-groups have finished executing the 
 
 # 5. Results on Running Time
 
-The following experiments are done with [test_dot.cpp](test_dot.cpp) in this directory.
+The following experiments are done with [test_dot.cpp](./test_dot.cpp) in this directory.
 
 Compiler: Apple clang version 13.0.0 (clang-1300.0.29.3) Target: arm64-apple-darwin20.6.0 Thread model: posix
 
@@ -576,7 +576,7 @@ There is a slight advantage in multithreading for the problem sizes around 512K 
 
 # 6. Implementations
 This section briefly describes each of the implementations tested with some key points in the code.
-Those are executed as part of the test program in [test_dot.cpp](test_dot.cpp).
+Those are executed as part of the test program in [test_dot.cpp](./test_dot.cpp).
 The top-level object in the 'main()' function is **TestExecutorDOT**, which is a subclass of **TestExecutor** found
 in [../common/test_case_with_time_measurements.h](../common/test_case_with_time_measurements.h).
 It manages one single test suite, which consists of test cases.
@@ -587,7 +587,7 @@ The main part is implemented in **TestCaseDOT::run()**, and it is the subject fo
 
 
 ## 6.1. CPP_BLOCK 1 1 - baseline
-[**class TestCaseDOT_baseline** in test_dot.cpp](test_dot.cpp)
+[**class TestCaseDOT_baseline** in test_dot.cpp](./test_dot.cpp)
 ```
 T m_dot = 0.0;
 for ( size_t i = 0; i < N ; i++ ) {
@@ -597,7 +597,7 @@ for ( size_t i = 0; i < N ; i++ ) {
 
 
 ## 6.2. NEON X 1 - NEON intrinsics with loop unrolling factor X
-[**class TestCaseDOT_neon** in test_dot.cpp](test_dot.cpp)
+[**class TestCaseDOT_neon** in test_dot.cpp](./test_dot.cpp)
 
 This is a C++ code with the NEON intrinsics for the numerical operations.
 The code below is the main part of for the loop unrolling factor 1.
@@ -626,11 +626,11 @@ for ( size_t i = 0; i < N; i+=2 ) {
 dot = dot_pair[0] + dot_pair[1];
 ```
 
-For the loop unrolling factor of 2, 4, and 8, please see `calc_block_factor_2()`, `calc_block_factor_4()`, and `calc_block_factor_8()` of [class TestCaseDOT_neon](test_dot.cpp).
+For the loop unrolling factor of 2, 4, and 8, please see `calc_block_factor_2()`, `calc_block_factor_4()`, and `calc_block_factor_8()` of [class TestCaseDOT_neon](./test_dot.cpp).
 
 
 ## 6.3. NEON 8 Y - NEON intrinsics with multithreading
-[**class TestCaseDOT_neon_multithread_block** in test_dot.cpp](test_dot.cpp)
+[**class TestCaseDOT_neon_multithread_block** in test_dot.cpp](./test_dot.cpp)
 
 This is based on NEON 8 1 with multiple threads, each of which is allocated a consecutive range of elements of X and Y. 
 Each thread accesses a consecutive range of memory, and a higher cache locality is expected.
@@ -661,7 +661,7 @@ Following is the definition of the worker threads.
 
 
 ## 6.4. VDSP 1 1 - Accelerate vDSP
-[**class TestCaseDOT_vDSP** in test_dot.cpp](test_dot.cpp)
+[**class TestCaseDOT_vDSP** in test_dot.cpp](./test_dot.cpp)
 
 ```
 vDSP_dotpr ( x, 1, y, 1, &m_dot, N );
@@ -672,7 +672,7 @@ vDSP_dotprD ( x, 1, y, 1, &m_dot, N );
 ```
 
 ## 6.5. BLAS 1 1  - Accelerate BLAS
-[**class TestCaseDOT_BLAS** in test_dot.cpp](test_dot.cpp)
+[**class TestCaseDOT_BLAS** in test_dot.cpp](./test_dot.cpp)
 
 ```
 m_dot = cblas_sdot( N, x, 1, y, 1);
@@ -683,11 +683,11 @@ m_dot = cblas_ddot( N, x, 1, y, 1);
 ```
 
 ## 6.6. METAL TWO_PASS_DEVICE_MEMORY 0 0 - baseline for Metal - using two kernels
-[**class TestCaseDOT_Metal** in test_dot.cpp](test_dot.cpp)
+[**class TestCaseDOT_Metal** in test_dot.cpp](./test_dot.cpp)
 
 This is based on *12.2 Two-Pass Reduction* of The [CUDA Handbook](http://www.cudahandbook.com/),
  but the partial sums are stored to a device memory instead of to a thread-group memory.
-The corresponding code is `dot_type1_pass1()` and `dot_type1_pass2()` in [metal/dot.metal](metal/dot.metal).
+The corresponding code is `dot_type1_pass1()` and `dot_type1_pass2()` in [metal/dot.metal](./metal/dot.metal).
 In the 1st pass each thread-group processes the block of 1024 consecutive x[i]*y[i]s into one partial sum.
 The 2nd pass launches only one thread-group, which takes the partial sums calculated at the 1st pass and calculate the final dot value.
 The following is an excerpt from the kernel `dot_type1_pass1()`
@@ -737,10 +737,10 @@ kernel void dot_type1_pass1(
 The 2nd pass is performed by `dot_type1_pass2()`, which has a similar log-step reduction loop.
 
 ## 6.7. METAL TWO_PASS_SHARED_MEMORY 0 0 - using two kernels and *threadgroup memory*.
-[**class TestCaseDOT_Metal** in test_dot.cpp](test_dot.cpp)
+[**class TestCaseDOT_Metal** in test_dot.cpp](./test_dot.cpp)
 
 This is based on 'METAL TWO_PASS_DEVICE_MEMORY 0 0' but it uses a threadgroup memory as the scratch memory.
-The corresponding code is `dot_type2_threadgroup_memory_pass1()` and `dot_type2_threadgroup_memory_pass2()` in [metal/dot.metal](metal/dot.metal).
+The corresponding code is `dot_type2_threadgroup_memory_pass1()` and `dot_type2_threadgroup_memory_pass2()` in [metal/dot.metal](./metal/dot.metal).
 Following is an excerpt from the kernel `dot_type2_threadgroup_memory_pass1()`.
 It shows the main part of the log-step operation in the loop.
 See the difference in `s_partials` and `threadgroup_barrier()` in `dot_type1_pass1()`.
@@ -793,10 +793,10 @@ kernel void dot_type2_threadgroup_memory_pass1(
 ```
 
 ## 6.8. METAL_TWO_PASS_SIMD_SHUFFLE 0 0  - with threadgroup memory and SIMD shuffle.
-[**class TestCaseDOT_Metal** in test_dot.cpp](test_dot.cpp)
+[**class TestCaseDOT_Metal** in test_dot.cpp](./test_dot.cpp)
 
 This is based on 'METAL TWO_PASS_SHARED_MEMORY 0 0' but it uses the simd shuffle function **simd_shuffle_xor()**.
-The corresponding code is `dot_type3_pass1_simd_shuffle()` and `dot_type3_pass2_simd_shuffle()` in [metal/dot.metal](metal/dot.metal).
+The corresponding code is `dot_type3_pass1_simd_shuffle()` and `dot_type3_pass2_simd_shuffle()` in [metal/dot.metal](./metal/dot.metal).
 The following is an excerpt from the kernel `dot_type3_pass1_simd_shuffle()`.
 It shows the main part of the log-step operation in the loop.
 See the log-step operations with the offset less than 32.
@@ -839,10 +839,10 @@ kernel void dot_type3_pass1_simd_shuffle(
 ```
 
 ## 6.9. METAL_TWO_PASS_SIMD_SUM 0 0 - with threadgroup memory and `simd_sum()`
-[**class TestCaseDOT_Metal** in test_dot.cpp](test_dot.cpp)
+[**class TestCaseDOT_Metal** in test_dot.cpp](./test_dot.cpp)
 
 This is based on 'METAL TWO_PASS_SHARED_MEMORY 0 0' but it uses the simd function **simd_sum()**.
-The corresponding code is `dot_type4_pass1_simd_add()` and `dot_type4_pass2_simd_add()` in [metal/dot.metal](metal/dot.metal).
+The corresponding code is `dot_type4_pass1_simd_add()` and `dot_type4_pass2_simd_add()` in [metal/dot.metal](./metal/dot.metal).
 Following is an excerpt from the kernel `dot_type4_pass1_simd_add()`.
 See how the log-step operation is replaced with two phases of `simd_sum()`.
 
@@ -890,10 +890,10 @@ kernel void dot_type4_pass1_simd_add(
 ```
 
 ## 6.10. METAL_ONE_PASS_ATOMIC_SIMD_SHUFFLE 0 0 - one-pass with SIMD shuffle and an atomic accumulator.
-[**class TestCaseDOT_Metal** in test_dot.cpp](test_dot.cpp)
+[**class TestCaseDOT_Metal** in test_dot.cpp](./test_dot.cpp)
 
 This is based on 'METAL TWO_PASS_SIMD_SHUFFLE 0 0' but it eliminates the 2nd pass by using **an atomic accomulator**.
-The corresponding code is `dot_type5_atomic_simd_shuffle()` in [metal/dot.metal](metal/dot.metal).
+The corresponding code is `dot_type5_atomic_simd_shuffle()` in [metal/dot.metal](./metal/dot.metal).
 The following is an excerpt from the kernel.
 It shows the last part after the log-step operations in the loop. It accumulates the partial sums in the atomic.
 
@@ -950,10 +950,10 @@ void atomic_add_float( device atomic_uint* atom_var, const float val )
 ```
 
 ## 6.11. METAL_ONE_PASS_ATOMIC_SIMD_SUM 0 0 - one-pass with simd_add() and an atomic accumulator.
-[**class TestCaseDOT_Metal** in test_dot.cpp](test_dot.cpp)
+[**class TestCaseDOT_Metal** in test_dot.cpp](./test_dot.cpp)
 
 This is based on 'METAL ONE_PASS_ATOMIC_SIMD_SHUFFLE 0 0' but it replaces the log-step operations with **simd_sum()**.
-The corresponding code is `dot_type6_atomic_simd_add()` in [metal/dot.metal](metal/dot.metal).
+The corresponding code is `dot_type6_atomic_simd_add()` in [metal/dot.metal](./metal/dot.metal).
 The following is an excerpt from the kernel.
 
 ```
@@ -1003,7 +1003,7 @@ kernel void dot_type6_atomic_simd_add(
 ```
 
 ## 6.12. METAL_ONE_PASS_THREAD_COUNTER 0 0 - one-pass with the last block detection
-[**class TestCaseDOT_Metal** in test_dot.cpp](test_dot.cpp)
+[**class TestCaseDOT_Metal** in test_dot.cpp](./test_dot.cpp)
 
 This corresponds to *12.3 Single-Pass Reduction* in [CUDA Handbook](http://www.cudahandbook.com/).
 This type of implementation does not work due to the reason stated above.
@@ -1011,7 +1011,7 @@ This type of implementation does not work due to the reason stated above.
 In this implementation, each thread-group (Block in CUDA) checks if it is the last thread-group running in the grid.
 If so, then it reads all the partial sums in the device memory calculated by other thread-groups (Blocks) to produce the final dot product.
 
-Please see the code snippet from `dot_type6_atomic_thread_group_counter()` in [metal/dot.metal](metal/dot.metal).
+Please see the code snippet from `dot_type6_atomic_thread_group_counter()` in [metal/dot.metal](./metal/dot.metal).
 ```
 kernel void dot_type7_atomic_thread_group_counter(
 

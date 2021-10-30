@@ -25,7 +25,7 @@ This gives some insight if a custom algorithm similar to the basic convolution m
 
 
 # 4. Results on Running Time
-The following experiments are done with [test_convolution_2d.cpp](test_convolution_2d.cpp) in this directory.
+The following experiments are done with [test_convolution_2d.cpp](./test_convolution_2d.cpp) in this directory.
 
 Compiler: Apple clang version 13.0.0 (clang-1300.0.29.3) Target: arm64-apple-darwin20.6.0 Thread model: posix
 
@@ -114,7 +114,7 @@ X-axis is the number of pixels, and Y-axis is the relative running time of each 
 
 # 5. Implementations
 This section briefly describes each of the implementations tested with some key points in the code.
-Those are executed as part of the test program in [test_convolution_2d.cpp](test_convolution_2d.cpp).
+Those are executed as part of the test program in [test_convolution_2d.cpp](./test_convolution_2d.cpp).
 The top-level object in the 'main()' function is **TestExecutorConvolution2D**, which is a subclass of **TestExecutor found**
  in [../common/test_case_with_time_measurements.h](../common/test_case_with_time_measurements.h).
 It manages one single test suite, which consists of test cases.
@@ -124,7 +124,7 @@ Each implementation type is implemented as a **TestCaseConvolution2D**, which is
 The main part is implemented in **TestCaseConvolution2D::run()**, and it is the subject for the running time measurements.
 
 ## 5.1. CPP_BLOCK 1 1
-[**class TestCaseConvolution2D_baseline** in test_convolution_2d.cpp](test_convolution_2d.cpp)
+[**class TestCaseConvolution2D_baseline** in test_convolution_2d.cpp](./test_convolution_2d.cpp)
 
 The following is the function to calculate one output pixel.
 ```
@@ -180,7 +180,7 @@ The function `calc_conv_one_point()` is called for each pixed in the following l
 
 
 ## 5.2. CPP_BLOCK 1 X
-[**class TestCaseConvolution2D_multithreads** in test_convolution_2d.cpp](test_convolution_2d.cpp)
+[**class TestCaseConvolution2D_multithreads** in test_convolution_2d.cpp](./test_convolution_2d.cpp)
 
 It uses the same function `calc_conv_one_point ()`,
 but split into blocks horizontally (in rows), each of which is processed by one thread as follows.
@@ -218,7 +218,7 @@ but split into blocks horizontally (in rows), each of which is processed by one 
 
 
 ## 5.3. CIIMAGE_GPU 1 1 : CIFilter convolution5X5Filter,  CIContext contextWithMTLDevice:
-[**class TestCaseConvolution2D_ciimage** in test_convolution_2d.cpp](test_convolution_2d.cpp)
+[**class TestCaseConvolution2D_ciimage** in test_convolution_2d.cpp](./test_convolution_2d.cpp)
 
 This implementation involves a sequence of function calls and multiple data structures.
 
@@ -292,20 +292,20 @@ filter_arc.weights    = filter_vector_arc;
                                            colorSpace: _mColorSpaceRef ];
 ```
 
-Please see [ciimage/convolution_2d_ciimage_objc.mm](ciimage/convolution_2d_ciimage_objc.mm) for details.
+Please see [ciimage/convolution_2d_ciimage_objc.mm](./ciimage/convolution_2d_ciimage_objc.mm) for details.
 
 ## 5.4. CIIMAGE_CPU 1 1 : CIFilter convolution5X5Filter, CIContext contextWithOptions:
-[**class TestCaseConvolution2D_ciimage** in test_convolution_2d.cpp](test_convolution_2d.cpp)
+[**class TestCaseConvolution2D_ciimage** in test_convolution_2d.cpp](./test_convolution_2d.cpp)
 
 This is similar to 'CIIMAGE_GPU 1 1', but the **CIContext** is created as follows.
 
 ```
  _mContextArc = [ CIContext contextWithOptions: @{ kCIContextUseSoftwareRenderer : [NSNumber numberWithBool:true] } ];
 ```
-Please see [ciimage/convolution_2d_ciimage_objc.mm](ciimage/convolution_2d_ciimage_objc.mm) for details.
+Please see [ciimage/convolution_2d_ciimage_objc.mm](./ciimage/convolution_2d_ciimage_objc.mm) for details.
 
 ## 5.5. METAL NAIVE 0 0 : Metal kernel
-[**class TestCaseConvolution2D_metal** in test_convolution_2d.cpp](test_convolution_2d.cpp)
+[**class TestCaseConvolution2D_metal** in test_convolution_2d.cpp](./test_convolution_2d.cpp)
 
 In this metal implementation, each thread is responsible for calculating one output pixel as follows.
 
@@ -361,11 +361,11 @@ kernel void convolution_2d_naive (
     }
 }
 ```
-Please see [metal/convolution_2d.metal](metal/convolution_2d.metal) for details.
-The kerkel is managed by c++ & objc code found in [metal/](metal/).
+Please see [metal/convolution_2d.metal](./metal/convolution_2d.metal) for details.
+The kerkel is managed by c++ & objc code found in [metal/](./metal/).
 
 ## 5.6. METAL TWO_STAGE 0 0: Metal kernel - twp-pass with simd_shuffle_up() and simd_shuffle_down()
-[**class TestCaseConvolution2D_metal** in test_convolution_2d.cpp](test_convolution_2d.cpp)
+[**class TestCaseConvolution2D_metal** in test_convolution_2d.cpp](./test_convolution_2d.cpp)
 
 In the 1st phase, the output pixels whose horizontal coordinate is in the range of [2-29]*N, where N={1,2,...}
 It utilizes `simd_shuffle_down()` and `simd_shuffle_up()`.
@@ -375,19 +375,19 @@ These are handled in the 2nd phase.
 If the 1st phase that handles (100 * 28/32) % of the pixels is fast enough to compensate the overhead of
 the 2nd phrase that handles (100* 4/32)%, it is worth it, and the chart above shows, it is indeed the case.
 
-please see `convolution_5x5_stage1()` and `convolution_5x5_stage2()` in [metal/convolution_2d.metal](metal/convolution_2d.metal).
+please see `convolution_5x5_stage1()` and `convolution_5x5_stage2()` in [metal/convolution_2d.metal](./metal/convolution_2d.metal).
 
 NOTE: convolution_5x5_stage2 () works only with maximum 768 threads per thread-group, not 1024 threads.
 This is apparently due to too many local variables used in the kernel, though they are **consts**.
 
 ## 5.7. METAL MPS 0 0: MPSImageConvolution
-[**class TestCaseConvolution2D_metal** in test_convolution_2d.cpp](test_convolution_2d.cpp)
+[**class TestCaseConvolution2D_metal** in test_convolution_2d.cpp](./test_convolution_2d.cpp)
 
 This implementation uses `MPSImageConvolution` and `MTLTexture`.
 
 
-The main part of the code is shown below. Please see [metal/convolution_2d_metal_objc_mps.h](metal/convolution_2d_metal_objc_mps.h)
-and [metal/convolution_2d_metal_objc_mps.mm](metal/convolution_2d_metal_objc_mps.mm) for details.
+The main part of the code is shown below. Please see [metal/convolution_2d_metal_objc_mps.h](./metal/convolution_2d_metal_objc_mps.h)
+and [metal/convolution_2d_metal_objc_mps.mm](./metal/convolution_2d_metal_objc_mps.mm) for details.
 
 ```
 - (void) performConvolution

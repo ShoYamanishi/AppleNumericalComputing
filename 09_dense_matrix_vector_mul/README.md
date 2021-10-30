@@ -73,13 +73,13 @@ This section an overview for each of *float* and *double*.
 This section is split further into 4 separate files.
 Please see the following 4 READMEs for the *per-type* results.
 
-*  [Float Column-Major](README_runningtime_float_colmajor.md)
+*  [Float Column-Major](./README_runningtime_float_colmajor.md)
 
-*  [Float Row-Major](README_runningtime_float_rowmajor.md)
+*  [Float Row-Major](./README_runningtime_float_rowmajor.md)
 
-*  [Double Column-Major](README_runningtime_double_colmajor.md)
+*  [Double Column-Major](./README_runningtime_double_colmajor.md)
 
-*  [Double Row-Major](README_runningtime_double_rowmajor.md)
+*  [Double Row-Major](./README_runningtime_double_rowmajor.md)
 
 ## 4.1. Overview : Float
 The following chart shows the mean running times taken to perform one matrix-vector multiplication in *float*
@@ -146,7 +146,7 @@ This can be used as an indicator for the decision on whether to use the column-m
 
 # 5. Implementations
 This section briefly describes each of the implementations tested with some key points in the code.
-Those are executed as part of the test program in [test_dense_matrix_vector.cpp](test_dense_matrix_vector.cpp).
+Those are executed as part of the test program in [test_dense_matrix_vector.cpp](./test_dense_matrix_vector.cpp).
 The top-level object in the 'main()' function is **TestExecutorDenseMV**, which is a subclass of **TestExecutor found**
  in [../common/test_case_with_time_measurements.h](../common/test_case_with_time_measurements.h).
 It manages one single test suite, which consists of test cases.
@@ -157,7 +157,7 @@ The main part is implemented in **TestCaseDenseMV::run()**, and it is the subjec
 
 
 ## 5.1. CPP_BLOCK 1 1
-[**class TestCaseDenseMV_baseline** in test_dense_matrix_vector.cpp](test_dense_matrix_vector.cpp)
+[**class TestCaseDenseMV_baseline** in test_dense_matrix_vector.cpp](./test_dense_matrix_vector.cpp)
 
 A plain C++ implementation with two loops.
 
@@ -176,7 +176,7 @@ for ( int i = 0; i < this->m_M; i++ ) {
 ```
 
 ## 5.2. NEON 1 1
-[**class TestCaseDenseMV_NEON** in test_dense_matrix_vector.cpp](test_dense_matrix_vector.cpp)
+[**class TestCaseDenseMV_NEON** in test_dense_matrix_vector.cpp](./test_dense_matrix_vector.cpp)
 
 
 There are 4 types of implementations: 2 (col-major or row-major) x 2 (float or double).
@@ -270,10 +270,10 @@ for ( int i = row_begin; i < row_end_past_one; i++ ) {
 }
 ```
 
-Please see `run_col_major_loop_unrolling_1()` and `run_row_major_loop_unrolling_1()` in [test_dense_matrix_vector.cpp](test_dense_matrix_vector.cpp) for details.
+Please see `run_col_major_loop_unrolling_1()` and `run_row_major_loop_unrolling_1()` in [test_dense_matrix_vector.cpp](./test_dense_matrix_vector.cpp) for details.
 
 ## 5.3. NEON X 1 : NEON With Loop Unrolling of Factor X
-[**class TestCaseDenseMV_NEON** in test_dense_matrix_vector.cpp](test_dense_matrix_vector.cpp)
+[**class TestCaseDenseMV_NEON** in test_dense_matrix_vector.cpp](./test_dense_matrix_vector.cpp)
 
 This is based on NEON 1 1 and expanding the SIMD lanes by stacking multiple NEON instructions.
 
@@ -441,10 +441,10 @@ for ( int i = row_begin; i < row_end_past_one; i++ ) {
 }
 ```
 
-Please see `run_col_major_loop_unrolling_X()` and `run_row_major_loop_unrolling_X()` in [test_dense_matrix_vector.cpp](test_dense_matrix_vector.cpp) for details.
+Please see `run_col_major_loop_unrolling_X()` and `run_row_major_loop_unrolling_X()` in [test_dense_matrix_vector.cpp](./test_dense_matrix_vector.cpp) for details.
 
 ## 5.4. NEON X Y : Neon With Loop Unrolling of Factor X With Y Threads
-[**class TestCaseDenseMV_NEON_multithread** in test_dense_matrix_vector.cpp](test_dense_matrix_vector.cpp)
+[**class TestCaseDenseMV_NEON_multithread** in test_dense_matrix_vector.cpp](./test_dense_matrix_vector.cpp)
 This is based on NEON X 1, and the rows are split over Y threads.
 
 The following is the definition of the worker threads. Each thread is responsible for the given range of rows.
@@ -470,11 +470,11 @@ auto thread_lambda = [ this, num_rows_per_thread ]( const size_t thread_index ) 
 }
 ```
 
-Please see `class TestCaseDenseMV_NEON_multithread`  in [test_dense_matrix_vector.cpp](test_dense_matrix_vector.cpp) for details.
+Please see `class TestCaseDenseMV_NEON_multithread`  in [test_dense_matrix_vector.cpp](./test_dense_matrix_vector.cpp) for details.
 
 
 ## 5.5. CPP_BLOCK 1 Y : Plain C++ Implementation With Y Threads
-[**class TestCaseDenseMV_multithread** in test_dense_matrix_vector.cpp](test_dense_matrix_vector.cpp)
+[**class TestCaseDenseMV_multithread** in test_dense_matrix_vector.cpp](./test_dense_matrix_vector.cpp)
 
 This is based on CPP_BLOCK 1 1, and the rows are split over Y threads.
 
@@ -512,10 +512,10 @@ auto thread_lambda = [ this, num_rows_per_thread ]( const size_t thread_index ) 
 };
 ```
 
-Please see `class TestCaseDenseMV_multithread`  in [test_dense_matrix_vector.cpp](test_dense_matrix_vector.cpp) for details.
+Please see `class TestCaseDenseMV_multithread`  in [test_dense_matrix_vector.cpp](./test_dense_matrix_vector.cpp) for details.
 
 ## 5.6. BLAS 1 1 : `cblas_sgemv()` and `cblas_dgemv()`
-[**class TestCaseDenseMV_blas** in test_dense_matrix_vector.cpp](test_dense_matrix_vector.cpp)
+[**class TestCaseDenseMV_blas** in test_dense_matrix_vector.cpp](./test_dense_matrix_vector.cpp)
 
 This is for BLAS cblas_sgemv() and cblas_dgemv().
 
@@ -535,7 +535,7 @@ virtual void run() {
 ```
 
 ## 5.7. VDSP 1 1 : (Row-Major Only) `vDSP_mmul()` and `vDSP_mmulD()`.
-[**class TestCaseDenseMV_vDSP** in test_dense_matrix_vector.cpp](test_dense_matrix_vector.cpp)
+[**class TestCaseDenseMV_vDSP** in test_dense_matrix_vector.cpp](./test_dense_matrix_vector.cpp)
 
 This is for vDSP's `vDSP_mmul()` and `vDSP_mmulD()`.
 
@@ -552,20 +552,20 @@ virtual void run() {
 ```
 
 ## 5.8. METAL MPS 0 0 : `MPSMatrixVectorMultiplication`
-[**class TestCaseDenseMV_MPS** in test_dense_matrix_vector.cpp](test_dense_matrix_vector.cpp)
+[**class TestCaseDenseMV_MPS** in test_dense_matrix_vector.cpp](./test_dense_matrix_vector.cpp)
 
 This involves an encoding with Metal, but it is straightforward to understand.
 
-Please see [metal/dense_matrix_vector_metal_objc_mps.h](metal/dense_matrix_vector_metal_objc_mps.h) and
- [metal/dense_matrix_vector_metal_objc_mps.mm](metal/dense_matrix_vector_metal_objc_mps.mm) for details.
-It is managed by **class TestCaseDenseMV_MPS** in [test_dense_matrix_vector.cpp](test_dense_matrix_vector.cpp).
+Please see [metal/dense_matrix_vector_metal_objc_mps.h](./metal/dense_matrix_vector_metal_objc_mps.h) and
+ [metal/dense_matrix_vector_metal_objc_mps.mm](./metal/dense_matrix_vector_metal_objc_mps.mm) for details.
+It is managed by **class TestCaseDenseMV_MPS** in [test_dense_matrix_vector.cpp](./test_dense_matrix_vector.cpp).
 
 Judging from the charts above, `MPSMatrixVectorMultiplication` performs a similar reduction found in 
-`mult_row_major_threads_over_columns ()` in [metal/dense_matrix_vector.metal](metal/dense_matrix_vector.metal).
+`mult_row_major_threads_over_columns ()` in [metal/dense_matrix_vector.metal](./metal/dense_matrix_vector.metal).
 
 
 ## 5.9. METAL THREADS_OVER_ROWS 0 0 - Metal Kernel, Threads Over Rows
-[**class TestCaseDenseMV_metal** in test_dense_matrix_vector.cpp](test_dense_matrix_vector.cpp)
+[**class TestCaseDenseMV_metal** in test_dense_matrix_vector.cpp](./test_dense_matrix_vector.cpp)
 
 This is suitable for matrices in the col-major.
 This is similar to *NEON X 1* but with much more lanes (up to 1024).
@@ -613,10 +613,10 @@ kernel void mult_row_major_threads_over_rows (
 }
 ```
 
-Pelase see [metal/dense_matrix_vector.metal](metal/dense_matrix_vector.metal) for details.
+Pelase see [metal/dense_matrix_vector.metal](./metal/dense_matrix_vector.metal) for details.
 
 ## 5.10. METAL THREADS_OVER_COLUMNS 0 0 - Metal Kernel, Threads Over Columns With Reduction
-[**class TestCaseDenseMV_metal** in test_dense_matrix_vector.cpp](test_dense_matrix_vector.cpp)
+[**class TestCaseDenseMV_metal** in test_dense_matrix_vector.cpp](./test_dense_matrix_vector.cpp)
 
 In this case, each thread-group performs one reduction for one row.
 The reduction uses a shared memory and **simd_sum()** for better performance.
@@ -704,7 +704,7 @@ kernel void mult_row_major_threads_over_columns (
 }
 ```
 
-Please see [metal/dense_matrix_vector.metal](metal/dense_matrix_vector.metal) for details.
+Please see [metal/dense_matrix_vector.metal](./metal/dense_matrix_vector.metal) for details.
 
 # 6. References
 

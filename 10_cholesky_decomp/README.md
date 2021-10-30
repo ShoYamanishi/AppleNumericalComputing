@@ -22,7 +22,7 @@ This section deals with the dense Cholesky only, and the sparse Cholesky is out 
 The main purpose is to measure the performance of the GPU implementations, my own shader ,and MPSMatrixDecomposition against the established CPU implementations, notably LAPACK.
 
 # 4. Results on Running Time
-The following experiments are done with [test_cholesky.cpp](test_cholesky.cpp) in this directory.
+The following experiments are done with [test_cholesky.cpp](./test_cholesky.cpp) in this directory.
 
 Compiler: Apple clang version 13.0.0 (clang-1300.0.29.3) Target: arm64-apple-darwin20.6.0 Thread model: posix
 
@@ -109,7 +109,7 @@ for each implementation in log-log scale. X-axis is *(M x N)*, and Y-axis is the
 
 # 5. Implementations
 This section briefly describes each of the implementations tested with some key points in the code.
-Those are executed as part of the test program in [test_cholesky.cpp](test_cholesky.cpp).
+Those are executed as part of the test program in [test_cholesky.cpp](./test_cholesky.cpp).
 The top-level object in the 'main()' function is **TestExecutorCholesky**, which is a subclass of **TestExecutor found**
  in [../common/test_case_with_time_measurements.h](../common/test_case_with_time_measurements.h).
 It manages one single test suite, which consists of test cases.
@@ -120,11 +120,11 @@ The main part is implemented in **TestCaseCholesky::run()**, and it is the subje
 
 
 ## 5.1. CPP_SUBMATRIX_CHOLESKY 1 1 - algorithm type *submatrix*
-[**class TestCaseCholesky_baseline** in test_case_cholesky_baseline.h](test_case_cholesky_baseline.h)
+[**class TestCaseCholesky_baseline** in test_case_cholesky_baseline.h](./test_case_cholesky_baseline.h)
 
 
 This corresponds to 'The cholesky algorithm' in [Wikipedia](https://en.wikipedia.org/wiki/Cholesky_decomposition).
-Following is an excerpt from [test_case_cholesky_baseline.h](test_case_cholesky_baseline.h).
+Following is an excerpt from [test_case_cholesky_baseline.h](./test_case_cholesky_baseline.h).
 ```
 template<class T, bool IS_COL_MAJOR>
 static void factorize_in_place_submatrix_cholesky( T* A, const int dim )
@@ -153,11 +153,11 @@ static void factorize_in_place_submatrix_cholesky( T* A, const int dim )
 ```
 
 ## 5.2. CPP_COLUMN_CHOLESKY 1 1 - algorithm type parallelizable *column cholesky*
-[**class TestCaseCholesky_baseline** in test_case_cholesky_baseline.h](test_case_cholesky_baseline.h)
+[**class TestCaseCholesky_baseline** in test_case_cholesky_baseline.h](./test_case_cholesky_baseline.h)
 
 This is a version of the parallelizable algorithms described in [UoI course](https://courses.engr.illinois.edu/cs554/fa2015/notes/07_cholesky.pdf).
 
-Following is an excerpt from [test_case_cholesky_baseline.h](test_case_cholesky_baseline.h).
+Following is an excerpt from [test_case_cholesky_baseline.h](./test_case_cholesky_baseline.h).
 ```
 template<class T, bool IS_COL_MAJOR>
 static void factorize_in_place_column_cholesky( T* A, const int dim )
@@ -189,11 +189,11 @@ The two parts in the loop body before and after the *A_jj* assignment are parall
 However NEON or Multi-thread version is not implemented for this study due to high complexity.
 
 ## 5.3. EIGEN3 1 1 - Eigen3 library
-[**class TestCaseCholesky_eigen3** in test_case_cholesky_baseline.h](test_case_cholesky_eigen3.h)
+[**class TestCaseCholesky_eigen3** in test_case_cholesky_baseline.h](./test_case_cholesky_eigen3.h)
 
 This uses [the Eigen3 library](http://eigen.tuxfamily.org/dox/classEigen_1_1LLT.html).
 
-Following is an excerpt from [test_case_cholesky_eigen3.h ](test_case_cholesky_eigen3.h).
+Following is an excerpt from [test_case_cholesky_eigen3.h ](./test_case_cholesky_eigen3.h).
 ```
 #include <Eigen/Cholesky>
 ...
@@ -210,38 +210,38 @@ ex = llt.solve( eb );
 ```
 
 ## 5.4. LAPACK 1 1
-[**class TestCaseCholesky_lapack** in test_case_cholesky_baseline.h](test_case_cholesky_lapack.h)
+[**class TestCaseCholesky_lapack** in test_case_cholesky_baseline.h](./test_case_cholesky_lapack.h)
 
 This uses [LAPACK](http://www.netlib.org/lapack/).
 It uses  `sposv_()` for float, and `dposv_()` for double.
-The implementation is found in [test_case_cholesky_lapack.h](test_case_cholesky_lapack.h).
+The implementation is found in [test_case_cholesky_lapack.h](./test_case_cholesky_lapack.h).
 
 Another example code is found in [this Intel site](https://software.intel.com/sites/products/documentation/doclib/mkl_sa/11/mkl_lapack_examples/sposv_ex.c.htm).
 
 ## 5.5. GSL 1 1 - GNU Scientific Library
-[**class TestCaseCholesky_gsl** in test_case_cholesky_baseline.h](test_case_cholesky_gsl.h)
+[**class TestCaseCholesky_gsl** in test_case_cholesky_baseline.h](./test_case_cholesky_gsl.h)
 
 This implementation is for double only.
 This implementation uses **gsl_linalg_cholesky_decomp1()** and **gsl_linalg_cholesky_solve()**.
 
 The documentation is found in [the official documentation at gnu.org](https://www.gnu.org/software/gsl/doc/html/linalg.html).
 
-The test implementation is found in [test_case_cholesky_gsl.cpp](test_case_cholesky_gsl.cpp).
+The test implementation is found in [test_case_cholesky_gsl.cpp](./test_case_cholesky_gsl.cpp).
 
 ## 5.6. METAL MPS 0 0
-[**class TestCaseCholesky_metal** in test_case_cholesky_baseline.h](test_case_cholesky_metal.h)
+[**class TestCaseCholesky_metal** in test_case_cholesky_baseline.h](./test_case_cholesky_metal.h)
 
 This implementation uses **MPSMatrixDecompositionCholesky** and **MPSMatrixSolveTriangular** in MPS.
-Please see [metal/cholesky_metal_objc_mps.mm](metal/cholesky_metal_objc_mps.mm) for details.
+Please see [metal/cholesky_metal_objc_mps.mm](./metal/cholesky_metal_objc_mps.mm) for details.
 
 ## 5.7. METAL DEFAULT 0 0
-[**class TestCaseCholesky_metal** in test_case_cholesky_baseline.h](test_case_cholesky_metal.h)
+[**class TestCaseCholesky_metal** in test_case_cholesky_baseline.h](./test_case_cholesky_metal.h)
 
 This is my own kernel in *column cholesky* algorithm.
 
 Following is an excerpt from the decomposition kernel.
 The outer loop iterates over the column and in the body threads are assigned the rows to parallelize.
-Please see [metal/cholesky.metal](metal/cholesky.metal) for details.
+Please see [metal/cholesky.metal](./metal/cholesky.metal) for details.
 
 ```
 kernel void decompose_cholesky (
@@ -332,7 +332,7 @@ kernel void decompose_cholesky (
 ```
 And the following is the forward substitution to solve *Ly = b*.
 The outer loop iterates over the rows, and threads are assigned the columns to parallelize, and then reduction is performed.
-Following is an excerpt from **solve_Lyeb()** in  in [metal/cholesky.metal](metal/cholesky.metal) for details.
+Following is an excerpt from **solve_Lyeb()** in  in [metal/cholesky.metal](./metal/cholesky.metal) for details.
 
 ```
 kernel void solve_Lyeb (
@@ -379,7 +379,7 @@ kernel void solve_Lyeb (
 }
 ```
 
-The backward substitution is done in a similar way. Please see ` solve_Ltxey()` in [metal/cholesky.metal](metal/cholesky.metal) for details.
+The backward substitution is done in a similar way. Please see ` solve_Ltxey()` in [metal/cholesky.metal](./metal/cholesky.metal) for details.
 
 
 # 6. References

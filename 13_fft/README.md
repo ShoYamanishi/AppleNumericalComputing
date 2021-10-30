@@ -53,7 +53,7 @@ Also it is implemented in a Metal kernel to study the behavior.
 # 5. Implementations
 
 This section briefly describes each of the implementations tested with some key points in the code.
-Those are executed as part of the test program in [test_fft.cpp](test_fft.cpp).
+Those are executed as part of the test program in [test_fft.cpp](./test_fft.cpp).
 The top-level object in the 'main()' function is **TestExecutorFFT512Radix2**, which is a subclass of **TestExecutor found** 
 in [../common/test_case_with_time_measurements.h](../common/test_case_with_time_measurements.h).
 It manages one single test suite, which consists of test cases.
@@ -71,7 +71,7 @@ The general strategy is as follows:
 * Use table lookup for twiddle factors (trigonometry).
 
 ## 5.1. CPP_BLOCK 1 1
-[**class TestCaseFFT512Radix2_baseline** in test_fft.cpp](test_fft.cpp)
+[**class TestCaseFFT512Radix2_baseline** in test_fft.cpp](./test_fft.cpp)
 
 The top-level function is as follows:
 The first part shuffles the elements of the input *Re* and *Im* arrays.
@@ -160,10 +160,10 @@ inline void butterfly_one_pair(
 }
 ```
 
-Please see `class TestCaseFFT512Radix2_baseline` in [test_fft.cpp](test_fft.cpp) for details.
+Please see `class TestCaseFFT512Radix2_baseline` in [test_fft.cpp](./test_fft.cpp) for details.
 
 ## 5.2. NEON 1 1 : Neon Intrinsics
-[**class TestCaseFFT512Radix2_NEON** in test_ffp.cpp](test_fft.cpp)
+[**class TestCaseFFT512Radix2_NEON** in test_ffp.cpp](./test_fft.cpp)
 
 This is based on CPP_BLOCK 1 1 but the pair operations are parallelized using the NEON's lanes.
 
@@ -279,10 +279,10 @@ This is based on CPP_BLOCK 1 1 but the pair operations are parallelized using th
     }
 ```
 
-Please see `class TestCaseFFT512Radix2_NEON` in [test_fft.cpp](test_fft.cpp) for details.
+Please see `class TestCaseFFT512Radix2_NEON` in [test_fft.cpp](./test_fft.cpp) for details.
 
 ## 5.3. NEON 1 4: NEON Intrinsics with 4 threads.
-[**class TestCaseFFT512Radix2_multithread_NEON** in test_fft.cpp](test_fft.cpp)
+[**class TestCaseFFT512Radix2_multithread_NEON** in test_fft.cpp](./test_fft.cpp)
 
 This is based on NEON 1 1, but the per-layer operations up to the straddle of 64 are parallelized over 4 threads.
 The ramaining 2 layers are handles in the main thread.
@@ -333,10 +333,10 @@ virtual void run() {
 }
 ```
 
-Please see `class TestCaseFFT512Radix2_multithread_NEON` in [test_fft.cpp](test_fft.cpp) for details.
+Please see `class TestCaseFFT512Radix2_multithread_NEON` in [test_fft.cpp](./test_fft.cpp) for details.
 
 ## 5.4. VDSP 1 1
-[**class TestCaseFFT512Radix2_vDSP** in test_fft.cpp](test_fft.cpp)
+[**class TestCaseFFT512Radix2_vDSP** in test_fft.cpp](./test_fft.cpp)
 
 It simply calls the following functions.
 
@@ -355,15 +355,15 @@ vDSP_DFT_SetupD  setup = vDSP_DFT_zop_CreateSetup( nullptr, FFT_LEN_512, vDSP_DF
 vDSP_DFT_ExecuteD( setup, this->m_time_re, this->m_time_im, this->m_freq_re, this->m_freq_im );
 ```
 
-Please see `class TestCaseFFT512Radix2_vDSP` in [test_fft.cpp](test_fft.cpp) for details.
+Please see `class TestCaseFFT512Radix2_vDSP` in [test_fft.cpp](./test_fft.cpp) for details.
 
 ## 5.5. METAL 0 0
-[**class TestCaseFFT512Radix2_metal** in test_fft.cpp](test_fft.cpp)
+[**class TestCaseFFT512Radix2_metal** in test_fft.cpp](./test_fft.cpp)
 
 It uses *threadgroup memory* for the shuffled *Re* and *Im* arrays as well as pre-calculated cos, sin tables.
 Also it utilizes `simd_shuffle_xor()` for the butterfly operations.
 
-Please see ` fft_512_radix_2()` in [metal/fft.metal](metal/fft.metal) for details.
+Please see ` fft_512_radix_2()` in [metal/fft.metal](./metal/fft.metal) for details.
 
 
 # 6. References

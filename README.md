@@ -124,7 +124,7 @@ The target *all* of Make does the following:
 1. Build the test executable, and also metal libraries if necessary.
 2. Run the executable and perform experiments according to the top-level C++-code 'test_*.cpp'.
 3. The executable generates a log in `doc/make_log.txt`
-4. A python script [common/process_log.py](common/process_log.py) scan the make_log.txt and plots charts according to the specification given in 'doc/plot_spec.json'.
+4. A python script [common/process_log.py](./common/process_log.py) scan the make_log.txt and plots charts according to the specification given in 'doc/plot_spec.json'.
 
 
 ## General Findings on CPU
@@ -137,20 +137,20 @@ The target *all* of Make does the following:
 
 ## General Findings on GPU
 
-* The more thread-groups, the faster it executes. Please see [DOT](03_dot/README.md) for details.
+* The more thread-groups, the faster it executes. Please see [DOT](./03_dot) for details.
 
-* The last block detection technique can not be used for Metal. Please see [DOT](03_dot/README.md) for details.
+* The last block detection technique can not be used for Metal. Please see [DOT](./03_dot) for details.
 
-* There is no severe penalty in uncoalesced loads from the device memory. Please see 'METAL TWO_PASS_DEVICE_MEMORY 0 0' and 'METAL TWO_PASS_SHARED_MEMORY 0 0' in [DOT](03_dot/README.md) for details.
+* There is no severe penalty in uncoalesced loads from the device memory. Please see 'METAL TWO_PASS_DEVICE_MEMORY 0 0' and 'METAL TWO_PASS_SHARED_MEMORY 0 0' in [DOT](./03_dot) for details.
 
-* There is no severe penalty in uncoalesced writes to the device memory. Please see 'METAL UNCOALESCED_WRITE' and 'METAL COALESCED_WRITE' in [RadixSort](05_radix_sort/README.md) for details.
+* There is no severe penalty in uncoalesced writes to the device memory. Please see 'METAL UNCOALESCED_WRITE' and 'METAL COALESCED_WRITE' in [RadixSort](./05_radix_sort) for details.
 
-* Multiple *threadgroup* function parameters can not be used for Metal kernels. Please see [Prefix-Scan](04_prefix_sum/README.md) for details.
+* Multiple *threadgroup* function parameters can not be used for Metal kernels. Please see [Prefix-Scan](./04_prefix_sum) for details.
 
-* Explicit loop unrolling in the kernels does not seem to improve the running time. CUDA has a pragma *unroll <factor>*, and some improvements with it are reported in Chapter 14 of CUDA Handbook. However, Metal does not have such a compiler directive, and according to my study in [NBody](06_nbody/README.md),
+* Explicit loop unrolling in the kernels does not seem to improve the running time. CUDA has a pragma *unroll <factor>*, and some improvements with it are reported in Chapter 14 of CUDA Handbook. However, Metal does not have such a compiler directive, and according to my study in [NBody](./06_nbody),
 explicit unrolling of the loop body does not only improve performance, but also causes runtime error if the factor is greater than 4.
 
-* Apparently there is a limit in the number of *thread (local)* variables defined in one kernel even for *consts*. This is observed in [2DConvolution](07_2d_filter/README.md). Please see the kernels used in 'METAL TWO_STAGE'. It uses many 'const float' in the kernel `convolution_5x5_stage2()`.
+* Apparently there is a limit in the number of *thread (local)* variables defined in one kernel even for *consts*. This is observed in [2DConvolution](./07_2d_filter). Please see the kernels used in 'METAL TWO_STAGE'. It uses many 'const float' in the kernel `convolution_5x5_stage2()`.
 To make it work, the number of threads per thread-group has to be reduced from 1024 to 768. Otherwise, the output from this kernel is wrong, and there is no compiler or runtime error for it.
 
 

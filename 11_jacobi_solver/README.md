@@ -43,13 +43,13 @@ This section an overview for each of *float* and *double*.
 This section is split further into 4 separate files.
 Please see the following 4 READMEs for the *per-type* results.
 
-*  [Float Column-Major](README_runningtime_float_colmajor.md)
+*  [Float Column-Major](./README_runningtime_float_colmajor.md)
 
-*  [Float Row-Major](README_runningtime_float_rowmajor.md)
+*  [Float Row-Major](./README_runningtime_float_rowmajor.md)
 
-*  [Double Column-Major](README_runningtime_double_colmajor.md)
+*  [Double Column-Major](./README_runningtime_double_colmajor.md)
 
-*  [Double Row-Major](README_runningtime_double_rowmajor.md)
+*  [Double Row-Major](./README_runningtime_double_rowmajor.md)
 
 ## 4.1. Overview : Float
 The following chart shows the mean running times taken to perform 10 iterations of the Jacobian method in *float*
@@ -99,7 +99,7 @@ This can be used as an indicator for the decision on whether to use the column-m
 
 # 5. Implementations
 This section briefly describes each of the implementations tested with some key points in the code.
-Those are executed as part of the test program in [test_jacobi_solver.cpp](test_jacobi_solver.cpp).
+Those are executed as part of the test program in [test_jacobi_solver.cpp](./test_jacobi_solver.cpp).
 The top-level object in the 'main()' function is **TestExecutorJacobiSolver**, which is a subclass of **TestExecutor found**
 in [../common/test_case_with_time_measurements.h](../common/test_case_with_time_measurements.h).
 It manages one single test suite, which consists of test cases.
@@ -110,7 +110,7 @@ The main part is implemented in **TestCaseJacobiSolver::run()**, and it is the s
 
 
 ## 5.1. CPP_BLOCK 1 1 : plain C++ implementation - baseline
-[**class TestCaseJacobiSolver_baseline** in test_jacobi_solver.cpp](test_jacobi_solver.cpp)
+[**class TestCaseJacobiSolver_baseline** in test_jacobi_solver.cpp](./test_jacobi_solver.cpp)
 
 This is a plain C++ implementation as the baseline for the experiments.
 The main part is shown as follows.
@@ -127,11 +127,11 @@ for ( int i = 0; i < dim; i++ ) {
     x1[i] = (b[i] - sum) * Dinv[ i ];
 }
 ```
-Please see `class TestCaseJacobiSolver_baseline` in [test_jacobi_solver.cpp](test_jacobi_solver.cpp) for details.
+Please see `class TestCaseJacobiSolver_baseline` in [test_jacobi_solver.cpp](./test_jacobi_solver.cpp) for details.
 
 
 ## 5.2. NEON 1 1
-[**class TestCaseJacobiSolver_NEON** in test_jacobi_solver.cpp](test_jacobi_solver.cpp)
+[**class TestCaseJacobiSolver_NEON** in test_jacobi_solver.cpp](./test_jacobi_solver.cpp)
 
 
 First, to avoid division, it calculates the reciprocal of the diagonal elements as follows.
@@ -278,11 +278,11 @@ for ( int i = 0; i < dim; i+=4 ) {
 dist = sqrt( sum_sq_dist );
 ```
 
-Please see `class TestCaseJacobiSolver_NEON` in [test_jacobi_solver.cpp](test_jacobi_solver.cpp) for details.
+Please see `class TestCaseJacobiSolver_NEON` in [test_jacobi_solver.cpp](./test_jacobi_solver.cpp) for details.
 
 
 ## 5.3. NEON X 1
-[**class TestCaseJacobiSolver_NEON** in test_jacobi_solver.cpp](test_jacobi_solver.cpp)
+[**class TestCaseJacobiSolver_NEON** in test_jacobi_solver.cpp](./test_jacobi_solver.cpp)
 
 This is based on 'NEON 1 1' with the loop bodies unrolled according to the given factor.
 
@@ -339,11 +339,11 @@ for ( int i = row_begin; i < row_end_past_one; i += 16 ) {
 }
 ```
 
-Please see `class TestCaseJacobiSolver_NEON` in [test_jacobi_solver.cpp](test_jacobi_solver.cpp) for details.
+Please see `class TestCaseJacobiSolver_NEON` in [test_jacobi_solver.cpp](./test_jacobi_solver.cpp) for details.
 
 
 ## 5.4. NEON X Y
-[**class TestCaseJacobiSolver_multithread** in test_jacobi_solver.cpp](test_jacobi_solver.cpp)
+[**class TestCaseJacobiSolver_multithread** in test_jacobi_solver.cpp](./test_jacobi_solver.cpp)
 
 This is based on 'NEON X 1' but with multithreads as follows.
 
@@ -387,10 +387,10 @@ auto thread_lambda = [ this, num_rows_per_thread ]( const size_t thread_index ) 
 };
 ```
 
-Please see `class TestCaseJacobiSolver_multithread` in [test_jacobi_solver.cpp](test_jacobi_solver.cpp) for details.
+Please see `class TestCaseJacobiSolver_multithread` in [test_jacobi_solver.cpp](./test_jacobi_solver.cpp) for details.
 
 ## 5.5. BLAS 1 1
-[**class TestCaseJacobiSolver_blas** in test_jacobi_solver.cpp](test_jacobi_solver.cpp)
+[**class TestCaseJacobiSolver_blas** in test_jacobi_solver.cpp](./test_jacobi_solver.cpp)
 
 This is a combination of the BLAS and vDSP routines.
 
@@ -436,11 +436,11 @@ for (int i = 0; i < iteration; i++ ) {
 }
 ```
 
-Please see `class TestCaseJacobiSolver_blas` in [test_jacobi_solver.cpp](test_jacobi_solver.cpp) for details.
+Please see `class TestCaseJacobiSolver_blas` in [test_jacobi_solver.cpp](./test_jacobi_solver.cpp) for details.
 
 
 ## 5.6. VDSP 1 1 (row-major only)
-[**class TestCaseJacobiSolver_vDSP** in test_jacobi_solver.cpp](test_jacobi_solver.cpp)
+[**class TestCaseJacobiSolver_vDSP** in test_jacobi_solver.cpp](./test_jacobi_solver.cpp)
 
 This is very similar to 'BLAS 1 1' but the matrix-vector multiplication is replaced with the following.
 
@@ -450,11 +450,11 @@ vDSP_mmul( A, 1, x2, 1, sums, 1, dim, 1, dim ); // float
 vDSP_mmulD( A, 1, x2, 1, sums, 1, dim, 1, dim ); // double
 ```
 
-Please see `class TestCaseJacobiSolver_vDSP` in [test_jacobi_solver.cpp](test_jacobi_solver.cpp) for details.
+Please see `class TestCaseJacobiSolver_vDSP` in [test_jacobi_solver.cpp](./test_jacobi_solver.cpp) for details.
 
 
 ## 5.7. METAL DEFAULT 0 0
-[**class TestCaseJacobiSolver_metal** in test_jacobi_solver.cpp](test_jacobi_solver.cpp)
+[**class TestCaseJacobiSolver_metal** in test_jacobi_solver.cpp](./test_jacobi_solver.cpp)
 
 This is a METAL kernel implementation 
 The inverse of the diagonal elements are pre-calculated in the CPU.
@@ -572,5 +572,5 @@ void atomic_add_float( device atomic_uint* atom_var, const float val )
 }
 ```
 
-Please see [metal/jacobi_solver.metal](metal/jacobi_solver.metal) for details.
+Please see [metal/jacobi_solver.metal](./metal/jacobi_solver.metal) for details.
 
