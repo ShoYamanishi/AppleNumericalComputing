@@ -1,0 +1,53 @@
+[
+{
+    "DataElementType": "FLOAT",
+    "DataElementSubtype": "ANY",
+    "Width" : 13,
+    "Height" : 8,
+    "Title": "Overview : Float",
+    "PlotType": "LOG-LOG",
+    "PlotBase": "MATRIX_COL_MAJOR:CPP_SUBMATRIX_CHOLESKY 1 1",
+    "UpperLimit" : 1.2,
+    "PlotCases": [
+        "MATRIX_ROW_MAJOR:CPP_SUBMATRIX_CHOLESKY 1 1", 
+        "MATRIX_ROW_MAJOR:CPP_COLUMN_CHOLESKY 1 1",
+        "MATRIX_COL_MAJOR:CPP_SUBMATRIX_CHOLESKY 1 1", 
+        "MATRIX_COL_MAJOR:CPP_COLUMN_CHOLESKY 1 1",
+        "MATRIX_COL_MAJOR:EIGEN3 1 1",
+        "MATRIX_COL_MAJOR:LAPACK 1 1",
+        "MATRIX_COL_MAJOR:METAL MPS 0 0",
+        "MATRIX_COL_MAJOR:METAL DEFAULT 0 0"
+    ]
+},
+{
+    "DataElementType": "FLOAT",
+    "DataElementSubtype": "MATRIX_COL_MAJOR",
+    "Width" : 13,
+    "Height" : 8,
+    "Title": "Comparison of two Metal implementations",
+    "PlotType": "LOG-LIN-RELATIVE",
+    "PlotBase": "METAL MPS 0 0",
+    "UpperLimit" : 1.5,
+    "PlotCases": [ "METAL MPS 0 0", "METAL DEFAULT 0 0" ]
+},
+{
+    "DataElementType": "DOUBLE",
+    "DataElementSubtype": "ANY",
+    "Width" : 13,
+    "Height" : 8,
+    "Title": "Overview : Double",
+    "PlotType": "LOG-LOG",
+    "PlotBase": "MATRIX_COL_MAJOR:CPP_SUBMATRIX_CHOLESKY 1 1",
+    "UpperLimit" : 1.2,
+    "PlotCases": [
+        "MATRIX_ROW_MAJOR:CPP_SUBMATRIX_CHOLESKY 1 1", 
+        "MATRIX_ROW_MAJOR:CPP_COLUMN_CHOLESKY 1 1",
+        "MATRIX_COL_MAJOR:CPP_SUBMATRIX_CHOLESKY 1 1", 
+        "MATRIX_COL_MAJOR:CPP_COLUMN_CHOLESKY 1 1",
+        "MATRIX_COL_MAJOR:EIGEN3 1 1",
+        "MATRIX_COL_MAJOR:LAPACK 1 1",
+        "MATRIX_COL_MAJOR:GSL 1 1"
+    ]
+}
+]
+

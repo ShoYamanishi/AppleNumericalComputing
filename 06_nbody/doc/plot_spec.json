@@ -1,0 +1,53 @@
+[
+{
+    "DataElementType": "FLOAT",
+    "DataElementSubtype": "ANY",
+    "Width" : 13,
+    "Height" : 8,
+    "Title": "Overview",
+    "PlotType": "LOG-LOG",
+    "PlotBase": "ARRAY_OF_STRUCTURES:CPP_BLOCK 1 1",
+    "UpperLimit" : 1.2,
+    "PlotCases": [
+        "ARRAY_OF_STRUCTURES:CPP_BLOCK 1 1",
+        "ARRAY_OF_STRUCTURES:METAL DEFAULT 0 0",
+        "STRUCTURE_OF_ARRAYS:CPP_BLOCK 1 1",
+        "STRUCTURE_OF_ARRAYS:NEON 1 1",
+        "STRUCTURE_OF_ARRAYS:NEON 1 4"
+    ]
+},
+{
+    "DataElementType": "FLOAT",
+    "DataElementSubtype": "STRUCTURE_OF_ARRAYS",
+    "Width" : 13,
+    "Height" : 8,
+    "Title": "Comparison among NEON implementations",
+    "PlotType": "LOG-LIN-RELATIVE",
+    "PlotBase": "CPP_BLOCK 1 1",
+    "UpperLimit" : 1.2,
+    "PlotCases": [
+        "CPP_BLOCK 1 1",
+        "NEON 1 1",
+        "NEON 2 1",
+        "NEON 4 1",
+        "NEON 8 1"
+    ]
+},
+{
+    "DataElementType": "FLOAT",
+    "DataElementSubtype": "STRUCTURE_OF_ARRAYS",
+    "Width" : 13,
+    "Height" : 8,
+    "Title": "Comparison among multithreaded implementations",
+    "PlotType": "LOG-LIN-RELATIVE",
+    "PlotBase": "NEON 1 1",
+    "UpperLimit" : 2.0,
+    "PlotCases": [
+        "NEON 1 1",
+        "NEON 1 2",
+        "NEON 1 4",
+        "NEON 1 8"
+    ]
+}
+]
+

@@ -1,0 +1,57 @@
+[
+{
+    "DataElementType": "FLOAT",
+    "DataElementSubtype": "MATRIX_SPARSE",
+    "Width" : 13,
+    "Height" : 8,
+    "Title": "Overview : Float",
+    "PlotType": "LOG-LOG",
+    "PlotBase": "CPP_BLOCK 1 1",
+    "UpperLimit" : 1.2,
+    "PlotCases": [ "CPP_BLOCK 1 1", "CPP_BLOCK 1 8", "BLAS 1 1", "METAL NAIVE 0 0", "METAL ADAPTIVE 0 0" ]
+},
+{
+    "DataElementType": "FLOAT",
+    "DataElementSubtype": "MATRIX_SPARSE",
+    "Width" : 13,
+    "Height" : 8,
+    "Title": "Comparison Among Multithreaded Implementations : Float",
+    "PlotType": "LOG-LIN-RELATIVE",
+    "PlotBase": "CPP_BLOCK 1 1",
+    "UpperLimit" : 1.2,
+    "PlotCases": [ "CPP_BLOCK 1 1", "CPP_BLOCK 1 2", "CPP_BLOCK 1 4", "CPP_BLOCK 1 8", "CPP_BLOCK 1 16" ]
+},
+{
+    "DataElementType": "FLOAT",
+    "DataElementSubtype": "MATRIX_SPARSE",
+    "Width" : 13,
+    "Height" : 8,
+    "Title": "Comparison Among GPU Implementations : Float",
+    "PlotType": "LOG-LIN-RELATIVE",
+    "PlotBase": "METAL NAIVE 0 0",
+    "UpperLimit" : 1.2,
+    "PlotCases": [ "METAL NAIVE 0 0", "METAL ADAPTIVE 0 0" ]
+},
+{
+    "DataElementType": "DOUBLE",
+    "DataElementSubtype": "MATRIX_SPARSE",
+    "Width" : 13,
+    "Height" : 8,
+    "Title": "Overview : Double",
+    "PlotType": "LOG-LOG",
+    "PlotBase": "CPP_BLOCK 1 1",
+    "UpperLimit" : 1.2,
+    "PlotCases": [ "CPP_BLOCK 1 1", "CPP_BLOCK 1 8", "BLAS 1 1" ]
+},
+{
+    "DataElementType": "DOUBLE",
+    "DataElementSubtype": "MATRIX_SPARSE",
+    "Width" : 13,
+    "Height" : 8,
+    "Title": "Comparison Among Multithreaded Implementations : Double",
+    "PlotType": "LOG-LIN-RELATIVE",
+    "PlotBase": "CPP_BLOCK 1 1",
+    "UpperLimit" : 1.2,
+    "PlotCases": [ "CPP_BLOCK 1 1", "CPP_BLOCK 1 2", "CPP_BLOCK 1 4", "CPP_BLOCK 1 8", "CPP_BLOCK 1 16" ]
+}
+]

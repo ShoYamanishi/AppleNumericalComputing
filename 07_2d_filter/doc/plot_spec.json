@@ -1,0 +1,36 @@
+[
+{
+    "DataElementType": "FLOAT",
+    "DataElementSubtype": "MATRIX_ROW_MAJOR",
+    "Width" : 13,
+    "Height" : 8,
+    "Title": "Overview",
+    "PlotType": "LOG-LOG",
+    "PlotBase": "CPP_BLOCK 1 1",
+    "UpperLimit" : 1.2,
+    "PlotCases": [ "CPP_BLOCK 1 1", "CPP_BLOCK 1 8", "CIIMAGE_GPU 1 1", "CIIMAGE_CPU 1 1", "METAL NAIVE 0 0", "METAL TWO_STAGES 0 0", "METAL MPS 0 0" ]
+},
+{
+    "DataElementType": "FLOAT",
+    "DataElementSubtype": "MATRIX_ROW_MAJOR",
+    "Width" : 13,
+    "Height" : 8,
+    "Title": "Comparison Among CPU Multithreaded Implementations",
+    "PlotType": "LOG-LIN-RELATIVE",
+    "PlotBase": "CPP_BLOCK 1 1",
+    "UpperLimit" : 1.2,
+    "PlotCases": [ "CPP_BLOCK 1 1", "CPP_BLOCK 1 2", "CPP_BLOCK 1 4", "CPP_BLOCK 1 8", "CPP_BLOCK 1 16", "CPP_BLOCK 1 32" ]
+},
+{
+    "DataElementType": "FLOAT",
+    "DataElementSubtype": "MATRIX_ROW_MAJOR",
+    "Width" : 13,
+    "Height" : 8,
+    "Title": "Comparison Among GPU Implementations",
+    "PlotType": "LOG-LIN-RELATIVE",
+    "PlotBase": "METAL NAIVE 0 0",
+    "UpperLimit" : 2.0,
+    "PlotCases": [ "METAL NAIVE 0 0", "METAL TWO_STAGES 0 0", "METAL MPS 0 0" ]
+}
+]
+

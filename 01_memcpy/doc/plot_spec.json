@@ -1,0 +1,70 @@
+[
+{
+    "DataElementType": "INT",
+    "DataElementSubtype": "VECTOR",
+    "Width" : 13,
+    "Height" : 8,
+    "Title": "Overview",
+    "PlotType": "LOG-LOG",
+    "PlotBase": "CPP_BLOCK 1 1",
+    "UpperLimit" : 1.2,
+    "PlotCases": [ "CPP_BLOCK 1 1", "CPP_BLOCK 4 1", "CPP_BLOCK 4 2", "MEMCPY 1 1", "MEMCPY 1 2", "METAL BLIT_SHARED 0 0" ]
+
+
+},
+{
+    "DataElementType": "INT",
+    "DataElementSubtype": "VECTOR",
+    "Width" : 13,
+    "Height" : 8,
+    "Title": "Performance Relative to Baseline",
+    "PlotType": "LOG-LIN-RELATIVE",
+    "PlotBase": "CPP_BLOCK 1 1",
+    "UpperLimit" : 1.2,
+    "PlotCases": [ "CPP_BLOCK 1 1", "CPP_BLOCK 2 1", "CPP_BLOCK 4 1", "CPP_BLOCK 4 2", "CPP_BLOCK 4 4", "CPP_BLOCK 4 8", "CPP_BLOCK 8 1", "MEMCPY 1 1", "MEMCPY 1 2", "MEMCPY 1 4", "MEMCPY 1 8", "METAL DEFAULT_SHARED 0 0", "METAL DEFAULT_MANAGED 0 0", "METAL BLIT_SHARED 0 0", "METAL BLIT_MANAGED 0 0" ]
+},
+{
+    "DataElementType": "INT",
+    "DataElementSubtype": "VECTOR",
+    "Width" : 13,
+    "Height" : 8,
+    "Title": "Effect of Loop Unrolling in C++",
+    "PlotType": "LOG-LIN-RELATIVE",
+    "PlotBase": "CPP_BLOCK 1 1",
+    "UpperLimit" : 1.2,
+    "PlotCases": [ "CPP_BLOCK 1 1", "CPP_BLOCK 2 1", "CPP_BLOCK 4 1", "CPP_BLOCK 8 1", "MEMCPY 1 1" ]
+},
+{
+    "DataElementType": "INT",
+    "DataElementSubtype": "VECTOR",
+    "Width" : 13,
+    "Height" : 8,
+    "Title": "Effect of Multithreading in C++",
+    "PlotType": "LOG-LIN-RELATIVE",
+    "PlotBase": "CPP_BLOCK 4 1",
+    "UpperLimit" : 5.0,
+    "PlotCases": [ "CPP_BLOCK 4 1", "CPP_BLOCK 4 2", "CPP_BLOCK 4 4", "CPP_BLOCK 4 8", "MEMCPY 1 1" ]
+},
+{
+    "DataElementType": "INT",
+    "DataElementSubtype": "VECTOR",
+    "Width" : 13,
+    "Height" : 8,
+    "Title": "Effect of Multithreading with memcpy()",
+    "PlotType": "LOG-LIN-RELATIVE",
+    "PlotBase": "MEMCPY 1 1",
+    "UpperLimit" : 5.0,
+    "PlotCases": [ "MEMCPY 1 1", "MEMCPY 1 2", "MEMCPY 1 4", "MEMCPY 1 8" ]
+},
+{
+    "DataElementType": "INT",
+    "DataElementSubtype": "VECTOR",
+    "Width" : 13,
+    "Height" : 8,
+    "Title": "Comparison Among Metal Implementations",
+    "PlotType": "LOG-LIN-RELATIVE",
+    "PlotBase": "METAL DEFAULT_SHARED 0 0",
+    "UpperLimit" : 2.0,
+    "PlotCases": [ "METAL DEFAULT_SHARED 0 0", "METAL DEFAULT_MANAGED 0 0", "METAL BLIT_SHARED 0 0", "METAL BLIT_MANAGED 0 0" ]
+}
+]

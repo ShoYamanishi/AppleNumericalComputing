@@ -1,0 +1,171 @@
+[
+{
+    "DataElementType": "FLOAT",
+    "DataElementSubtype": "ANY",
+    "Width" : 13,
+    "Height" : 8,
+    "Title": "Overview",
+    "PlotType": "LOG-LOG",
+    "PlotBase": "CPP_BLOCK 1 1",
+    "UpperLimit" : 1.2,
+    "PlotCases": [
+        "MATRIX_COL_MAJOR:BLAS 1 1", 
+        "MATRIX_COL_MAJOR:METAL DEFAULT 0 0",
+        "MATRIX_ROW_MAJOR:BLAS 1 1",
+        "MATRIX_ROW_MAJOR:NEON 8 8",
+        "MATRIX_ROW_MAJOR:METAL DEFAULT 0 0"
+    ]
+},
+
+{
+    "DataElementType": "DOUBLE",
+    "DataElementSubtype": "ANY",
+    "Width" : 13,
+    "Height" : 8,
+    "Title": "Overview",
+    "PlotType": "LOG-LOG",
+    "PlotBase": "CPP_BLOCK 1 1",
+    "UpperLimit" : 1.2,
+    "PlotCases": [
+        "MATRIX_COL_MAJOR:BLAS 1 1",
+        "MATRIX_COL_MAJOR:NEON 8 8",
+        "MATRIX_ROW_MAJOR:BLAS 1 1",
+        "MATRIX_ROW_MAJOR:NEON 8 8"
+    ]
+},
+
+{
+    "DataElementType": "FLOAT",
+    "DataElementSubtype": "MATRIX_COL_MAJOR",
+    "Width" : 13,
+    "Height" : 8,
+    "Title": "Overview",
+    "PlotType": "LOG-LOG",
+    "PlotBase": "CPP_BLOCK 1 1",
+    "UpperLimit" : 1.2,
+    "PlotCases": [ "CPP_BLOCK 1 1", "NEON 8 1", "NEON 8 8", "BLAS 1 1", "METAL DEFAULT 0 0" ]
+},
+{
+    "DataElementType": "FLOAT",
+    "DataElementSubtype": "MATRIX_COL_MAJOR",
+    "Width" : 13,
+    "Height" : 8,
+    "Title": "Comparison Among NEON Loop Unrolling",
+    "PlotType": "LOG-LIN-RELATIVE",
+    "PlotBase": "NEON 1 1",
+    "UpperLimit" : 1.2,
+    "PlotCases": [ "NEON 1 1", "NEON 2 1", "NEON 4 1", "NEON 8 1" ]
+},
+{
+    "DataElementType": "FLOAT",
+    "DataElementSubtype": "MATRIX_COL_MAJOR",
+    "Width" : 13,
+    "Height" : 8,
+    "Title": "Comparison Among NEON Multithreads",
+    "PlotType": "LOG-LIN-RELATIVE",
+    "PlotBase": "NEON 8 1",
+    "UpperLimit" : 1.2,
+    "PlotCases": [ "NEON 8 1", "NEON 8 2", "NEON 8 4", "NEON 8 8" ]
+},
+{
+    "DataElementType": "FLOAT",
+    "DataElementSubtype": "MATRIX_ROW_MAJOR",
+    "Width" : 13,
+    "Height" : 8,
+    "Title": "Overview",
+    "PlotType": "LOG-LOG",
+    "PlotBase": "CPP_BLOCK 1 1",
+    "UpperLimit" : 1.2,
+    "PlotCases": [ "CPP_BLOCK 1 1", "NEON 4 1", "NEON 8 8", "VDSP 1 1", "BLAS 1 1", "METAL DEFAULT 0 0" ]
+},
+{
+    "DataElementType": "FLOAT",
+    "DataElementSubtype": "MATRIX_ROW_MAJOR",
+    "Width" : 13,
+    "Height" : 8,
+    "Title": "Comparison Among NEON Loop Unrolling",
+    "PlotType": "LOG-LIN-RELATIVE",
+    "PlotBase": "NEON 1 1",
+    "UpperLimit" : 1.2,
+    "PlotCases": [ "NEON 1 1", "NEON 2 1", "NEON 4 1", "NEON 8 1" ]
+},
+{
+    "DataElementType": "FLOAT",
+    "DataElementSubtype": "MATRIX_ROW_MAJOR",
+    "Width" : 13,
+    "Height" : 8,
+    "Title": "Comparison Among NEON Multithreads",
+    "PlotType": "LOG-LIN-RELATIVE",
+    "PlotBase": "NEON 8 1",
+    "UpperLimit" : 1.2,
+    "PlotCases": [ "NEON 8 1", "NEON 8 2", "NEON 8 4", "NEON 8 8" ]
+},
+{
+    "DataElementType": "DOUBLE",
+    "DataElementSubtype": "MATRIX_COL_MAJOR",
+    "Width" : 13,
+    "Height" : 8,
+    "Title": "Overview",
+    "PlotType": "LOG-LOG",
+    "PlotBase": "CPP_BLOCK 1 1",
+    "UpperLimit" : 1.2,
+    "PlotCases": [ "CPP_BLOCK 1 1", "NEON 8 1", "NEON 8 8", "BLAS 1 1" ]
+},
+{
+    "DataElementType": "DOUBLE",
+    "DataElementSubtype": "MATRIX_COL_MAJOR",
+    "Width" : 13,
+    "Height" : 8,
+    "Title": "Comparison Among NEON Loop Unrolling",
+    "PlotType": "LOG-LIN-RELATIVE",
+    "PlotBase": "NEON 1 1",
+    "UpperLimit" : 1.2,
+    "PlotCases": [ "NEON 1 1", "NEON 2 1", "NEON 4 1", "NEON 8 1" ]
+},
+{
+    "DataElementType": "DOUBLE",
+    "DataElementSubtype": "MATRIX_COL_MAJOR",
+    "Width" : 13,
+    "Height" : 8,
+    "Title": "Comparison Among NEON Multithreads",
+    "PlotType": "LOG-LIN-RELATIVE",
+    "PlotBase": "NEON 8 1",
+    "UpperLimit" : 1.2,
+    "PlotCases": [ "NEON 8 1", "NEON 8 2", "NEON 8 4", "NEON 8 8" ]
+},
+
+{
+    "DataElementType": "DOUBLE",
+    "DataElementSubtype": "MATRIX_ROW_MAJOR",
+    "Width" : 13,
+    "Height" : 8,
+    "Title": "Overview",
+    "PlotType": "LOG-LOG",
+    "PlotBase": "CPP_BLOCK 1 1",
+    "UpperLimit" : 1.2,
+    "PlotCases": [ "CPP_BLOCK 1 1", "NEON 8 1", "NEON 8 8", "VDSP 1 1", "BLAS 1 1" ]
+},
+{
+    "DataElementType": "DOUBLE",
+    "DataElementSubtype": "MATRIX_ROW_MAJOR",
+    "Width" : 13,
+    "Height" : 8,
+    "Title": "Comparison Among NEON Loop Unrolling",
+    "PlotType": "LOG-LIN-RELATIVE",
+    "PlotBase": "NEON 1 1",
+    "UpperLimit" : 1.2,
+    "PlotCases": [ "NEON 1 1", "NEON 2 1", "NEON 4 1", "NEON 8 1" ]
+},
+{
+    "DataElementType": "DOUBLE",
+    "DataElementSubtype": "MATRIX_ROW_MAJOR",
+    "Width" : 13,
+    "Height" : 8,
+    "Title": "Comparison Among NEON Multithreads",
+    "PlotType": "LOG-LIN-RELATIVE",
+    "PlotBase": "NEON 8 1",
+    "UpperLimit" : 1.2,
+    "PlotCases": [ "NEON 8 1", "NEON 8 2", "NEON 8 4", "NEON 8 8" ]
+}
+]
+

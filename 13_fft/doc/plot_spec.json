@@ -1,0 +1,25 @@
+[
+{
+    "DataElementType": "FLOAT",
+    "DataElementSubtype": "VECTOR",
+    "Width" : 13,
+    "Height" : 8,
+    "Title": "Overview : Float",
+    "PlotType": "LOG-LOG",
+    "PlotBase": "CPP_BLOCK 1 1",
+    "UpperLimit" : 1.2,
+    "PlotCases": [ "CPP_BLOCK 1 1", "NEON 1 1", "NEON 1 4", "METAL DEFAULT 0 0", "VDSP 1 1" ]
+},
+{
+    "DataElementType": "DOUBLE",
+    "DataElementSubtype": "VECTOR",
+    "Width" : 13,
+    "Height" : 8,
+    "Title": "Overview : Float",
+    "PlotType": "LOG-LOG",
+    "PlotBase": "CPP_BLOCK 1 1",
+    "UpperLimit" : 1.2,
+    "PlotCases": [ "CPP_BLOCK 1 1", "NEON 1 1", "NEON 1 4", "VDSP 1 1" ]
+}
+]
+
