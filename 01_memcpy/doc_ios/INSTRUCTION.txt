@@ -1,4 +1,4 @@
-- Launch Xcode
+- Open AppleNumericalComputing/iOSTester_01/iOSTester_01.xcodeproj with Xcode
 - Build a release build
 - Run the iOS App in release build
 - Press 'Run' on the screen
