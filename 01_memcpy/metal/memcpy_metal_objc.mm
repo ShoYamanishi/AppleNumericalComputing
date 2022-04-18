@@ -90,12 +90,12 @@ struct memcpy_constants
 
 -(void) performComputationKernel
 {
+#if TARGET_OS_OSX
     if ( _mUseManagedBuffer ) {
-
         [_mIn    didModifyRange: NSMakeRange(0, _mNumElementsInt * sizeof(int)   ) ];
         [_mConst didModifyRange: NSMakeRange(0, sizeof( struct memcpy_constants) ) ];
     }
-
+#endif
     id<MTLCommandBuffer> commandBuffer = [ self.commandQueue commandBuffer ];
 
     assert( commandBuffer != nil );
@@ -120,8 +120,9 @@ struct memcpy_constants
         id<MTLBlitCommandEncoder> blitEncoder = [ commandBuffer blitCommandEncoder ];
 
         assert( blitEncoder != nil );
-
+#if TARGET_OS_OSX
         [ blitEncoder synchronizeResource:_mOut ];
+#endif
         [ blitEncoder endEncoding ];
     }
 
@@ -133,11 +134,12 @@ struct memcpy_constants
 
 -(void) performComputationBlit
 {
+#if TARGET_OS_OSX
     if ( _mUseManagedBuffer ) {
 
         [_mIn    didModifyRange: NSMakeRange(0, _mNumElementsInt * sizeof(int)   ) ];
     }
-
+#endif
     id<MTLCommandBuffer> commandBuffer = [ self.commandQueue commandBuffer ];
 
     assert( commandBuffer != nil );
@@ -151,12 +153,12 @@ struct memcpy_constants
                         toBuffer: _mOut
                destinationOffset: 0 
                             size: sizeof(int)*_mNumElementsInt  ];
-
+#if TARGET_OS_OSX
     if ( _mUseManagedBuffer ) {
 
         [ blitEncoder synchronizeResource:_mOut ];
     }
-
+#endif
     [blitEncoder endEncoding];
 
     [commandBuffer commit];

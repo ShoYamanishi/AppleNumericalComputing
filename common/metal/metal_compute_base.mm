@@ -37,7 +37,11 @@
 - (bool) loadLibraryWithName:(NSString*)name
 {
     NSError* error = nil;
+#if TARGET_OS_OSX
     _mLibrary = [_mDevice newLibraryWithFile: name error: &error ];
+#else
+    _mLibrary = [_mDevice newDefaultLibrary ];
+#endif
     if ( _mLibrary == nil )
     {
         NSLog(@"Failed to find the default library. Error %@", error );
@@ -93,12 +97,17 @@
 
 - (id<MTLBuffer>) getManagedMTLBufferForBytes:(int)bytes for:(NSString*)name;
 {
+#if TARGET_OS_OSX
     id<MTLBuffer> buf = [_mDevice newBufferWithLength: bytes options:MTLResourceStorageModeManaged ];
+
     if ( buf== nil)
     {
         NSLog( @"Failed to allocate new metal buffer [%@].", name );
         return nil;
     }
     return buf;
+#else
+    return nil;
+#endif
 }
 @end

@@ -26,7 +26,7 @@ class MemcpyMetalCppImpl
     void performComputationBlit();
 
   private:
-    void * m_self;
+    MemcpyMetalObjC* m_self;
 
 };
 

@@ -1,3 +1,4 @@
+class MemcpyMetalObjC;
 #include "memcpy_metal_cpp_impl.h"
 #include "memcpy_metal_cpp.h"
 
