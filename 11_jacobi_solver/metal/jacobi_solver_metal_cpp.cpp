@@ -1,8 +1,8 @@
 #include "jacobi_solver_metal_cpp_impl.h"
 #include "jacobi_solver_metal_cpp.h"
 
-JacobiSolverMetalCpp::JacobiSolverMetalCpp( const int dim, const int iteration, const int type )
-    :m_impl( new JacobiSolverMetalCppImpl( dim, iteration, type ) )
+JacobiSolverMetalCpp::JacobiSolverMetalCpp( const int dim, const int iteration, const int type, const bool one_commit )
+    :m_impl( new JacobiSolverMetalCppImpl( dim, iteration, type, one_commit ) )
 {
     ;
 }

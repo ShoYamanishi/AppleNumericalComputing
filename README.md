@@ -77,7 +77,9 @@ For example, if you have to implement a variant of the projected Gauss-Seidel it
 
 * **Oct 2021** : The version (this repo) for Apple M1 using Mac mini (M1, 2020), 8GB Memory has been converged.
 
-* **Jan 2022** : Another version for Apple A15 Bionic using an iPhone 13 planned.
+* **Apr 2022** : New Metal implementations with one commit for all the iterations/shifts are added for 05_radix_sort, 11_jacobi_solver, and 12_gauss_seidel_solver.
+
+* **May 2022** : Another version for Apple A15 Bionic using an iPhone 13 planned.
 
 # Technical Summary
 
@@ -153,6 +155,7 @@ explicit unrolling of the loop body does not only improve performance, but also 
 * Apparently there is a limit in the number of *thread (local)* variables defined in one kernel even for *consts*. This is observed in [2DConvolution](./07_2d_filter). Please see the kernels used in 'METAL TWO_STAGE'. It uses many 'const float' in the kernel `convolution_5x5_stage2()`.
 To make it work, the number of threads per thread-group has to be reduced from 1024 to 768. Otherwise, the output from this kernel is wrong, and there is no compiler or runtime error for it.
 
+* In general the more kernel dispatches per commit, the more efficient. However it does not necessarily hold for the problem sizes where Metal has an advantage over CPU. See [radix sort](./05_radix_sort), [Jacobi solver](./11_jacobi_solver), and [Gauss-Seldel solver](./12_gauss_seidel_solver).
 
 # File Organization
 This repo consists of 13 independent sections at the top directory, numbered from '01_*' to '13_*'.

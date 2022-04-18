@@ -4,7 +4,7 @@
 
 @interface GaussSeidelSolverMetalObjC : MetalComputeBase
 
-- (instancetype)initWithDim:(int) dim Iteration:(int) iteration;
+- (instancetype)initWithDim:(int) dim Iteration:(int) iteration oneCommit:(bool) one_commit;
 
 - (void) setInitialStatesA:(float*) A D:(float*) D B:(float*) b X1:(float*) x1 X2:(float*) x2;
 

@@ -9,6 +9,7 @@
     int _mDim;
     int _mIteration;
     bool _mX1ToX2;
+    bool _mOneCommit;
 
     id<MTLComputePipelineState> _mPSO_solve_raw_major;
 
@@ -22,7 +23,7 @@
 }
 
 
-- (instancetype)initWithDim:(int) dim Iteration:(int) iteration
+- (instancetype)initWithDim:(int) dim Iteration:(int) iteration oneCommit:(bool) one_commit
 {
 
     self = [super init];
@@ -32,7 +33,7 @@
         _mDim       = dim;
         _mIteration = iteration;
         _mX1ToX2    = false;
-
+        _mOneCommit = one_commit;
         [ self loadLibraryWithName: @"./gauss_seidel_solver.metallib" ];
 
         _mPSO_solve_raw_major =  [ self getPipelineStateForFunction: @"solve_raw_major" ];
@@ -92,6 +93,71 @@
 
 
 - (void) performComputation
+{
+    if (_mOneCommit) {
+        [ self performComputationOneCommit ];
+    }
+    else {
+        [ self performComputationMultipleCommits ];
+    }
+}
+
+- (void) performComputationOneCommit
+{
+    memset( _mX1.contents, 0, sizeof(float) * _mDim );
+    memset( _mX2.contents, 0, sizeof(float) * _mDim );
+
+    _mX1ToX2    = false;
+
+    id<MTLCommandBuffer> commandBuffer = [ self.commandQueue commandBuffer ];
+
+    assert( commandBuffer != nil );
+
+    id<MTLComputeCommandEncoder> computeEncoder = [ commandBuffer computeCommandEncoder ];
+
+    assert( computeEncoder != nil );
+
+    for ( int i = 0; i < _mIteration; i++ ) {
+
+        [ computeEncoder setComputePipelineState: _mPSO_solve_raw_major ];
+
+        [ computeEncoder setBuffer:_mA       offset:0 atIndex:0 ];
+        [ computeEncoder setBuffer:_mDinv    offset:0 atIndex:1 ];
+        [ computeEncoder setBuffer:_mB       offset:0 atIndex:2 ];
+
+        if ( _mX1ToX2 ) {
+            [ computeEncoder setBuffer:_mX1      offset:0 atIndex:3 ];
+            [ computeEncoder setBuffer:_mX2      offset:0 atIndex:4 ];
+        }
+        else {
+            [ computeEncoder setBuffer:_mX2      offset:0 atIndex:3 ];
+            [ computeEncoder setBuffer:_mX1      offset:0 atIndex:4 ];
+        }
+        [ computeEncoder setBuffer:_mError   offset:0 atIndex:5 ];
+        [ computeEncoder setBuffer:_mConst   offset:0 atIndex:6 ];
+
+        int numGroupsPerGrid   = 1;
+        int numThreadsPerGroup =   ( _mDim >= 1024 )
+                                 ? 1024
+                                 : ( ( (_mDim + 31) / 32) * 32 ) ;
+
+        [ computeEncoder dispatchThreadgroups:MTLSizeMake( numGroupsPerGrid,   1, 1)
+                        threadsPerThreadgroup:MTLSizeMake( numThreadsPerGroup, 1, 1) ];
+
+        _mX1ToX2 = ! _mX1ToX2;
+    }
+
+
+    [computeEncoder endEncoding];
+
+    [commandBuffer commit];
+
+    [commandBuffer waitUntilCompleted];
+}
+
+
+
+- (void) performComputationMultipleCommits
 {
     memset( _mX1.contents, 0, sizeof(float) * _mDim );
     memset( _mX2.contents, 0, sizeof(float) * _mDim );

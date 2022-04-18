@@ -58,13 +58,17 @@ X-axis is the size of the input array, and Y-axis is the time taken in milliseco
 
 * **BOOST_SAMPLE_SORT 1 16** : boost::sort::block_indirect_sort() with 16 threads
 
-* **METAL_UNCOALESCED_WRITE_EARLY_OUT 0 0** : Metal [HKS 09] with early-out & without coalesced write
+* **METAL_UNCOALESCED_WRITE_EARLY_OUT 0 0** : Metal [HKS 09] with early-out & without coalesced write, one commit per shift
 
-* **METAL_COALESCED_WRITE_EARLY_OUT 0 0** : Metal [HKS 09] with early-out & with coalesced write
+* **METAL_COALESCED_WRITE_EARLY_OUT 0 0** : Metal [HKS 09] with early-out & with coalesced write, one commit per shift
 
-* **METAL_UNCOALESCED_WRITE 0 0** : Metal [HKS 09] without early-out & without coalesced write
+* **METAL_UNCOALESCED_WRITE 0 0** : Metal [HKS 09] without early-out & without coalesced write, one commit per shift
 
-* **METAL_COALESCED_WRITE 0 0** : Metal [HKS 09] without early-out & with coalesced write
+* **METAL_COALESCED_WRITE 0 0** : Metal [HKS 09] without early-out & with coalesced write, one commit per shift
+
+* **METAL_UNCOALESCED_WRITE_IN_ONE_COMMIT 0 0** : Metal without early-out & without coalesced write, one commit for all the 16 shifts
+
+* **METAL_COALESCED_WRITE_IN_ONE_COMMIT 0 0** : Metal without early-out & with coalesced write, one commit for all the 16 shifts
 
 <a href="doc/INT_VECTOR_Overview.png"><img src="doc/INT_VECTOR_Overview.png" alt="overview" height="600"/></a>
 
@@ -73,6 +77,7 @@ X-axis is the size of the input array, and Y-axis is the time taken in milliseco
 * BOOST_SAMPLE_SORT 1 16 shows the best running time for the problems of size less than 8M.
 
 * METAL without the early-out overhead shows the best running time for 8M and larger.
+
 
 ## 4.2. Overview : Float
 The following chart shows the mean running times taken to perform one sort in *float* for each implementation in log-log scale.
@@ -85,13 +90,17 @@ X-axis is the size of the input array, and Y-axis is the time taken in milliseco
 
 * **BOOST_SAMPLE_SORT 1 16** : boost::sort::block_indirect_sort() with 16 threads
 
-* **METAL_UNCOALESCED_WRITE_EARLY_OUT 0 0** : Metal [HKS 09] with early-out & without coalesced write
+* **METAL_UNCOALESCED_WRITE_EARLY_OUT 0 0** : Metal [HKS 09] with early-out & without coalesced write, one commit per shift
 
-* **METAL_COALESCED_WRITE_EARLY_OUT 0 0** : Metal [HKS 09] with early-out & with coalesced write
+* **METAL_COALESCED_WRITE_EARLY_OUT 0 0** : Metal [HKS 09] with early-out & with coalesced write, one commit per shift
 
-* **METAL_UNCOALESCED_WRITE 0 0** : Metal [HKS 09] without early-out & without coalesced write
+* **METAL_UNCOALESCED_WRITE 0 0** : Metal [HKS 09] without early-out & without coalesced write, one commit per shift
 
-* **METAL_COALESCED_WRITE 0 0** : Metal [HKS 09] without early-out & with coalesced write
+* **METAL_COALESCED_WRITE 0 0** : Metal [HKS 09] without early-out & with coalesced write, one commit per shift
+
+* **METAL_UNCOALESCED_WRITE_IN_ONE_COMMIT 0 0** : Metal without early-out & without coalesced write, one commit for all the 16 shifts
+
+* **METAL_COALESCED_WRITE_IN_ONE_COMMIT 0 0** : Metal without early-out & with coalesced write, one commit for all the 16 shifts
 
 <a href="doc/FLOAT_VECTOR_Overview.png"><img src="doc/FLOAT_VECTOR_Overview.png" alt="overview" height="600"/></a>
 
@@ -100,7 +109,6 @@ X-axis is the size of the input array, and Y-axis is the time taken in milliseco
 * BOOST_SAMPLE_SORT 1 16 shows the best running time for the problems of size less than 8M.
 
 * METAL without the early-out overhead shows the best running time for 8M and larger.
-
 
 ## 4.3. Comparison Among CPU implementations : Int
 The following chart shows the relative running times taken to perform one sort in *int* for the CPU implementations in log-lin scale.
@@ -154,6 +162,8 @@ For the problems with size greater than 128K, `boost::sort::block_indirect_sort(
 ## 4.5. Comparison Among Metal Implementations
 The following chart shows the relative running times taken to perform one sort in *int* and *float* for 4 Metal implementations in log-lin scale.
 X-axis is the size of the input array, and Y-axis is the relative running time of each implementation relative to 'METAL UNCOALESCED_WRITE_EARLY_OUT 0 0', which is fixed at 1.0.
+The nubmers for the early-out implementations on this page were measured for the entire 16 shifts. The difference from the nubmers for the non-eraly-out implementatios shows the overhead of the additional check per shift.
+
 
 ### Legend
 
@@ -161,6 +171,9 @@ X-axis is the size of the input array, and Y-axis is the relative running time o
 * **METAL COALESCED_WRITE_EARLY_OUT 0 0** :  with coalesced writes and with an extra step for early-out.
 * **METAL UNCOALESCED_WRITE 0 0** : with uncoalesced writes and without an extra step for early-out.
 * **METAL COALESCED_WRITE 0 0** :  with coalesced writes and without an extra step for early-out.
+* **METAL_UNCOALESCED_WRITE_IN_ONE_COMMIT 0 0** : Metal without early-out & without coalesced write, one commit for all the 16 shifts
+* **METAL_COALESCED_WRITE_IN_ONE_COMMIT 0 0** : Metal without early-out & with coalesced write, one commit for all the 16 shifts
+
 
 <a href="doc/INT_VECTOR_Comparison_Among_Metal_Implementations_relative.png"><img src="doc/INT_VECTOR_Comparison_Among_Metal_Implementations_relative.png" alt="comparison among Metal implementations" height="600"/></a>
 
@@ -170,9 +183,15 @@ X-axis is the size of the input array, and Y-axis is the relative running time o
 Here we study the two aspects in the Metal implementations:
 * The effect of the coalesced and uncoalesced writes to the device memory.
 * The effect of the overhead of the extra check if the array is already sorted to enable an early break from the loop.
+The nubmers for the early-out implementations on this page were measured for the entire 16 shifts. The difference from the nubmers for the non-eraly-out implementatios shows the overhead of the additional check per shift.
 
 The overhead of uncoalesced writes is negligible, but the overhead of extra check for early-out is 25-70%,
 and it should be used only if the array is almost sorted, in the sense that the maximum distance the elements travel to get them sorted is less than 25% of the total length.
+
+
+METAL in one commit for all the 16 shifts (iterations)  has a noticeable advantage if the problem size is small. However, as the problem size becomes bigger, the overhead becomes way bigger than the overhead with the implementation with one commit per shift. It is especially noticeable if the writes are not coalesced.
+Cause of this phenomenon is unknown, but it seems to be related to the cache write-back. There are 22 kernel invokations (dispatches) per shift, and the command encoder may not be able to handle too many write backs or kernel invokations efficiently.
+
 
 ### Effect of Coalesced and Uncoalesced Stores to the Device Memory.
 

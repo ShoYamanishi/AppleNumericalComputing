@@ -1,9 +1,9 @@
 #import "gauss_seidel_solver_metal_objc.h"
 #import "gauss_seidel_solver_metal_cpp_impl.h"
 
-GaussSeidelSolverMetalCppImpl::GaussSeidelSolverMetalCppImpl( const int dim, const int iteration )
+GaussSeidelSolverMetalCppImpl::GaussSeidelSolverMetalCppImpl( const int dim, const int iteration, const bool one_commit )
 {
-    m_self = [ [ GaussSeidelSolverMetalObjC alloc ] initWithDim: dim Iteration: iteration ];
+    m_self = [ [ GaussSeidelSolverMetalObjC alloc ] initWithDim: dim Iteration: iteration oneCommit: one_commit ];
 }             
 
 GaussSeidelSolverMetalCppImpl::~GaussSeidelSolverMetalCppImpl(){ m_self = nullptr; }

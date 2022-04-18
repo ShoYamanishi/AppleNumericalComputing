@@ -2,9 +2,9 @@
 #import "jacobi_solver_metal_cpp_impl.h"
 
 
-JacobiSolverMetalCppImpl::JacobiSolverMetalCppImpl( const int dim, const int iteration, const int type )
+JacobiSolverMetalCppImpl::JacobiSolverMetalCppImpl( const int dim, const int iteration, const int type, const bool one_commit )
 {
-    m_self = [ [ JacobiSolverMetalObjC alloc ] initWithDim: dim Iteration: iteration Type: type ];
+    m_self = [ [ JacobiSolverMetalObjC alloc ] initWithDim: dim Iteration: iteration Type: type OneCommit: one_commit ];
 }             
 
 JacobiSolverMetalCppImpl::~JacobiSolverMetalCppImpl(){ m_self = nullptr; }

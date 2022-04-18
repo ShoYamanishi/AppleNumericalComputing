@@ -10,10 +10,12 @@
     "UpperLimit" : 1.2,
     "PlotCases": [
         "MATRIX_COL_MAJOR:BLAS 1 1", 
-        "MATRIX_COL_MAJOR:METAL DEFAULT 0 0",
+        "MATRIX_COL_MAJOR:METAL ONE_COMMIT 0 0",
+        "MATRIX_COL_MAJOR:METAL MULTIPLE_COMMITS 0 0",
         "MATRIX_ROW_MAJOR:BLAS 1 1",
         "MATRIX_ROW_MAJOR:NEON 8 8",
-        "MATRIX_ROW_MAJOR:METAL DEFAULT 0 0"
+        "MATRIX_ROW_MAJOR:METAL ONE_COMMIT 0 0",
+        "MATRIX_ROW_MAJOR:METAL MULTIPLE_COMMITS 0 0"
     ]
 },
 
@@ -43,7 +45,7 @@
     "PlotType": "LOG-LOG",
     "PlotBase": "CPP_BLOCK 1 1",
     "UpperLimit" : 1.2,
-    "PlotCases": [ "CPP_BLOCK 1 1", "NEON 8 1", "NEON 8 8", "BLAS 1 1", "METAL DEFAULT 0 0" ]
+    "PlotCases": [ "CPP_BLOCK 1 1", "NEON 8 1", "NEON 8 8", "BLAS 1 1", "METAL ONE_COMMIT 0 0", "METAL MULTIPLE_COMMITS 0 0" ]
 },
 {
     "DataElementType": "FLOAT",
@@ -76,7 +78,7 @@
     "PlotType": "LOG-LOG",
     "PlotBase": "CPP_BLOCK 1 1",
     "UpperLimit" : 1.2,
-    "PlotCases": [ "CPP_BLOCK 1 1", "NEON 4 1", "NEON 8 8", "VDSP 1 1", "BLAS 1 1", "METAL DEFAULT 0 0" ]
+    "PlotCases": [ "CPP_BLOCK 1 1", "NEON 4 1", "NEON 8 8", "VDSP 1 1", "BLAS 1 1", "METAL ONE_COMMIT 0 0", "METAL MULTIPLE_COMMITS 0 0" ]
 },
 {
     "DataElementType": "FLOAT",

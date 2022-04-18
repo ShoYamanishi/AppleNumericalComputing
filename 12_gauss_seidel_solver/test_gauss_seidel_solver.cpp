@@ -1988,11 +1988,16 @@ class TestCaseGaussSeidelSolver_metal : public TestCaseGaussSeidelSolver< T, IS_
 
   public:
 
-    TestCaseGaussSeidelSolver_metal( const int dim, const int solver_iteration )
+    TestCaseGaussSeidelSolver_metal( const int dim, const int solver_iteration, const bool one_commit )
         :TestCaseGaussSeidelSolver< T, IS_COL_MAJOR >( dim, solver_iteration )
-        ,m_metal( dim, solver_iteration )
+        ,m_metal( dim, solver_iteration, one_commit )
     {
-        this->setMetal( DEFAULT, 1, 1 );
+        if ( one_commit ) {
+            this->setMetal( ONE_COMMIT, 1, 1 );
+        }
+        else {
+            this->setMetal( MULTIPLE_COMMITS, 1, 1 );
+        }
     }
 
     virtual ~TestCaseGaussSeidelSolver_metal() {;}
@@ -2123,7 +2128,8 @@ void testSuitePerType ( const T condition_num, const T gen_low, const T gen_high
             }
 
             if constexpr ( is_same< float,T >::value ) {
-                e.addTestCase( make_shared< TestCaseGaussSeidelSolver_metal <T, IS_COL_MAJOR> > ( dim, SOLVER_ITERATION ) );
+                e.addTestCase( make_shared< TestCaseGaussSeidelSolver_metal <T, IS_COL_MAJOR> > ( dim, SOLVER_ITERATION, false ) );
+                e.addTestCase( make_shared< TestCaseGaussSeidelSolver_metal <T, IS_COL_MAJOR> > ( dim, SOLVER_ITERATION, true ) );
             }
         }
         e.execute();

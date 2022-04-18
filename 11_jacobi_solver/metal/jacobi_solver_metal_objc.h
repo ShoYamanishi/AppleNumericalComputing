@@ -4,7 +4,7 @@
 
 @interface JacobiSolverMetalObjC : MetalComputeBase
 
-- (instancetype)initWithDim:(int) dim Iteration:(int) iteration Type:(int) type;
+- (instancetype)initWithDim:(int) dim Iteration:(int) iteration Type:(int) type OneCommit:(bool) one_commit;
 
 - (void) setInitialStatesA:(float*) A D:(float*) D B:(float*) b X1:(float*) x1 X2:(float*) x2;
 

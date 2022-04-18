@@ -62,18 +62,23 @@ This can be used as an indicator for the decision on whether to use the column-m
 
 * **MATRIX_COL_MAJOR:BLAS 1 1**: combination of **cblas_sgemv()**, **vDSP_vdiv()** and **vDSP_vsbm()**.
 
-* **MATRIX_COL_MAJOR:METAL DEFAULT 0 0**: own kernel, threads over rows, loop over columns
+* **MATRIX_COL_MAJOR:METAL ONE COMMIT 0 0**: own kernel, threads over rows, loop over columns, one commit for all the iterations (10 iterations)
+
+* **MATRIX_COL_MAJOR:METAL MULTIPLE COMMITS 0 0**: own kernel, threads over rows, loop over columns, one commit per iteration
 
 * **MATRIX_ROW_MAJOR:BLAS 1 1**: combination of cblas_sgemv(), vDSP_vdiv() and vDSP_vsbm().
 
 * **MATRIX_ROW_MAJOR:NEON 8 8**: NEON intrinsics with loop unrolling factor 8, 8 threads
 
-* **MATRIX_ROW_MAJOR:METAL DEFAULT 0 0**: Metal kernel, threads over columns, reduction over one row per thread-group
+* **MATRIX_ROW_MAJOR:METAL ONE COMMIT 0 0**: Metal kernel, threads over columns, reduction over one row per thread-group, one commit for all the iterations (10 iterations)
+
+* **MATRIX_ROW_MAJOR:METAL MULTIPLE COMMITS 0 0**: Metal kernel, threads over columns, reduction over one row per thread-group, one commit per iteration
 
 <a href="doc/FLOAT_ANY_Overview.png"><img src="doc/FLOAT_ANY_Overview.png" alt="overview : float" height="600"/></a>
 
 ### Remarks
 
+* The Metal implementations in a single commit have a noticeable advantage over the implementation with multiple commits, if the problem size is small. However this advantage is lost for the problem sizes for which the metal implementations have an advantage over the CPU implementations.
 
 ## 4.2. Overview : Double
 The following chart shows the mean running times taken to perform 10 iterations of the Jacobian method in *double*

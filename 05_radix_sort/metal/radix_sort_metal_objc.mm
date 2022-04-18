@@ -112,6 +112,7 @@ class PrefixSumLayerParams {
     bool                        _mForFloat;
     bool                        _mCoalescedWrite;
     bool                        _mEarlyOut;
+    bool                        _mInOneCommit;
 
     uint                        _mPrefixSumConfiguration;
 
@@ -155,6 +156,23 @@ class PrefixSumLayerParams {
     id<MTLBuffer> _mMetalPrefixSumConstantsLayer1;
     id<MTLBuffer> _mMetalPrefixSumConstantsLayer2;
     id<MTLBuffer> _mMetalPrefixSumConstantsLayer3;
+
+    id<MTLBuffer> _mMetalConstRadixSortConstants_01;
+    id<MTLBuffer> _mMetalConstRadixSortConstants_02;
+    id<MTLBuffer> _mMetalConstRadixSortConstants_03;
+    id<MTLBuffer> _mMetalConstRadixSortConstants_04;
+    id<MTLBuffer> _mMetalConstRadixSortConstants_05;
+    id<MTLBuffer> _mMetalConstRadixSortConstants_06;
+    id<MTLBuffer> _mMetalConstRadixSortConstants_07;
+    id<MTLBuffer> _mMetalConstRadixSortConstants_08;
+    id<MTLBuffer> _mMetalConstRadixSortConstants_09;
+    id<MTLBuffer> _mMetalConstRadixSortConstants_10;
+    id<MTLBuffer> _mMetalConstRadixSortConstants_11;
+    id<MTLBuffer> _mMetalConstRadixSortConstants_12;
+    id<MTLBuffer> _mMetalConstRadixSortConstants_13;
+    id<MTLBuffer> _mMetalConstRadixSortConstants_14;
+    id<MTLBuffer> _mMetalConstRadixSortConstants_15;
+    id<MTLBuffer> _mMetalConstRadixSortConstants_16;
 }
 
 
@@ -230,6 +248,23 @@ class PrefixSumLayerParams {
         _mMetalPrefixSumConstantsLayer3        = [ self getPrivateMTLBufferForBytes: sizeof(struct prefix_sum_constants)
                                                                                 for: @"_mMetalPrefixSumConstantsLayer3"     ];
     }
+
+    _mMetalConstRadixSortConstants_01          = [ self getSharedMTLBufferForBytes:  sizeof(struct radix_sort_constants)      for:@"_mMetalConstRadixSortConstants_01" ];
+    _mMetalConstRadixSortConstants_02          = [ self getSharedMTLBufferForBytes:  sizeof(struct radix_sort_constants)      for:@"_mMetalConstRadixSortConstants_02" ];
+    _mMetalConstRadixSortConstants_03          = [ self getSharedMTLBufferForBytes:  sizeof(struct radix_sort_constants)      for:@"_mMetalConstRadixSortConstants_03" ];
+    _mMetalConstRadixSortConstants_04          = [ self getSharedMTLBufferForBytes:  sizeof(struct radix_sort_constants)      for:@"_mMetalConstRadixSortConstants_04" ];
+    _mMetalConstRadixSortConstants_05          = [ self getSharedMTLBufferForBytes:  sizeof(struct radix_sort_constants)      for:@"_mMetalConstRadixSortConstants_05" ];
+    _mMetalConstRadixSortConstants_06          = [ self getSharedMTLBufferForBytes:  sizeof(struct radix_sort_constants)      for:@"_mMetalConstRadixSortConstants_06" ];
+    _mMetalConstRadixSortConstants_07          = [ self getSharedMTLBufferForBytes:  sizeof(struct radix_sort_constants)      for:@"_mMetalConstRadixSortConstants_07" ];
+    _mMetalConstRadixSortConstants_08          = [ self getSharedMTLBufferForBytes:  sizeof(struct radix_sort_constants)      for:@"_mMetalConstRadixSortConstants_08" ];
+    _mMetalConstRadixSortConstants_09          = [ self getSharedMTLBufferForBytes:  sizeof(struct radix_sort_constants)      for:@"_mMetalConstRadixSortConstants_09" ];
+    _mMetalConstRadixSortConstants_10          = [ self getSharedMTLBufferForBytes:  sizeof(struct radix_sort_constants)      for:@"_mMetalConstRadixSortConstants_10" ];
+    _mMetalConstRadixSortConstants_11          = [ self getSharedMTLBufferForBytes:  sizeof(struct radix_sort_constants)      for:@"_mMetalConstRadixSortConstants_11" ];
+    _mMetalConstRadixSortConstants_12          = [ self getSharedMTLBufferForBytes:  sizeof(struct radix_sort_constants)      for:@"_mMetalConstRadixSortConstants_12" ];
+    _mMetalConstRadixSortConstants_13          = [ self getSharedMTLBufferForBytes:  sizeof(struct radix_sort_constants)      for:@"_mMetalConstRadixSortConstants_13" ];
+    _mMetalConstRadixSortConstants_14          = [ self getSharedMTLBufferForBytes:  sizeof(struct radix_sort_constants)      for:@"_mMetalConstRadixSortConstants_14" ];
+    _mMetalConstRadixSortConstants_15          = [ self getSharedMTLBufferForBytes:  sizeof(struct radix_sort_constants)      for:@"_mMetalConstRadixSortConstants_15" ];
+    _mMetalConstRadixSortConstants_16          = [ self getSharedMTLBufferForBytes:  sizeof(struct radix_sort_constants)      for:@"_mMetalConstRadixSortConstants_16" ];
 }
 
 
@@ -299,7 +334,7 @@ class PrefixSumLayerParams {
 }
 
 
-- (instancetype) initWithNumElements:(size_t) num_elements forFloat:(bool) for_float CoalescedWrite:(bool) coalesced_write EarlyOut:(bool) early_out
+- (instancetype) initWithNumElements:(size_t) num_elements forFloat:(bool) for_float CoalescedWrite:(bool) coalesced_write EarlyOut:(bool) early_out InOneCommit:(bool) in_one_commit
 {
     self = [super init];
     if (self) {
@@ -310,6 +345,7 @@ class PrefixSumLayerParams {
         _mForFloat        = for_float;
         _mCoalescedWrite  = coalesced_write;
         _mEarlyOut        = early_out;
+        _mInOneCommit     = in_one_commit;
 
         [ self createMetalPipelineStates ];
 
@@ -665,24 +701,326 @@ class PrefixSumLayerParams {
 
 - (void) performComputation
 {
-    for ( int i = 0; i < 16; i++ ) {
+    if ( _mInOneCommit ) {
+        [ self performComputationInOneCommit ];
+    }
+    else {
 
-        _mResultOn1 = ( (i%2) == 0 ) ? false : true;
+        for ( int i = 0; i < 16; i++ ) {
 
-        if (_mEarlyOut) {
+            _mResultOn1 = ( (i%2) == 0 ) ? false : true;
 
-            if ( [ self isArraySorted ] ) {
+            if (_mEarlyOut) {
 
-                _mResultOn1 = ! _mResultOn1;
+                if ( [ self isArraySorted ] ) {
 
-                // early out
-                NSLog(@"Early out at %d.", i );
-                return;
+                    _mResultOn1 = ! _mResultOn1;
+
+                    // early out
+                    NSLog(@"Early out at %d.", i );
+
+                    // NOTE: comment out 'return' for time measurements.
+                    //return;
+                }
             }
+            [ self performComputationForOneShift: i*2 ];
         }
-        [ self performComputationForOneShift: i*2 ];
     }
 }
 
+- (void) performComputationInOneCommit
+{
+    for ( int i = 0; i < 16; i++ ) {
+
+        const int shift = i*2;
+        struct radix_sort_constants c;
+
+        memset( &c, (uint)0, sizeof(struct radix_sort_constants) );
+
+        c.total_num_elements = _mNumElements;
+        c.bit_right_shift    = shift;
+        c.flip_msb           = (shift == 30)?true:false;
+        c.for_float          = _mForFloat;
+
+        switch (i) {
+
+          case 0:
+            memcpy( _mMetalConstRadixSortConstants_01.contents, &c, sizeof(struct radix_sort_constants) );
+            break;
+
+          case 1:
+            memcpy( _mMetalConstRadixSortConstants_02.contents, &c, sizeof(struct radix_sort_constants) );
+            break;
+
+          case 2:
+            memcpy( _mMetalConstRadixSortConstants_03.contents, &c, sizeof(struct radix_sort_constants) );
+            break;
+
+          case 3:
+            memcpy( _mMetalConstRadixSortConstants_04.contents, &c, sizeof(struct radix_sort_constants) );
+            break;
+
+          case 4:
+            memcpy( _mMetalConstRadixSortConstants_05.contents, &c, sizeof(struct radix_sort_constants) );
+            break;
+
+          case 5:
+            memcpy( _mMetalConstRadixSortConstants_06.contents, &c, sizeof(struct radix_sort_constants) );
+            break;
+
+          case 6:
+            memcpy( _mMetalConstRadixSortConstants_07.contents, &c, sizeof(struct radix_sort_constants) );
+            break;
+
+          case 7:
+            memcpy( _mMetalConstRadixSortConstants_08.contents, &c, sizeof(struct radix_sort_constants) );
+            break;
+
+          case 8:
+            memcpy( _mMetalConstRadixSortConstants_09.contents, &c, sizeof(struct radix_sort_constants) );
+            break;
+
+          case 9:
+            memcpy( _mMetalConstRadixSortConstants_10.contents, &c, sizeof(struct radix_sort_constants) );
+            break;
+
+          case 10:
+            memcpy( _mMetalConstRadixSortConstants_11.contents, &c, sizeof(struct radix_sort_constants) );
+            break;
+
+          case 11:
+            memcpy( _mMetalConstRadixSortConstants_12.contents, &c, sizeof(struct radix_sort_constants) );
+            break;
+
+          case 12:
+            memcpy( _mMetalConstRadixSortConstants_13.contents, &c, sizeof(struct radix_sort_constants) );
+            break;
+
+          case 13:
+            memcpy( _mMetalConstRadixSortConstants_14.contents, &c, sizeof(struct radix_sort_constants) );
+            break;
+
+          case 14:
+            memcpy( _mMetalConstRadixSortConstants_15.contents, &c, sizeof(struct radix_sort_constants) );
+            break;
+
+          case 15:
+          default:
+            memcpy( _mMetalConstRadixSortConstants_16.contents, &c, sizeof(struct radix_sort_constants) );
+            break;
+        }
+    }
+
+
+    id<MTLCommandBuffer> metal_command_buffer = [ self.commandQueue commandBuffer ];
+
+    assert( metal_command_buffer != nil );
+
+    id<MTLComputeCommandEncoder> metal_encoder = [ metal_command_buffer computeCommandEncoder ];
+
+    assert( metal_encoder != nil );
+
+    [ metal_encoder setComputePipelineState: _mPSO_four_way_prefix_sum_with_inblock_shuffle ];
+
+    for ( int i = 0; i < 16; i++ ) {
+
+        if ( _mResultOn1 ) {
+            [ metal_encoder setBuffer: _mMetalArray2 offset:0 atIndex:0 ];
+        }
+        else {
+            [ metal_encoder setBuffer: _mMetalArray1 offset:0 atIndex:0 ];
+        }
+
+        [ metal_encoder setBuffer: _mMetalPartialSumsPerThreadgroupLane0 offset:0 atIndex:1 ];
+        [ metal_encoder setBuffer: _mMetalPartialSumsPerThreadgroupLane1 offset:0 atIndex:2 ];
+        [ metal_encoder setBuffer: _mMetalPartialSumsPerThreadgroupLane2 offset:0 atIndex:3 ];
+        [ metal_encoder setBuffer: _mMetalPartialSumsPerThreadgroupLane3 offset:0 atIndex:4 ];
+        [ metal_encoder setBuffer: _mMetalStartPosWithinThreadgroupLane1 offset:0 atIndex:5 ];
+        [ metal_encoder setBuffer: _mMetalStartPosWithinThreadgroupLane2 offset:0 atIndex:6 ];
+        [ metal_encoder setBuffer: _mMetalStartPosWithinThreadgroupLane3 offset:0 atIndex:7 ];
+
+        switch (i) {
+
+          case 0:
+            [ metal_encoder setBuffer: _mMetalConstRadixSortConstants_01        offset:0 atIndex:8 ];
+            break;
+
+          case 1:
+            [ metal_encoder setBuffer: _mMetalConstRadixSortConstants_02        offset:0 atIndex:8 ];
+            break;
+
+          case 2:
+            [ metal_encoder setBuffer: _mMetalConstRadixSortConstants_03        offset:0 atIndex:8 ];
+            break;
+
+          case 3:
+            [ metal_encoder setBuffer: _mMetalConstRadixSortConstants_04        offset:0 atIndex:8 ];
+            break;
+
+          case 4:
+            [ metal_encoder setBuffer: _mMetalConstRadixSortConstants_05        offset:0 atIndex:8 ];
+            break;
+
+          case 5:
+            [ metal_encoder setBuffer: _mMetalConstRadixSortConstants_06        offset:0 atIndex:8 ];
+            break;
+
+          case 6:
+            [ metal_encoder setBuffer: _mMetalConstRadixSortConstants_07        offset:0 atIndex:8 ];
+            break;
+
+          case 7:
+            [ metal_encoder setBuffer: _mMetalConstRadixSortConstants_08        offset:0 atIndex:8 ];
+            break;
+
+          case 8:
+            [ metal_encoder setBuffer: _mMetalConstRadixSortConstants_09        offset:0 atIndex:8 ];
+            break;
+
+          case 9:
+            [ metal_encoder setBuffer: _mMetalConstRadixSortConstants_10        offset:0 atIndex:8 ];
+            break;
+
+          case 10:
+            [ metal_encoder setBuffer: _mMetalConstRadixSortConstants_11        offset:0 atIndex:8 ];
+            break;
+
+          case 11:
+            [ metal_encoder setBuffer: _mMetalConstRadixSortConstants_12        offset:0 atIndex:8 ];
+            break;
+
+          case 12:
+            [ metal_encoder setBuffer: _mMetalConstRadixSortConstants_13        offset:0 atIndex:8 ];
+            break;
+
+          case 13:
+            [ metal_encoder setBuffer: _mMetalConstRadixSortConstants_14        offset:0 atIndex:8 ];
+            break;
+
+          case 14:
+            [ metal_encoder setBuffer: _mMetalConstRadixSortConstants_15        offset:0 atIndex:8 ];
+            break;
+
+          case 15:
+          default:
+            [ metal_encoder setBuffer: _mMetalConstRadixSortConstants_16        offset:0 atIndex:8 ];
+            break;
+        }
+        [ metal_encoder dispatchThreadgroups:MTLSizeMake( _mNumThreadgroups, 1, 1)
+                       threadsPerThreadgroup:MTLSizeMake(              1024, 1, 1) ];
+
+        [ metal_encoder memoryBarrierWithScope:MTLBarrierScopeBuffers ];
+
+        [ self encodeMetalPrefixSumForEncoder:metal_encoder Buffer:_mMetalPartialSumsPerThreadgroupLane0 ];
+        [ self encodeMetalPrefixSumForEncoder:metal_encoder Buffer:_mMetalPartialSumsPerThreadgroupLane1 ];
+        [ self encodeMetalPrefixSumForEncoder:metal_encoder Buffer:_mMetalPartialSumsPerThreadgroupLane2 ];
+        [ self encodeMetalPrefixSumForEncoder:metal_encoder Buffer:_mMetalPartialSumsPerThreadgroupLane3 ];
+
+        [ metal_encoder memoryBarrierWithScope:MTLBarrierScopeBuffers ];
+
+        if ( _mCoalescedWrite  ) {
+            [ metal_encoder setComputePipelineState: _mPSO_coalesced_block_mapping_for_the_n_chunk_input ];
+        }
+        else {
+            [ metal_encoder setComputePipelineState: _mPSO_uncoalesced_block_mapping_for_the_n_chunk_input ];
+        }
+        if ( _mResultOn1 ) {
+            [ metal_encoder setBuffer: _mMetalArray2 offset:0 atIndex:0 ];
+            [ metal_encoder setBuffer: _mMetalArray1 offset:0 atIndex:1 ];
+        }
+        else {
+            [ metal_encoder setBuffer: _mMetalArray1 offset:0 atIndex:0 ];
+            [ metal_encoder setBuffer: _mMetalArray2 offset:0 atIndex:1 ];
+        }
+        [ metal_encoder setBuffer: _mMetalPartialSumsPerThreadgroupLane0 offset:0 atIndex:2 ];
+        [ metal_encoder setBuffer: _mMetalPartialSumsPerThreadgroupLane1 offset:0 atIndex:3 ];
+        [ metal_encoder setBuffer: _mMetalPartialSumsPerThreadgroupLane2 offset:0 atIndex:4 ];
+        [ metal_encoder setBuffer: _mMetalPartialSumsPerThreadgroupLane3 offset:0 atIndex:5 ];
+        [ metal_encoder setBuffer: _mMetalStartPosWithinThreadgroupLane1 offset:0 atIndex:6 ];
+        [ metal_encoder setBuffer: _mMetalStartPosWithinThreadgroupLane2 offset:0 atIndex:7 ];
+        [ metal_encoder setBuffer: _mMetalStartPosWithinThreadgroupLane3 offset:0 atIndex:8 ];
+
+        switch (i) {
+
+          case 0:
+            [ metal_encoder setBuffer: _mMetalConstRadixSortConstants_01        offset:0 atIndex:9 ];
+            break;
+
+          case 1:
+            [ metal_encoder setBuffer: _mMetalConstRadixSortConstants_02        offset:0 atIndex:9 ];
+            break;
+
+          case 2:
+            [ metal_encoder setBuffer: _mMetalConstRadixSortConstants_03        offset:0 atIndex:9 ];
+            break;
+
+          case 3:
+            [ metal_encoder setBuffer: _mMetalConstRadixSortConstants_04        offset:0 atIndex:9 ];
+            break;
+
+          case 4:
+            [ metal_encoder setBuffer: _mMetalConstRadixSortConstants_05        offset:0 atIndex:9 ];
+            break;
+
+          case 5:
+            [ metal_encoder setBuffer: _mMetalConstRadixSortConstants_06        offset:0 atIndex:9 ];
+            break;
+
+          case 6:
+            [ metal_encoder setBuffer: _mMetalConstRadixSortConstants_07        offset:0 atIndex:9 ];
+            break;
+
+          case 7:
+            [ metal_encoder setBuffer: _mMetalConstRadixSortConstants_08        offset:0 atIndex:9 ];
+            break;
+
+          case 8:
+            [ metal_encoder setBuffer: _mMetalConstRadixSortConstants_09        offset:0 atIndex:9 ];
+            break;
+
+          case 9:
+            [ metal_encoder setBuffer: _mMetalConstRadixSortConstants_10        offset:0 atIndex:9 ];
+            break;
+
+          case 10:
+            [ metal_encoder setBuffer: _mMetalConstRadixSortConstants_11        offset:0 atIndex:9 ];
+            break;
+
+          case 11:
+            [ metal_encoder setBuffer: _mMetalConstRadixSortConstants_12        offset:0 atIndex:9 ];
+            break;
+
+          case 12:
+            [ metal_encoder setBuffer: _mMetalConstRadixSortConstants_13        offset:0 atIndex:9 ];
+            break;
+
+          case 13:
+            [ metal_encoder setBuffer: _mMetalConstRadixSortConstants_14        offset:0 atIndex:9 ];
+            break;
+
+          case 14:
+            [ metal_encoder setBuffer: _mMetalConstRadixSortConstants_15        offset:0 atIndex:9 ];
+            break;
+
+          case 15:
+          default:
+            [ metal_encoder setBuffer: _mMetalConstRadixSortConstants_16        offset:0 atIndex:9 ];
+            break;
+        }
+
+        [ metal_encoder dispatchThreadgroups:MTLSizeMake( _mNumThreadgroups, 1, 1)
+                       threadsPerThreadgroup:MTLSizeMake(              1024, 1, 1) ];
+
+
+        [ metal_encoder memoryBarrierWithScope:MTLBarrierScopeBuffers ];
+    }
+
+    [ metal_encoder endEncoding ];
+
+    [ metal_command_buffer commit ];
+
+    [ metal_command_buffer waitUntilCompleted ];
+
+}
 
 @end

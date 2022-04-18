@@ -9,7 +9,7 @@ class JacobiSolverMetalCppImpl
 {
 
   public:
-    JacobiSolverMetalCppImpl( const int dim, const int iteration, const int type );
+    JacobiSolverMetalCppImpl( const int dim, const int iteration, const int type, const bool one_commit );
 
     virtual ~JacobiSolverMetalCppImpl();
 

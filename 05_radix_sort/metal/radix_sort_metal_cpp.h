@@ -7,7 +7,7 @@ class RadixSortMetalCpp
 {
 
   public:
-    RadixSortMetalCpp( const size_t num_elements , const bool for_float, const bool coalesced_write, const bool early_out );
+    RadixSortMetalCpp( const size_t num_elements , const bool for_float, const bool coalesced_write, const bool early_out , const bool in_one_commit );
 
     virtual ~RadixSortMetalCpp();
 

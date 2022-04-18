@@ -1,8 +1,8 @@
 #include "radix_sort_metal_cpp_impl.h"
 #include "radix_sort_metal_cpp.h"
 
-RadixSortMetalCpp::RadixSortMetalCpp( const size_t num_elements, const bool for_float, const bool coalesced_write, const bool early_out )
-    :m_impl( new RadixSortMetalCppImpl( num_elements , for_float , coalesced_write, early_out ) )
+RadixSortMetalCpp::RadixSortMetalCpp( const size_t num_elements, const bool for_float, const bool coalesced_write, const bool early_out, const bool in_one_commit )
+    :m_impl( new RadixSortMetalCppImpl( num_elements , for_float , coalesced_write, early_out, in_one_commit ) )
 {
     ;
 }

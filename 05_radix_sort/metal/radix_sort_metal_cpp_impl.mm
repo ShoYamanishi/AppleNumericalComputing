@@ -5,12 +5,14 @@ RadixSortMetalCppImpl::RadixSortMetalCppImpl(
     const size_t num_elements,
     const bool   for_float,
     const bool   coalesced_write,
-    const bool   early_out
+    const bool   early_out,
+    const bool   in_one_commit
 ) {
     m_self = [ [ RadixSortMetalObjC alloc ] initWithNumElements: num_elements 
                                                       forFloat: for_float    
                                                 CoalescedWrite: coalesced_write
-                                                      EarlyOut: early_out ];
+                                                      EarlyOut: early_out
+                                                   InOneCommit: in_one_commit ];
 }
 
 RadixSortMetalCppImpl::~RadixSortMetalCppImpl(){;}
@@ -42,4 +44,3 @@ int* RadixSortMetalCppImpl::getRawPointerIn2() {
 void RadixSortMetalCppImpl::performComputation() {
     return [ (id)m_self performComputation ];
 }
-

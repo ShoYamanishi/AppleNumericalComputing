@@ -2698,13 +2698,17 @@ class TestCaseJacobiSolver_metal : public TestCaseJacobiSolver< T, IS_COL_MAJOR 
 
   public:
 
-    TestCaseJacobiSolver_metal( const int dim, const int solver_iteration )
+    TestCaseJacobiSolver_metal( const int dim, const int solver_iteration, const bool one_commit )
         :TestCaseJacobiSolver< T, IS_COL_MAJOR >( dim, solver_iteration )
-        ,m_metal( dim, solver_iteration, IS_COL_MAJOR ? 0 : 1 )
+        ,m_metal( dim, solver_iteration, IS_COL_MAJOR ? 0 : 1, one_commit )
     {
         static_assert ( is_same< float,T >::value );
-
-        this->setMetal( DEFAULT, 1, 1 );
+        if ( one_commit ) {
+            this->setMetal( ONE_COMMIT, 1, 1 );
+        }
+        else {
+            this->setMetal( MULTIPLE_COMMITS, 1, 1 );
+        }
     }
 
     virtual ~TestCaseJacobiSolver_metal() {;}
@@ -2850,7 +2854,8 @@ void testSuitePerType ( const T condition_num, const T gen_low, const T gen_high
         e.addTestCase( make_shared< TestCaseJacobiSolver_blas <T, IS_COL_MAJOR> > ( dim, SOLVER_ITERATION ) );
 
         if constexpr ( is_same< float,T >::value ) {
-            e.addTestCase( make_shared< TestCaseJacobiSolver_metal <T, IS_COL_MAJOR> > ( dim, SOLVER_ITERATION ) );
+            e.addTestCase( make_shared< TestCaseJacobiSolver_metal <T, IS_COL_MAJOR> > ( dim, SOLVER_ITERATION, false ) );
+            e.addTestCase( make_shared< TestCaseJacobiSolver_metal <T, IS_COL_MAJOR> > ( dim, SOLVER_ITERATION, true  ) );
         }
 
         e.execute();

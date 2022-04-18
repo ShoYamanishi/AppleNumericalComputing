@@ -133,14 +133,17 @@ class TestCaseRadixSort_Metal : public TestCaseRadixSort<T> {
     RadixSortMetalCpp m_metal;
 
   public:
-    TestCaseRadixSort_Metal( const size_t num_elements, const bool coalesced_write, const bool early_out )
+    TestCaseRadixSort_Metal( const size_t num_elements, const bool coalesced_write, const bool early_out, const bool in_one_commit )
         :TestCaseRadixSort<T>( num_elements )
-        ,m_metal( num_elements, is_same<float, T>::value, coalesced_write, early_out )
+        ,m_metal( num_elements, is_same<float, T>::value, coalesced_write, early_out, in_one_commit )
     {
         static_assert( std::is_same<int, T>::value || std::is_same<long, T>::value || std::is_same<float,T>::value );
 
         if ( early_out ) {
             this->setMetal( coalesced_write ? COALESCED_WRITE_EARLY_OUT : UNCOALESCED_WRITE_EARLY_OUT, 1, 1024 );
+        }
+        else if ( in_one_commit ) {
+            this->setMetal( coalesced_write ? COALESCED_WRITE_IN_ONE_COMMIT : UNCOALESCED_WRITE_IN_ONE_COMMIT, 1, 1024 );
         }
         else {
             this->setMetal( coalesced_write ? COALESCED_WRITE : UNCOALESCED_WRITE, 1, 1024 );
@@ -230,10 +233,12 @@ void testSuitePerType () {
         e.addTestCase( make_shared< TestCaseRadixSort_boost_sample_sort  <T> > ( num_elements,     4  ) );
         e.addTestCase( make_shared< TestCaseRadixSort_boost_sample_sort  <T> > ( num_elements,    16  ) );
         e.addTestCase( make_shared< TestCaseRadixSort_boost_sample_sort  <T> > ( num_elements,    64  ) );
-        e.addTestCase( make_shared< TestCaseRadixSort_Metal              <T> > ( num_elements , false, true  ) );
-        e.addTestCase( make_shared< TestCaseRadixSort_Metal              <T> > ( num_elements , true,  true  ) );
-        e.addTestCase( make_shared< TestCaseRadixSort_Metal              <T> > ( num_elements , false, false ) );
-        e.addTestCase( make_shared< TestCaseRadixSort_Metal              <T> > ( num_elements , true,  false ) );
+        e.addTestCase( make_shared< TestCaseRadixSort_Metal              <T> > ( num_elements , false, true  , false ) );
+        e.addTestCase( make_shared< TestCaseRadixSort_Metal              <T> > ( num_elements , true,  true  , false ) );
+        e.addTestCase( make_shared< TestCaseRadixSort_Metal              <T> > ( num_elements , false, false , false ) );
+        e.addTestCase( make_shared< TestCaseRadixSort_Metal              <T> > ( num_elements , true,  false , false ) );
+        e.addTestCase( make_shared< TestCaseRadixSort_Metal              <T> > ( num_elements , false, false , true  ) );
+        e.addTestCase( make_shared< TestCaseRadixSort_Metal              <T> > ( num_elements , true,  false , true  ) );
 
         e.execute();
     }

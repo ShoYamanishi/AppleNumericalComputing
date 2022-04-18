@@ -238,12 +238,16 @@ enum MetalImplementationType {
     UNCOALESCED_WRITE,
     COALESCED_WRITE_EARLY_OUT,
     UNCOALESCED_WRITE_EARLY_OUT,
+    COALESCED_WRITE_IN_ONE_COMMIT,
+    UNCOALESCED_WRITE_IN_ONE_COMMIT,
     THREADS_OVER_ROWS,
     THREADS_OVER_COLUMNS,
     NAIVE,
     TWO_STAGES,
     MPS,
     ADAPTIVE,
+    ONE_COMMIT,
+    MULTIPLE_COMMITS
 };
 
 inline ostream& printMetalImplementationType( ostream& os, const  MetalImplementationType t ) {
@@ -329,6 +333,14 @@ inline ostream& printMetalImplementationType( ostream& os, const  MetalImplement
         os << "UNCOALESCED_WRITE_EARLY_OUT";
         break;
 
+      case COALESCED_WRITE_IN_ONE_COMMIT:
+        os << "COALESCED_WRITE_IN_ONE_COMMIT";
+        break;
+
+      case UNCOALESCED_WRITE_IN_ONE_COMMIT:
+        os << "UNCOALESCED_WRITE_IN_ONE_COMMIT";
+        break;
+
       case THREADS_OVER_ROWS:
         os << "THREADS_OVER_ROWS";
         break;
@@ -351,6 +363,14 @@ inline ostream& printMetalImplementationType( ostream& os, const  MetalImplement
 
       case ADAPTIVE:
         os << "ADAPTIVE";
+        break;
+
+      case ONE_COMMIT:
+        os << "ONE_COMMIT";
+        break;
+
+      case MULTIPLE_COMMITS:
+        os << "MULTIPLE_COMMITS";
         break;
 
       default:

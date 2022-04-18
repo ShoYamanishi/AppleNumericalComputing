@@ -9,7 +9,7 @@ class GaussSeidelSolverMetalCppImpl
 {
 
   public:
-    GaussSeidelSolverMetalCppImpl( const int dim, const int iteration );
+    GaussSeidelSolverMetalCppImpl( const int dim, const int iteration, const bool one_commit );
 
     virtual ~GaussSeidelSolverMetalCppImpl();
 

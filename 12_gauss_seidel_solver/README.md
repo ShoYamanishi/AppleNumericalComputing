@@ -68,7 +68,9 @@ X-axis is *Dim x Dim*, and Y-axis is the time taken in milliseconds.
 
 * **MATRIX_ROW_MAJOR:VDSP 1 1** : vDSP implementation with **vDSP_vsub()**, **vDSP_dotpr()**, and **vDSP_vdiv()**.
 
-* **MATRIX_ROW_MAJOR:METAL DEFAULT 0 0** : Metal implementation, threads over columns, reduction over one row per thread-group
+* **MATRIX_ROW_MAJOR:METAL ONE COMMIT 0 0** : Metal implementation, threads over columns, reduction over one row per thread-group, one commit for all the iterations (10 iterations)
+
+* **MATRIX_ROW_MAJOR:METAL MULTIPLE COMMITS 0 0** : Metal implementation, threads over columns, reduction over one row per thread-group, one commpt per iteration
 
 <a href="doc/FLOAT_ANY_Overview.png"><img src="doc/FLOAT_ANY_Overview.png" alt="overview" height="600"/></a>
 
@@ -82,6 +84,9 @@ X-axis is *Dim x Dim*, and Y-axis is the time taken in milliseconds.
 
 * The overhead of using Metal kernel is significant, and it is probably not worth using it.
 This is due to the fact that only one thread-group can be launched.
+
+* The Metal implementations in a single commit have a noticeable advantage over the implementation with multiple commits, if the problem size is small. However this advantage is lost for the problem sizes for which the metal implementations have an advantage over the CPU implementations.
+
 
 ## 4.2. Comparison Among the NEON Implementations With Different Loop Unrolling Factors.
 The following chart shows the relative running times taken to perform 10 iterations of the Gauss-Seidel method in *float* for 4 NEON implementations in log-lin scale.

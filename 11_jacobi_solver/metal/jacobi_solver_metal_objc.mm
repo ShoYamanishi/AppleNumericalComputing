@@ -10,6 +10,7 @@
     int _mDim;
     int _mIteration;
     bool _mX1ToX2;
+    bool _mOneCommit;
 
     id<MTLComputePipelineState> _mPSO_solve_col_major;
     id<MTLComputePipelineState> _mPSO_solve_row_major;
@@ -24,7 +25,7 @@
 }
 
 
-- (instancetype)initWithDim:(int) dim Iteration:(int) iteration Type:(int) type
+- (instancetype)initWithDim:(int) dim Iteration:(int) iteration Type:(int) type OneCommit:(bool) one_commit
 {
     self = [super init];
 
@@ -34,6 +35,7 @@
         _mDim       = dim;
         _mIteration = iteration;
         _mX1ToX2    = false;
+        _mOneCommit = one_commit;
 
         [ self loadLibraryWithName: @"./jacobi_solver.metallib" ];
 
@@ -96,6 +98,16 @@
 
 
 - (void) performComputation
+{
+    if ( _mOneCommit ) {
+        [ self performComputationOneCommit ];
+    }
+    else {
+        [ self performComputationMultipleCommits ];
+    }
+}
+
+- (void) performComputationMultipleCommits
 {
     memset( _mX1.contents, 0, sizeof(float) * _mDim );
     memset( _mX2.contents, 0, sizeof(float) * _mDim );
@@ -167,5 +179,76 @@
         _mX1ToX2 = ! _mX1ToX2;
     }
 }
+
+// NOTE: _mError is no longer valid as it accummulates all the errors from all the iterations.
+//       The residual erorr will habe to be calculated by a separate kernel at the end.
+
+- (void) performComputationOneCommit
+{
+    memset( _mX1.contents, 0, sizeof(float) * _mDim );
+    memset( _mX2.contents, 0, sizeof(float) * _mDim );
+
+    _mX1ToX2    = false;
+
+    memset( _mX2.contents, 0 , sizeof(float)* _mDim );
+    memset( _mX1.contents, 0 , sizeof(float)* _mDim );
+    memset( _mError.contents, 0, sizeof(float) );
+
+    id<MTLCommandBuffer> commandBuffer = [ self.commandQueue commandBuffer ];
+
+    assert( commandBuffer != nil );
+
+    id<MTLComputeCommandEncoder> computeEncoder = [ commandBuffer computeCommandEncoder ];
+
+    assert( computeEncoder != nil );
+
+    for ( int i = 0; i < _mIteration; i++ ) {
+
+        if ( _mType == 0 ) {
+            [ computeEncoder setComputePipelineState: _mPSO_solve_col_major ];
+        }
+        else {
+            [ computeEncoder setComputePipelineState: _mPSO_solve_row_major ];
+        }
+
+        [ computeEncoder setBuffer:_mA       offset:0 atIndex:0 ];
+        [ computeEncoder setBuffer:_mDinv    offset:0 atIndex:1 ];
+        [ computeEncoder setBuffer:_mB       offset:0 atIndex:2 ];
+
+        if ( _mX1ToX2 ) {
+            [ computeEncoder setBuffer:_mX1      offset:0 atIndex:3 ];
+            [ computeEncoder setBuffer:_mX2      offset:0 atIndex:4 ];
+        }
+        else {
+            [ computeEncoder setBuffer:_mX2      offset:0 atIndex:3 ];
+            [ computeEncoder setBuffer:_mX1      offset:0 atIndex:4 ];
+        }
+        [ computeEncoder setBuffer:_mError   offset:0 atIndex:5 ];
+        [ computeEncoder setBuffer:_mConst   offset:0 atIndex:6 ];
+
+        int numGroupsPerGrid;
+        if ( _mType == 0 ) {
+            numGroupsPerGrid = (_mDim + 1023)/1024;
+        }
+        else {
+            numGroupsPerGrid = _mDim;
+        }
+        int numThreadsPerGroup =   ( _mDim >= 1024 )
+                                 ? 1024
+                                 : ( ( (_mDim + 31) / 32) * 32 ) ;
+
+        [ computeEncoder dispatchThreadgroups:MTLSizeMake( numGroupsPerGrid,   1, 1)
+                        threadsPerThreadgroup:MTLSizeMake( numThreadsPerGroup, 1, 1) ];
+
+        _mX1ToX2 = ! _mX1ToX2;
+    }
+
+    [computeEncoder endEncoding];
+
+    [commandBuffer commit];
+
+    [commandBuffer waitUntilCompleted];
+}
+
 
 @end

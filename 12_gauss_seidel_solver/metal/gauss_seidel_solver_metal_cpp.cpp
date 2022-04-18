@@ -2,8 +2,8 @@
 #include "gauss_seidel_solver_metal_cpp.h"
 
 
-GaussSeidelSolverMetalCpp::GaussSeidelSolverMetalCpp( const int dim, const int iteration )
-    :m_impl( new GaussSeidelSolverMetalCppImpl( dim, iteration ) )
+GaussSeidelSolverMetalCpp::GaussSeidelSolverMetalCpp( const int dim, const int iteration, const bool one_commit )
+    :m_impl( new GaussSeidelSolverMetalCppImpl( dim, iteration, one_commit ) )
 {
     ;
 }
