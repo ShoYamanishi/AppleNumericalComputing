@@ -22,6 +22,11 @@ inline uint roundup_32(uint n)
     return ((n + 31) / 32) * 32;
 }
 
+inline uint roundup_16(uint n)
+{
+    return ((n + 15) / 16) * 16;
+}
+
 @implementation PrefixSumMetalObjCMerrillGrimshaw
 {
 
@@ -189,7 +194,7 @@ inline uint roundup_32(uint n)
     [ computeEncoder setBuffer:_mIn          offset:0 atIndex:0 ];
     [ computeEncoder setBuffer:_mPartialSums offset:0 atIndex:1 ];
     [ computeEncoder setBuffer:_mConstStep1  offset:0 atIndex:2 ];
-    [ computeEncoder setThreadgroupMemoryLength:sizeof(int)*_mNumThreadsPerGroupStep1 / 32 atIndex:0 ];
+    [ computeEncoder setThreadgroupMemoryLength: roundup_16(sizeof(int)*_mNumThreadsPerGroupStep1 / 32) atIndex:0 ];
 
     [ computeEncoder dispatchThreadgroups:MTLSizeMake( _mNumGroupsPerGridStep1,   1, 1)
                     threadsPerThreadgroup:MTLSizeMake( _mNumThreadsPerGroupStep1, 1, 1) ];
@@ -200,7 +205,7 @@ inline uint roundup_32(uint n)
 
     [ computeEncoder setBuffer:_mPartialSums offset:0 atIndex:0 ];
     [ computeEncoder setBuffer:_mConstStep2  offset:0 atIndex:1 ];
-    [ computeEncoder setThreadgroupMemoryLength:sizeof(int)*_mNumThreadsPerGroupStep2 / 32 atIndex:0 ];
+    [ computeEncoder setThreadgroupMemoryLength:roundup_16(sizeof(int)*_mNumThreadsPerGroupStep2 / 32) atIndex:0 ];
 
     [ computeEncoder dispatchThreadgroups:MTLSizeMake( _mNumGroupsPerGridStep2,   1, 1)
                     threadsPerThreadgroup:MTLSizeMake( _mNumThreadsPerGroupStep2, 1, 1) ];

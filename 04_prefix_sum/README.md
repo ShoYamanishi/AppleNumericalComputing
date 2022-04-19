@@ -11,6 +11,31 @@ As shown above, the element *Y_i* depends on the previous elements.
 The type of elements are usually integer, as it is mostly used for indexing or sorting.
 There are two types of prefix-scan: *inclusive* and *exclusive*. The operation above is the inclusive scan.
 
+## 0. Instruction for iOS
+So far this has been tested on iPhone 13 mini 256GB.
+
+- Open `AppleNumericalComputing/iOSTester_04/iOSTester_04.xcodeproj` with Xcode
+
+- Build a release build
+
+- Run the iOS App in release build
+
+- Press 'Run' on the screen
+
+- Wait until App finished with 'finished!' on the log output.
+
+- Copy and paste the log into `04_prefix_sum/doc_ios/make_log.txt`.
+
+- Run the following in the terminal.
+```
+$ cd 04_prefix_sum
+$ grep '\(^INT\|^FLOAT\|^DOUBLE\|data element type\)' doc_ios/make_log.txt > doc_ios/make_log_cleaned.txt
+$ python ../common/process_log.py -logfile doc_ios/make_log_cleaned.txt -specfile doc_ios/plot_spec.json -show_impl -plot_charts -base_dir doc_ios/
+```
+- You will get the PNG files in  `04_prefix_sum/doc_ios/`.
+
+
+
 # 1. Key Points
 
 * Three main algorithms described in CUDA Handbook implemented on Metal.
@@ -100,9 +125,13 @@ X-axis is the size of the input array, and Y-axis is the time taken in milliseco
 
 * **METAL_MERRILL_AND_GRIMSHAW 0 0** - Metal Merrill-Grimshaw algorithm
 
+### Plots: Mac Mini M1 2020 8 GB
 <a href="doc/INT_VECTOR_Overview.png"><img src="doc/INT_VECTOR_Overview.png" alt="overview" height="600"/></a>
 
-### Remarks
+### Plots: iPhone 13 mini 256 GB
+<a href="doc_ios/INT_VECTOR_Overview.png"><img src="doc_ios/INT_VECTOR_Overview.png" alt="overview" height="600"/></a>
+
+### Remarks on Mac Mini
 * On CPU, 'CPP_BLOCK 4 1', a C++ implementation with the loop unrolling of factor 4 runs approximately 30% faster than 'CPP_BLOCK 1 1' with no loop 
 unrolling, and 'CPP_STDLIB 1 1' with `std::inclusive_scan()`.
 
@@ -121,9 +150,13 @@ which is fixed at 1.0.
 
 * **METAL_MERRILL_AND_GRIMSHAW 0 0** - Metal Merrill-Grimshaw algorithm
 
+### Plots: Mac Mini M1 2020 8 GB
 <a href="doc/INT_VECTOR_Comparison_Among_GPU_Implementations_relative.png"><img src="doc/INT_VECTOR_Comparison_Among_GPU_Implementations_relative.png" alt="comparison among Metal implementations" height="600"/></a>
 
-### Remarks
+### Plots: iPhone 13 mini 256 GB
+<a href="doc_ios/INT_VECTOR_Comparison_Among_GPU_Implementations_relative.png"><img src="doc_ios/INT_VECTOR_Comparison_Among_GPU_Implementations_relative.png" alt="comparison among Metal implementations" height="600"/></a>
+
+### Remarks on Mac Mini
 There is no clear winner, but it seems 'METAL_REDUCE_THEN_SCAN 0 0' performs best as expected.
 
 
@@ -144,9 +177,13 @@ which is fixed at 1.0.
 
 * **CPP_STDLIB 1 1** - std::inclusive_scan()
 
+### Plots: Mac Mini M1 2020 8 GB
 <a href="doc/INT_VECTOR_Comparison_Among_CPU_Implementations_relative.png"><img src="doc/INT_VECTOR_Comparison_Among_CPU_Implementations_relative.png" alt="comparison among CPU implementations" height="600"/></a>
 
-### Remarks
+### Plots: iPhone 13 mini 256 GB
+<a href="doc_ios/INT_VECTOR_Comparison_Among_CPU_Implementations_relative.png"><img src="doc_ios/INT_VECTOR_Comparison_Among_CPU_Implementations_relative.png" alt="comparison among CPU implementations" height="600"/></a>
+
+### Remarks on Mac Mini
 The explicit loop unrolling improves the performance, and the factor of 4 seems to be the sweet spot for Mac Mini 2020.
 
 

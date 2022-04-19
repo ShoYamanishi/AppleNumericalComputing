@@ -18,6 +18,11 @@ inline uint roundup_32(uint n)
     return ((n + 31) / 32) * 32;
 }
 
+inline uint roundup_16(uint n)
+{
+    return ((n + 15) / 16) * 16;
+}
+
 // Type 1: scan-then-fan
 //
 //   - 0 < num_elements <= 1024
@@ -366,7 +371,7 @@ inline uint roundup_32(uint n)
         [ computeEncoder setBuffer:_mOut                   offset:0 atIndex:1 ];
         [ computeEncoder setBuffer:_mGridPrefixSumsLayer1  offset:0 atIndex:2 ];
         [ computeEncoder setBuffer:_mConstLayer1           offset:0 atIndex:3 ];
-        [ computeEncoder setThreadgroupMemoryLength:sizeof(int)*_mNumThreadsPerGroupLayer1 atIndex:0 ];
+        [ computeEncoder setThreadgroupMemoryLength:roundup_16(sizeof(int)*_mNumThreadsPerGroupLayer1) atIndex:0 ];
 
         [ computeEncoder dispatchThreadgroups:MTLSizeMake( _mNumGroupsPerGridLayer1,   1, 1)
                         threadsPerThreadgroup:MTLSizeMake( _mNumThreadsPerGroupLayer1, 1, 1) ];
@@ -381,7 +386,7 @@ inline uint roundup_32(uint n)
         [ computeEncoder setBuffer:_mGridPrefixSumsLayer1  offset:0 atIndex:2 ];
         [ computeEncoder setBuffer:_mConstLayer1           offset:0 atIndex:3 ];
 
-        [ computeEncoder setThreadgroupMemoryLength:sizeof(int)*_mNumThreadsPerGroupLayer1 atIndex:0 ];
+        [ computeEncoder setThreadgroupMemoryLength:roundup_16(sizeof(int)*_mNumThreadsPerGroupLayer1) atIndex:0 ];
 
         [ computeEncoder dispatchThreadgroups:MTLSizeMake( _mNumGroupsPerGridLayer1,   1, 1)
                         threadsPerThreadgroup:MTLSizeMake( _mNumThreadsPerGroupLayer1, 1, 1) ];
@@ -392,7 +397,7 @@ inline uint roundup_32(uint n)
         [ computeEncoder setBuffer:_mGridPrefixSumsLayer1  offset:0 atIndex:1 ];
         [ computeEncoder setBuffer:_mGridPrefixSumsLayer2  offset:0 atIndex:2 ];
         [ computeEncoder setBuffer:_mConstLayer2           offset:0 atIndex:3 ];
-        [ computeEncoder setThreadgroupMemoryLength:sizeof(int)*_mNumThreadsPerGroupLayer2 atIndex:0 ];
+        [ computeEncoder setThreadgroupMemoryLength:roundup_16(sizeof(int)*_mNumThreadsPerGroupLayer2) atIndex:0 ];
         [ computeEncoder dispatchThreadgroups:MTLSizeMake( _mNumGroupsPerGridLayer2,   1, 1)
                         threadsPerThreadgroup:MTLSizeMake( _mNumThreadsPerGroupLayer2, 1, 1) ];
 
@@ -417,7 +422,7 @@ inline uint roundup_32(uint n)
         [ computeEncoder setBuffer:_mGridPrefixSumsLayer1  offset:0 atIndex:2 ];
         [ computeEncoder setBuffer:_mConstLayer1           offset:0 atIndex:3 ];
 
-        [ computeEncoder setThreadgroupMemoryLength:sizeof(int)*_mNumThreadsPerGroupLayer1 atIndex:0 ];
+        [ computeEncoder setThreadgroupMemoryLength:roundup_16(sizeof(int)*_mNumThreadsPerGroupLayer1) atIndex:0 ];
 
         [ computeEncoder dispatchThreadgroups:MTLSizeMake( _mNumGroupsPerGridLayer1,   1, 1)
                         threadsPerThreadgroup:MTLSizeMake( _mNumThreadsPerGroupLayer1, 1, 1) ];
@@ -429,7 +434,7 @@ inline uint roundup_32(uint n)
         [ computeEncoder setBuffer:_mGridPrefixSumsLayer2  offset:0 atIndex:2 ];
         [ computeEncoder setBuffer:_mConstLayer2           offset:0 atIndex:3 ];
 
-        [ computeEncoder setThreadgroupMemoryLength:sizeof(int)*_mNumThreadsPerGroupLayer2 atIndex:0 ];
+        [ computeEncoder setThreadgroupMemoryLength:roundup_16(sizeof(int)*_mNumThreadsPerGroupLayer2) atIndex:0 ];
 
         [ computeEncoder dispatchThreadgroups:MTLSizeMake( _mNumGroupsPerGridLayer2,   1, 1)
                         threadsPerThreadgroup:MTLSizeMake( _mNumThreadsPerGroupLayer2, 1, 1) ];
@@ -440,7 +445,7 @@ inline uint roundup_32(uint n)
         [ computeEncoder setBuffer:_mGridPrefixSumsLayer2  offset:0 atIndex:1 ];
         [ computeEncoder setBuffer:_mGridPrefixSumsLayer3  offset:0 atIndex:2 ];
         [ computeEncoder setBuffer:_mConstLayer3           offset:0 atIndex:3 ];
-        [ computeEncoder setThreadgroupMemoryLength:sizeof(int)*_mNumThreadsPerGroupLayer3 atIndex:0 ];
+        [ computeEncoder setThreadgroupMemoryLength:roundup_16(sizeof(int)*_mNumThreadsPerGroupLayer3) atIndex:0 ];
         [ computeEncoder dispatchThreadgroups:MTLSizeMake( _mNumGroupsPerGridLayer3,   1, 1)
                         threadsPerThreadgroup:MTLSizeMake( _mNumThreadsPerGroupLayer3, 1, 1) ];
 
@@ -493,7 +498,7 @@ inline uint roundup_32(uint n)
         [ computeEncoder setBuffer:_mOut                    offset:0 atIndex:1 ];
         [ computeEncoder setBuffer:_mGridPrefixSumsLayer1   offset:0 atIndex:2 ];
         [ computeEncoder setBuffer:_mConstLayer1            offset:0 atIndex:3 ];
-        [ computeEncoder setThreadgroupMemoryLength:sizeof(int)*_mNumThreadsPerGroupLayer1 atIndex:0 ];
+        [ computeEncoder setThreadgroupMemoryLength:roundup_32(sizeof(int)*_mNumThreadsPerGroupLayer1) atIndex:0 ];
 
         [ computeEncoder dispatchThreadgroups:MTLSizeMake( _mNumGroupsPerGridLayer1,   1, 1)
                         threadsPerThreadgroup:MTLSizeMake( _mNumThreadsPerGroupLayer1, 1, 1) ];
@@ -507,7 +512,7 @@ inline uint roundup_32(uint n)
         [ computeEncoder setBuffer:_mGridPrefixSumsLayer1  offset:0 atIndex:1 ];
         [ computeEncoder setBuffer:_mConstLayer1           offset:0 atIndex:2 ];
 
-        [ computeEncoder setThreadgroupMemoryLength:sizeof(int)*_mNumThreadsPerGroupLayer1 atIndex:0 ];
+        [ computeEncoder setThreadgroupMemoryLength:roundup_32(sizeof(int)*_mNumThreadsPerGroupLayer1) atIndex:0 ];
 
         [ computeEncoder dispatchThreadgroups:MTLSizeMake( _mNumGroupsPerGridLayer1,   1, 1)
                         threadsPerThreadgroup:MTLSizeMake( _mNumThreadsPerGroupLayer1, 1, 1) ];
@@ -520,7 +525,7 @@ inline uint roundup_32(uint n)
         [ computeEncoder setBuffer:_mGridPrefixSumsLayer1  offset:0 atIndex:1 ];
         [ computeEncoder setBuffer:_mGridPrefixSumsLayer2  offset:0 atIndex:2 ];
         [ computeEncoder setBuffer:_mConstLayer2           offset:0 atIndex:3 ];
-        [ computeEncoder setThreadgroupMemoryLength:sizeof(int)*_mNumThreadsPerGroupLayer2 atIndex:0 ];
+        [ computeEncoder setThreadgroupMemoryLength:roundup_32(sizeof(int)*_mNumThreadsPerGroupLayer2) atIndex:0 ];
         [ computeEncoder dispatchThreadgroups:MTLSizeMake( _mNumGroupsPerGridLayer2,   1, 1)
                         threadsPerThreadgroup:MTLSizeMake( _mNumThreadsPerGroupLayer2, 1, 1) ];
 
@@ -532,10 +537,9 @@ inline uint roundup_32(uint n)
         [ computeEncoder setBuffer:_mOut                   offset:0 atIndex:1 ];
         [ computeEncoder setBuffer:_mGridPrefixSumsLayer1  offset:0 atIndex:2 ];
         [ computeEncoder setBuffer:_mConstLayer1           offset:0 atIndex:3 ];
-        [ computeEncoder setThreadgroupMemoryLength:sizeof(int)*_mNumThreadsPerGroupLayer1 atIndex:0 ];
+        [ computeEncoder setThreadgroupMemoryLength:roundup_32(sizeof(int)*_mNumThreadsPerGroupLayer1) atIndex:0 ];
         [ computeEncoder dispatchThreadgroups:MTLSizeMake( _mNumGroupsPerGridLayer1,   1, 1)
                         threadsPerThreadgroup:MTLSizeMake( _mNumThreadsPerGroupLayer1, 1, 1) ];
-
     }
 
     else if (_mConfiguration == 3) {
@@ -547,7 +551,7 @@ inline uint roundup_32(uint n)
         [ computeEncoder setBuffer:_mGridPrefixSumsLayer1  offset:0 atIndex:1 ];
         [ computeEncoder setBuffer:_mConstLayer1           offset:0 atIndex:2 ];
 
-        [ computeEncoder setThreadgroupMemoryLength:sizeof(int)*_mNumThreadsPerGroupLayer1 atIndex:0 ];
+        [ computeEncoder setThreadgroupMemoryLength:roundup_32(sizeof(int)*_mNumThreadsPerGroupLayer1) atIndex:0 ];
 
         [ computeEncoder dispatchThreadgroups:MTLSizeMake( _mNumGroupsPerGridLayer1,   1, 1)
                         threadsPerThreadgroup:MTLSizeMake( _mNumThreadsPerGroupLayer1, 1, 1) ];
@@ -558,7 +562,7 @@ inline uint roundup_32(uint n)
         [ computeEncoder setBuffer:_mGridPrefixSumsLayer2  offset:0 atIndex:1 ];
         [ computeEncoder setBuffer:_mConstLayer2           offset:0 atIndex:2 ];
 
-        [ computeEncoder setThreadgroupMemoryLength:sizeof(int)*_mNumThreadsPerGroupLayer2 atIndex:0 ];
+        [ computeEncoder setThreadgroupMemoryLength:roundup_32(sizeof(int)*_mNumThreadsPerGroupLayer2) atIndex:0 ];
 
         [ computeEncoder dispatchThreadgroups:MTLSizeMake( _mNumGroupsPerGridLayer2,   1, 1)
                         threadsPerThreadgroup:MTLSizeMake( _mNumThreadsPerGroupLayer2, 1, 1) ];
@@ -571,7 +575,7 @@ inline uint roundup_32(uint n)
         [ computeEncoder setBuffer:_mGridPrefixSumsLayer2  offset:0 atIndex:1 ];
         [ computeEncoder setBuffer:_mGridPrefixSumsLayer3  offset:0 atIndex:2 ];
         [ computeEncoder setBuffer:_mConstLayer3           offset:0 atIndex:3 ];
-        [ computeEncoder setThreadgroupMemoryLength:sizeof(int)*_mNumThreadsPerGroupLayer3 atIndex:0 ];
+        [ computeEncoder setThreadgroupMemoryLength:roundup_32(sizeof(int)*_mNumThreadsPerGroupLayer3) atIndex:0 ];
         [ computeEncoder dispatchThreadgroups:MTLSizeMake( _mNumGroupsPerGridLayer3,   1, 1)
                         threadsPerThreadgroup:MTLSizeMake( _mNumThreadsPerGroupLayer3, 1, 1) ];
 
@@ -583,7 +587,7 @@ inline uint roundup_32(uint n)
         [ computeEncoder setBuffer:_mGridPrefixSumsLayer1  offset:0 atIndex:1 ];
         [ computeEncoder setBuffer:_mGridPrefixSumsLayer2  offset:0 atIndex:2 ];
         [ computeEncoder setBuffer:_mConstLayer2           offset:0 atIndex:3 ];
-        [ computeEncoder setThreadgroupMemoryLength:sizeof(int)*_mNumThreadsPerGroupLayer2 atIndex:0 ];
+        [ computeEncoder setThreadgroupMemoryLength:roundup_32(sizeof(int)*_mNumThreadsPerGroupLayer2) atIndex:0 ];
         [ computeEncoder dispatchThreadgroups:MTLSizeMake( _mNumGroupsPerGridLayer2,   1, 1)
                         threadsPerThreadgroup:MTLSizeMake( _mNumThreadsPerGroupLayer2, 1, 1) ];
 
@@ -593,7 +597,7 @@ inline uint roundup_32(uint n)
         [ computeEncoder setBuffer:_mOut                   offset:0 atIndex:1 ];
         [ computeEncoder setBuffer:_mGridPrefixSumsLayer1  offset:0 atIndex:2 ];
         [ computeEncoder setBuffer:_mConstLayer1           offset:0 atIndex:3 ];
-        [ computeEncoder setThreadgroupMemoryLength:sizeof(int)*_mNumThreadsPerGroupLayer1 atIndex:0 ];
+        [ computeEncoder setThreadgroupMemoryLength:roundup_32(sizeof(int)*_mNumThreadsPerGroupLayer1) atIndex:0 ];
         [ computeEncoder dispatchThreadgroups:MTLSizeMake( _mNumGroupsPerGridLayer1,   1, 1)
                         threadsPerThreadgroup:MTLSizeMake( _mNumThreadsPerGroupLayer1, 1, 1) ];
     }

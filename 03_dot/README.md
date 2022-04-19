@@ -20,7 +20,7 @@ So far this has been tested on iPhone 13 mini 256GB.
 
 - Run the following in the terminal.
 ```
-$ cd 01_memcpy
+$ cd 03_dot
 $ grep '\(^INT\|^FLOAT\|^DOUBLE\|data element type\)' doc_ios/make_log.txt > doc_ios/make_log_cleaned.txt
 $ python ../common/process_log.py -logfile doc_ios/make_log_cleaned.txt -specfile doc_ios/plot_spec.json -show_impl -plot_charts -base_dir doc_ios/
 ```
