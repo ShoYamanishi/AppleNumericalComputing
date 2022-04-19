@@ -9,14 +9,14 @@ NBodyMetalCppImpl::NBodyMetalCppImpl( const size_t num_elements ){
 NBodyMetalCppImpl::~NBodyMetalCppImpl(){;}
 
 unsigned int NBodyMetalCppImpl::numElements() {
-    return [ (id)m_self numElements ];
+    return [ m_self numElements ];
 }
 
 struct particle* NBodyMetalCppImpl::getRawPointerParticles() {
-    return [ (id)m_self getRawPointerParticles ];
+    return [ m_self getRawPointerParticles ];
 }
 
 void NBodyMetalCppImpl::performComputationDirectionIsP0ToP1( const bool p0_to_p1 ) {
 
-    return [ (id)m_self performComputationDirectionIsP0ToP1:p0_to_p1 ];
+    return [ m_self performComputationDirectionIsP0ToP1:p0_to_p1 ];
 }

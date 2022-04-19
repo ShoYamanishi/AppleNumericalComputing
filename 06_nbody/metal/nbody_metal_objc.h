@@ -1,6 +1,6 @@
 #import "metal_compute_base.h"
 
-#include <nbody_metal_cpp.h>
+#include "nbody_metal_cpp.h"
 
 @interface NBodyMetalObjC : MetalComputeBase
 - (instancetype) initWithNumElements:(size_t) num_elements ;

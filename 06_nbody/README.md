@@ -2,6 +2,28 @@
 N-Body denotes a type of computation where each of N objects interacts with all the other N - 1 objects.
 Therefore the complexity is in the order of O(N^2).
 
+## 0. Instruction for iOS
+So far this has been tested on iPhone 13 mini 256GB.
+
+- Open `AppleNumericalComputing/iOSTester_06/iOSTester_06.xcodeproj` with Xcode
+
+- Build a release build
+
+- Run the iOS App in release build
+
+- Press 'Run' on the screen
+
+- Wait until App finished with 'finished!' on the log output.
+
+- Copy and paste the log into `06_nbody/doc_ios/make_log.txt`.
+
+- Run the following in the terminal.
+```
+$ cd 06_nbody
+$ grep '\(^INT\|^FLOAT\|^DOUBLE\|data element type\)' doc_ios/make_log.txt > doc_ios/make_log_cleaned.txt
+$ python ../common/process_log.py -logfile doc_ios/make_log_cleaned.txt -specfile doc_ios/plot_spec.json -show_impl -plot_charts -base_dir doc_ios/
+```
+- You will get the PNG files in  `06_nbody/doc_ios/`.
 
 # 1. Key Points
 
@@ -164,9 +186,13 @@ X-axis is the number of the bodies (particles), and Y-axis is the time taken in 
 * **STRUCTURE_OF_ARRAYS:NEON 1 1** : SOA NEON intrinsics for body-body interactions
 * **STRUCTURE_OF_ARRAYS:NEON 1 4** : SOA NEON intrinsics for body-body interactions with 4 threads
 
+### Plots: Mac Mini M1 2020 8 GB
 <a href="doc/FLOAT_ANY_Overview.png"><img src="doc/FLOAT_ANY_Overview.png" alt="overview" height="600"/></a>
 
-### Remarks
+### Plots: iPhone 13 mini 256 GB
+<a href="doc_ios/FLOAT_ANY_Overview.png"><img src="doc_ios/FLOAT_ANY_Overview.png" alt="overview" height="600"/></a>
+
+### Remarks on Mac Mini
 * 'SOA:NEON 1 4' shows the best overall running time on CPU if N>=64, 'SOA:NEON 1 1' works best if N < 64.
 
 * 'AOS:METAL DEFAULT 0 0' shows running time more than 10 times faster than the CPU versions if N >= 8K.
@@ -189,9 +215,13 @@ X-axis is the size of the input array, and Y-axis is the relative running time o
 * **NEON 8 1** : SOA NEON intrinsics for body-body interactions with the inner loop unrolled with factor 8
 
 
+### Plots: Mac Mini M1 2020 8 GB
 <a href="doc/FLOAT_STRUCTURE_OF_ARRAYS_Comparison_among_NEON_implementations_relative.png"><img src="doc/FLOAT_STRUCTURE_OF_ARRAYS_Comparison_among_NEON_implementations_relative.png" alt="comparison among neon loop unrolling" height="600"/></a>
 
-### Remarks
+### Plots: iPhone 13 mini 256 GB
+<a href="doc_ios/FLOAT_STRUCTURE_OF_ARRAYS_Comparison_among_NEON_implementations_relative.png"><img src="doc_ios/FLOAT_STRUCTURE_OF_ARRAYS_Comparison_among_NEON_implementations_relative.png" alt="comparison among neon loop unrolling" height="600"/></a>
+
+### Remarks on Mac Mini
 Loop unrolling the NEON implementation does not improve the performance.
 This indicates the body of the inner loop has enough arithmetic complexity to fill the instruction pipeline.
 
@@ -205,9 +235,13 @@ X-axis is the size of the input array, and Y-axis is the relative running time o
 * **NEON 1 4** : SOA NEON intrinsics for body-body interactions with no loop unrolling, with 4 threads
 * **NEON 1 8** : SOA NEON intrinsics for body-body interactions with no loop unrolling, with 8 threads
 
+### Plots: Mac Mini M1 2020 8 GB
 <a href="doc/FLOAT_STRUCTURE_OF_ARRAYS_Comparison_among_multithreaded_implementations_relative.png"><img src="doc/FLOAT_STRUCTURE_OF_ARRAYS_Comparison_among_multithreaded_implementations_relative.png" alt="comparison among multithreaded implementation" height="600"/></a>
 
-### Remarks
+### Plots: iPhone 13 mini 256 GB
+<a href="doc_ios/FLOAT_STRUCTURE_OF_ARRAYS_Comparison_among_multithreaded_implementations_relative.png"><img src="doc_ios/FLOAT_STRUCTURE_OF_ARRAYS_Comparison_among_multithreaded_implementations_relative.png" alt="comparison among multithreaded implementation" height="600"/></a>
+
+### Remarks on Mac Mini
 The overhead of synchronizing the worker threads is amortized if N >= 256.
 This suggests that N-body problem is parallelizable on CPU as well as on GPU.
 The sweet spot seems to be the implementation with with 4 threads, which runs approximately 4 times fastere than the single thread version, which implies this problem can be parallelizable with little overhead.

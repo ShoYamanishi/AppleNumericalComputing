@@ -1,3 +1,4 @@
+class NBodyMetalObjC;
 #include "nbody_metal_cpp_impl.h"
 #include "nbody_metal_cpp.h"
 
