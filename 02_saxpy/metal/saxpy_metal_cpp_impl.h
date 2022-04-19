@@ -20,7 +20,7 @@ class SaxpyMetalCppImpl
     void performComputation();
 
   private:
-    void * m_self;
+    SaxpyMetalObjC* m_self;
 
 };
 

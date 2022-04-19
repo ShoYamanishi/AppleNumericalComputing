@@ -727,9 +727,11 @@ class TestExecutorSAXPY : public TestExecutor {
 static const size_t NUM_METAL_THREADS_PER_GROUP = 1024;
 static const size_t NUM_METAL_WARP_SIZE         =   32;
 static const size_t NUM_TRIALS                  =  100;
-
+#if TARGET_OS_OSX
 size_t nums_elements[]{ 128, 512, 2*1024, 8*1024, 32*1024, 128*1024, 512*1024, 4*1024*1024, 16*1024*1024, 64*1024*1024 };
-
+#else
+size_t nums_elements[]{ 128, 512, 2*1024, 8*1024, 32*1024, 128*1024, 512*1024, 4*1024*1024, 16*1024*1024 };
+#endif
 template<class T>
 void testSuitePerType () {
 
@@ -790,8 +792,11 @@ void testSuitePerType () {
     }
 }
 
-int main(int argc, char* argv[]) {
-
+#if TARGET_OS_OSX
+int main( int argc, char* argv[] ) {
+#else
+int run_test() {
+#endif
     TestCaseWithTimeMeasurements::printHeader( cout );
 
     cerr << "\n\nTesting for type float.\n\n";
