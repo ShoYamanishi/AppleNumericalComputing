@@ -23,7 +23,7 @@ $ cd 01_memcpy
 $ grep '\(INT\|FLOAT\|DOUBLE\|data element type\)' doc_ios/make_log.txt > doc_ios/make_log_cleaned.txt
 $ python ../common/process_log.py -logfile doc_ios/make_log_cleaned.txt -specfile doc_ios/plot_spec.json -show_impl -plot_charts -base_dir doc_ios/
 ```
-- You will get the PNG file in  `01_memcpy/doc_ios/make_log.txt`.
+- You will get the PNG files in  `01_memcpy/doc_ios/`.
 
 
 # 1. Key Points
@@ -103,7 +103,7 @@ X-axis is the number of *ints* copied, and Y-axis is the time taken in milliseco
 ### Plots: iPhone 13 mini 256 GB
 <a href="doc_ios/INT_VECTOR_Overview.png"> <img src="doc_ios/INT_VECTOR_Overview.png" alt="Overview"/></a>
 
-### Remarks
+### Remarks on Mac Mini
 
 The **memcpy()** performs best for all the problem sizes.
 Compared with the plain C++ implementation, memcpy() is 5x - 10x faster.
@@ -140,7 +140,7 @@ and the Y-axis is the relative running time of each implementation relative to '
 
 
 
-### Remarks
+### Remarks on Mac Mini
 
 **CPP BLOCK 1 1** uses non-interleaved  **ldp** & **stp** with loop unrolling factor of 2.
 
@@ -190,7 +190,7 @@ Except for memcpy(), all the other implementations use the loop unrolling of fac
     <img src="doc_ios/INT_VECTOR_Effect_of_Multithreading_in_C++_relative.png" alt="Effect of Multithreading in C++"/></a>
 
 
-### Remarks
+### Remarks on Mac Mini
 The overhead of synchronizing multiple threads is amortized at around the problem size of 1 megabytes (256K ints).
 For the problems larger than 1 megabytes the multithreaded versions are 60-40 % faster than the single thread version.
 In most cases memcpy() achieves the best running time.
@@ -220,7 +220,7 @@ The following chart shows the effect of splitting the memcpy() into consecutive 
     <img src="doc_ios/INT_VECTOR_Effect_of_Multithreading_with_memcpy()_relative.png" alt="Effect of Multithreading with memcpy()"/></a>
 
 
-### Remarks
+### Remarks on Mac Mini
 The overhead of synchronizing two threads is amortized at around 2 to 4 megabytes.
 There seems to be no clear benefit in multithreading, as this problem is purely I/O bound.
 
@@ -245,7 +245,7 @@ The following chart shows the difference among 4 Metal versions to copy data fro
 ### Plots: iPhone 13 mini 256 GB
 <a href="doc_ios/INT_VECTOR_Comparison_Among_Metal_Implementations_relative.png"><img src="doc_ios/INT_VECTOR_Comparison_Among_Metal_Implementations_relative.png" alt="Comparison among Metal Implementations"/></a>
 
-### Remarks
+### Remarks on Mac Mini
 The running times fluctuate significantly for the sizes less than 256 megabytes.
 
 For the shared MTL buffers it is assumed that the views into those buffers from both CPUs and GPUs
