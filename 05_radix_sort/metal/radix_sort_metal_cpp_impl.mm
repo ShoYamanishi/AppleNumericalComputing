@@ -18,29 +18,29 @@ RadixSortMetalCppImpl::RadixSortMetalCppImpl(
 RadixSortMetalCppImpl::~RadixSortMetalCppImpl(){;}
 
 void RadixSortMetalCppImpl::resetBufferFlag() {
-    [ (id)m_self resetBufferFlag ];
+    [ m_self resetBufferFlag ];
 }
 
 unsigned int RadixSortMetalCppImpl::numElements() {
-    return [ (id)m_self numElements ];
+    return [ m_self numElements ];
 }
 
 int* RadixSortMetalCppImpl::getRawPointerIn() {
-    return [ (id)m_self getRawPointerIn ];
+    return [ m_self getRawPointerIn ];
 }
 
 int* RadixSortMetalCppImpl::getRawPointerOut() {
-    return [ (id)m_self getRawPointerOut ];
+    return [ m_self getRawPointerOut ];
 }
 
 int* RadixSortMetalCppImpl::getRawPointerIn1() {
-    return [ (id)m_self getRawPointerIn1 ];
+    return [ m_self getRawPointerIn1 ];
 }
 
 int* RadixSortMetalCppImpl::getRawPointerIn2() {
-    return [ (id)m_self getRawPointerIn2 ];
+    return [ m_self getRawPointerIn2 ];
 }
 
 void RadixSortMetalCppImpl::performComputation() {
-    return [ (id)m_self performComputation ];
+    return [ m_self performComputation ];
 }

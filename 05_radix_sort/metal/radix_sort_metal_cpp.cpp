@@ -1,3 +1,4 @@
+class RadixSortMetalObjC;
 #include "radix_sort_metal_cpp_impl.h"
 #include "radix_sort_metal_cpp.h"
 
