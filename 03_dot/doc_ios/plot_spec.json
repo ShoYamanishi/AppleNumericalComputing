@@ -1,0 +1,81 @@
+[
+{
+    "DataElementType": "FLOAT",
+    "DataElementSubtype": "VECTOR",
+    "Width" : 13,
+    "Height" : 8,
+    "Title": "Overview",
+    "PlotType": "LOG-LOG",
+    "PlotBase": "CPP_BLOCK 1 1",
+    "UpperLimit" : 1.2,
+    "PlotCases": [ "CPP_BLOCK 1 1", "NEON 1 1", "NEON 4 1", "NEON 8 8", "VDSP 1 1", "BLAS 1 1", "METAL ONE_PASS_ATOMIC_SIMD_SUM 0 0" ]
+},
+{
+    "DataElementType": "FLOAT",
+    "DataElementSubtype": "VECTOR",
+    "Width" : 13,
+    "Height" : 8,
+    "Title": "Effect of NEON Loop Unrolling",
+    "PlotType": "LOG-LIN-RELATIVE",
+    "PlotBase": "CPP_BLOCK 1 1",
+    "UpperLimit" : 1.2,
+    "PlotCases": [ "CPP_BLOCK 1 1", "NEON 1 1", "NEON 2 1", "NEON 4 1", "NEON 8 1" ]
+},
+{
+    "DataElementType": "FLOAT",
+    "DataElementSubtype": "VECTOR",
+    "Width" : 13,
+    "Height" : 8,
+    "Title": "Effect of NEON Multithreading",
+    "PlotType": "LOG-LIN-RELATIVE",
+    "PlotBase": "NEON 8 1",
+    "UpperLimit" : 5.0,
+    "PlotCases": [ "NEON 8 1", "NEON 8 2", "NEON 8 4", "NEON 8 8" ]
+},
+{
+    "DataElementType": "FLOAT",
+    "DataElementSubtype": "VECTOR",
+    "Width" : 13,
+    "Height" : 8,
+    "Title": "Comparison Among Metal Implementations",
+    "PlotType": "LOG-LIN-RELATIVE",
+    "PlotBase": "METAL TWO_PASS_DEVICE_MEMORY 0 0",
+    "UpperLimit" : 1.2,
+    "PlotCases": [ "METAL TWO_PASS_DEVICE_MEMORY 0 0", "METAL TWO_PASS_SHARED_MEMORY 0 0", "METAL TWO_PASS_SIMD_SHUFFLE 0 0", "METAL TWO_PASS_SIMD_SUM 0 0", "METAL ONE_PASS_ATOMIC_SIMD_SHUFFLE 0 0", "METAL ONE_PASS_ATOMIC_SIMD_SUM 0 0", "METAL ONE_PASS_THREAD_COUNTER 0 0" ]
+},
+
+{
+    "DataElementType": "DOUBLE",
+    "DataElementSubtype": "VECTOR",
+    "Width" : 13,
+    "Height" : 8,
+    "Title": "Overview",
+    "PlotType": "LOG-LOG",
+    "PlotBase": "CPP_BLOCK 1 1",
+    "UpperLimit" : 1.2,
+    "PlotCases": [ "CPP_BLOCK 1 1", "NEON 1 1", "NEON 4 1", "NEON 8 2", "VDSP 1 1", "BLAS 1 1" ]
+},
+{
+    "DataElementType": "DOUBLE",
+    "DataElementSubtype": "VECTOR",
+    "Width" : 13,
+    "Height" : 8,
+    "Title": "Effect of NEON Loop Unrolling",
+    "PlotType": "LOG-LIN-RELATIVE",
+    "PlotBase": "CPP_BLOCK 1 1",
+    "UpperLimit" : 1.2,
+    "PlotCases": [ "CPP_BLOCK 1 1", "NEON 1 1", "NEON 2 1", "NEON 4 1", "NEON 8 1" ]
+},
+{
+    "DataElementType": "DOUBLE",
+    "DataElementSubtype": "VECTOR",
+    "Width" : 13,
+    "Height" : 8,
+    "Title": "Effect of NEON Multithreading",
+    "PlotType": "LOG-LIN-RELATIVE",
+    "PlotBase": "NEON 8 1",
+    "UpperLimit" : 5.0,
+    "PlotCases": [ "NEON 8 1", "NEON 8 2", "NEON 8 4", "NEON 8 8" ]
+}
+]
+

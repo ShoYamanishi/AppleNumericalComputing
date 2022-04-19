@@ -3,6 +3,30 @@
 Calculation of the dot product of two vectors X and Y.
 This type of operation is called *Reduction* in Chapter 12 of [CUDA Handbook](http://www.cudahandbook.com/).
 
+## 0. Instruction for iOS
+So far this has been tested on iPhone 13 mini 256GB.
+
+- Open `AppleNumericalComputing/iOSTester_03/iOSTester_03.xcodeproj` with Xcode
+
+- Build a release build
+
+- Run the iOS App in release build
+
+- Press 'Run' on the screen
+
+- Wait until App finished with 'finished!' on the log output.
+
+- Copy and paste the log into `03_dot/doc_ios/make_log.txt`.
+
+- Run the following in the terminal.
+```
+$ cd 01_memcpy
+$ grep '\(^INT\|^FLOAT\|^DOUBLE\|data element type\)' doc_ios/make_log.txt > doc_ios/make_log_cleaned.txt
+$ python ../common/process_log.py -logfile doc_ios/make_log_cleaned.txt -specfile doc_ios/plot_spec.json -show_impl -plot_charts -base_dir doc_ios/
+```
+- You will get the PNG files in  `03_dot/doc_ios/`.
+
+
 # 1. Key Points
 
 * BLAS performs best overall.
@@ -161,9 +185,13 @@ X-axis is the size of the vectors |X| & |Y|, and Y-axis is the time taken in mil
 
 * **METAL ONE_PASS_ATOMIC_SIMD_SUM 0 0** : Metal Compute kernel, one-pass using simd_sum()
 
+### Plots: Mac Mini M1 2020 8 GB
 <a href="doc/FLOAT_VECTOR_Overview.png"><img src="doc/FLOAT_VECTOR_Overview.png" alt=""/></a>
 
-### Remarks
+### Plots: iPhone 13 mini 256 GB
+<a href="doc_ios/FLOAT_VECTOR_Overview.png"><img src="doc_ios/FLOAT_VECTOR_Overview.png" alt=""/></a>
+
+### Remarks on Mac Mini
 
 * VDSP, BLAS and NEON 4 1 show a good overall performance. VDSP performs best for the size in 32K - 512K.
 
@@ -189,9 +217,13 @@ The X-axis is the size of the vectors, and the Y-axis is the relative running ti
 
 * **NEON 8 1** : NEON intrinsics with loop unrolling of factor 8
 
+### Plots: Mac Mini M1 2020 8 GB
 <a href="doc/FLOAT_VECTOR_Effect_of_NEON_Loop_Unrolling_relative.png"><img src="doc/FLOAT_VECTOR_Effect_of_NEON_Loop_Unrolling_relative.png" alt=""/></a>
 
-### Remarks
+### Plots: iPhone 13 mini 256 GB
+<a href="doc_ios/FLOAT_VECTOR_Effect_of_NEON_Loop_Unrolling_relative.png"><img src="doc_ios/FLOAT_VECTOR_Effect_of_NEON_Loop_Unrolling_relative.png" alt=""/></a>
+
+### Remarks on Mac Mini
 There is a wide gap between CPP_BLOCK 1 1 and NEON Y 1 with NEON intrinsics.
 This can be explained by the difference in the code Clang++ generates.
 In the C++ version, the Clang++ emits *standard* (as opposed to NEON) float instructions with no loop unrolling.
@@ -317,9 +349,13 @@ The X-axis is the size of the vectors, and the Y-axis is the relative running ti
 
 * **NEON 8 8** : NEON intrinsics with loop unrolling factor 8 and 8 threads
 
+### Plots: Mac Mini M1 2020 8 GB
 <a href="doc/FLOAT_VECTOR_Effect_of_NEON_Multithreading_relative.png"><img src="doc/FLOAT_VECTOR_Effect_of_NEON_Multithreading_relative.png" alt=""/></a>
 
-### Remarks
+### Plots: iPhone 13 mini 256 GB
+<a href="doc_ios/FLOAT_VECTOR_Effect_of_NEON_Multithreading_relative.png"><img src="doc_ios/FLOAT_VECTOR_Effect_of_NEON_Multithreading_relative.png" alt=""/></a>
+
+### Remarks on Mac Mini
 The overhead of synchronizing multiple threads is amortized at around 512K elements.
 There is a slight advantage in multithreading for the problem sizes around 512K - 2M elements.
 
@@ -387,9 +423,13 @@ Therefore, the difference in time from **METAL TWO_PASS_DEVICE_MEMORY 0 0** show
     with **the last block detection** in the first pass. This corresponds to 12.3 of [CUDA Handbook](http://www.cudahandbook.com/).
     Due to the reason described above, it does not work for Metal.
 
+### Plots: Mac Mini M1 2020 8 GB
 <a href="doc/FLOAT_VECTOR_Comparison_Among_Metal_Implementations_relative.png"><img src="doc/FLOAT_VECTOR_Comparison_Among_Metal_Implementations_relative.png" alt=""/></a>
 
-### Remarks
+### Plots: iPhone 13 mini 256 GB
+<a href="doc_ios/FLOAT_VECTOR_Comparison_Among_Metal_Implementations_relative.png"><img src="doc_ios/FLOAT_VECTOR_Comparison_Among_Metal_Implementations_relative.png" alt=""/></a>
+
+### Remarks on Mac Mini
 The implementations with **simd_sum()** perform better than the others, and **METAL_ONE_PASS_ATOMIC_SIMD_SUM 0 0** performs best.
 It shows the benefit of using **simd_sum()**.
 The implementations with **simd_shuffle_xor()** perform better than the ones without by 5-10%.
@@ -414,9 +454,15 @@ The following chart shows the mean running times taken to perform one dot produc
 
 * **BLAS 1 1** : cblas_ddot() in the Accelerate framework
 
+
+### Plots: Mac Mini M1 2020 8 GB
 <a href="doc/DOUBLE_VECTOR_Overview.png"><img src="doc/DOUBLE_VECTOR_Overview.png" alt=""/></a>
 
-### Remarks
+### Plots: iPhone 13 mini 256 GB
+<a href="doc_ios/DOUBLE_VECTOR_Overview.png"><img src="doc_ios/DOUBLE_VECTOR_Overview.png" alt=""/></a>
+
+
+### Remarks on Mac Mini
 
 * VDSP and NEON 4 1, and BLAS show a good overall performance.
 
@@ -442,10 +488,13 @@ The following chart shows the relative running times taken to perform the dot op
 
 * **NEON 8 1** : NEON intrinsics with loop unrolling of factor 8
 
-
+### Plots: Mac Mini M1 2020 8 GB
 <a href="doc/DOUBLE_VECTOR_Effect_of_NEON_Loop_Unrolling_relative.png"><img src="doc/DOUBLE_VECTOR_Effect_of_NEON_Loop_Unrolling_relative.png" alt=""/></a>
 
-### Remarks
+### Plots: iPhone 13 mini 256 GB
+<a href="doc_ios/DOUBLE_VECTOR_Effect_of_NEON_Loop_Unrolling_relative.png"><img src="doc_ios/DOUBLE_VECTOR_Effect_of_NEON_Loop_Unrolling_relative.png" alt=""/></a>
+
+### Remarks on Mac Mini
 There is a wide gap between the C++ implementation and the NEON intrinsics.
 This can be explained by the difference in the code it generates.
 In the C++ version, the compiler emits the standard floating instructions with no loop unrolling.
@@ -567,9 +616,13 @@ The baseline is NEON 8 1 at 1.0. The X-axis is the size of the vectors, and the 
 
 * **NEON 8 8** : NEON intrinsics with loop unrolling factor 8 and 8 threads
 
+### Plots: Mac Mini M1 2020 8 GB
 <a href="doc/DOUBLE_VECTOR_Effect_of_NEON_Multithreading_relative.png"><img src="doc/DOUBLE_VECTOR_Effect_of_NEON_Multithreading_relative.png" alt=""/></a>
 
-### Remarks
+### Plots: iPhone 13 mini 256 GB
+<a href="doc_ios/DOUBLE_VECTOR_Effect_of_NEON_Multithreading_relative.png"><img src="doc_ios/DOUBLE_VECTOR_Effect_of_NEON_Multithreading_relative.png" alt=""/></a>
+
+### Remarks on Mac Mini
 The overhead of synchronizing multiple threads is amortized at around 128K elements.
 There is a slight advantage in multithreading for the problem sizes around 512K elements.
 
