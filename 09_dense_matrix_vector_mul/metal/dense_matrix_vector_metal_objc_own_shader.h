@@ -1,6 +1,6 @@
 #import "metal_compute_base.h"
 
-#include <dense_matrix_vector_metal_cpp.h>
+#include "dense_matrix_vector_metal_cpp.h"
 
 @interface DenseMatrixVectorMetalObjCOwnShader : MetalComputeBase
 

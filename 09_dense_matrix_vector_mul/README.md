@@ -1,6 +1,31 @@
 # Dense Matrix-Vector Multiplication
 Normal matrix-vector multiplication both in the column-major form and the row-major form.
 
+
+## 0. Instruction for iOS
+So far this has been tested on iPhone 13 mini 256GB.
+
+- Open `AppleNumericalComputing/iOSTester_09/iOSTester_09.xcodeproj` with Xcode
+
+- Build a release build
+
+- Run the iOS App in release build
+
+- Press 'Run' on the screen
+
+- Wait until App finished with 'finished!' on the log output.
+
+- Copy and paste the log into `09_dense_matrix_vector_mul/doc_ios/make_log.txt`.
+
+- Run the following in the terminal.
+```
+$ cd 09_dense_matrix_vector_mul
+$ grep '\(^INT\|^FLOAT\|^DOUBLE\|data element type\)' doc_ios/make_log.txt > doc_ios/make_log_cleaned.txt
+$ python ../common/process_log.py -logfile doc_ios/make_log_cleaned.txt -specfile doc_ios/plot_spec.json -show_impl -plot_charts -base_dir doc_ios/
+```
+- You will get the PNG files in  `09_dense_matrix_vector_mul/doc_ios/`.
+
+
 # 1. Key Points
 
 
@@ -104,9 +129,13 @@ This can be used as an indicator for the decision on whether to use the column-m
 
 * **MATRIX_ROW_MAJOR:METAL THREADS_OVER_COLUMNS 0 0**: Metal shader with threads over columns, reduction per row.
 
+### Plots: Mac Mini M1 2020 8 GB
 <a href="doc/FLOAT_ANY_Overview_Float.png"><img src="doc/FLOAT_ANY_Overview_Float.png" alt="overview : float" height="600"/></a>
 
-### Remarks
+### Plots: iPhone 13 mini 256 GB
+<a href="doc_ios/FLOAT_ANY_Overview_Float.png"><img src="doc_ios/FLOAT_ANY_Overview_Float.png" alt="overview : float" height="600"/></a>
+
+### Remarks on Mac Mini
 
 * For the problem size smaller than (1K, 1K), it is faster in column-major (BLAS 1 1) than in row-major (VDSP 1 1).
 
@@ -135,9 +164,13 @@ This can be used as an indicator for the decision on whether to use the column-m
 
 * **MATRIX_ROW_MAJOR:NEON 8 8**: NEON intrinsics with the loop unrolling factor 8 with 8 worker threads
 
+### Plots: Mac Mini M1 2020 8 GB
 <a href="doc/DOUBLE_ANY_Overview_Double.png"><img src="doc/DOUBLE_ANY_Overview_Double.png" alt="overview : double" height="600"/></a>
 
-### Remarks
+### Plots: iPhone 13 mini 256 GB
+<a href="doc_ios/DOUBLE_ANY_Overview_Double.png"><img src="doc_ios/DOUBLE_ANY_Overview_Double.png" alt="overview : double" height="600"/></a>
+
+### Remarks on Mac Mini
 
 * For the problem size smaller than (1K, 1K), it is faster in column-major (BLAS 1 1) than in row-major (VDSP 1 1).
 

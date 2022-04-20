@@ -24,9 +24,13 @@
 
 * **METAL THREADS_OVER_COLUMNS 0 0** : Metal shader, threads over columns, reduction per row per threadgroup
 
+### Plots: Mac Mini M1 2020 8 GB
 <a href="doc/FLOAT_MATRIX_ROW_MAJOR_Overview.png"><img src="doc/FLOAT_MATRIX_ROW_MAJOR_Overview.png" alt="overview float row-major" height="600"/></a>
 
-### Remarks
+### Plots: iPhone 13 mini 256 GB
+<a href="doc_ios/FLOAT_MATRIX_ROW_MAJOR_Overview.png"><img src="doc_ios/FLOAT_MATRIX_ROW_MAJOR_Overview.png" alt="overview float row-major" height="600"/></a>
+
+### Remarks on Mac Mini
 
 * vDSP/BLAS shows the best running time for the size up to *(1K, 1K)*.
 
@@ -50,9 +54,13 @@ This implies that the two implementations are identical.
 
 * **CPP_BLOCK 1 8** : C++ implementation with 8 threads
 
+### Plots: Mac Mini M1 2020 8 GB
 <a href="doc/FLOAT_MATRIX_ROW_MAJOR_Comparison_Among_CPP_Multithread_relative.png"><img src="doc/FLOAT_MATRIX_ROW_MAJOR_Comparison_Among_CPP_Multithread_relative.png" alt="comparison among C++ multithreaded" height="600"/></a>
 
-### Remarks
+### Plots: iPhone 13 mini 256 GB
+<a href="doc_ios/FLOAT_MATRIX_ROW_MAJOR_Comparison_Among_CPP_Multithread_relative.png"><img src="doc_ios/FLOAT_MATRIX_ROW_MAJOR_Comparison_Among_CPP_Multithread_relative.png" alt="comparison among C++ multithreaded" height="600"/></a>
+
+### Remarks on Mac Mini
 This shows the effectiveness of threadding for the plain C++ implementation.
 The cost of synchronizing the threads are quickly amortized already around the size of *(256, 256)*.
 
@@ -70,9 +78,13 @@ The cost of synchronizing the threads are quickly amortized already around the s
 
 * **NEON 8 1** : NEON intrinsics loop unrolling of factor 8, single thread
 
+### Plots: Mac Mini M1 2020 8 GB
 <a href="doc/FLOAT_MATRIX_ROW_MAJOR_Comparison_Among_NEON_loop_unrolling_relative.png"><img src="doc/FLOAT_MATRIX_ROW_MAJOR_Comparison_Among_NEON_loop_unrolling_relative.png" alt="comparison among NEON with loop unrolling" height="600"/></a>
 
-### Remarks
+### Plots: iPhone 13 mini 256 GB
+<a href="doc_ios/FLOAT_MATRIX_ROW_MAJOR_Comparison_Among_NEON_loop_unrolling_relative.png"><img src="doc_ios/FLOAT_MATRIX_ROW_MAJOR_Comparison_Among_NEON_loop_unrolling_relative.png" alt="comparison among NEON with loop unrolling" height="600"/></a>
+
+### Remarks on Mac Mini
 NEON intrinsics make it run faster more than 400% than the plain implementation.
 The loop unrolling also improves the performance, and the sweet spot for the loop unrolling seems to be around the factor 4.
 
@@ -85,9 +97,13 @@ The loop unrolling also improves the performance, and the sweet spot for the loo
 
 * **NEON 8 8** : NEON intrinsics with loop unrolling of factor 8, 8 threads - baseline
 
+### Plots: Mac Mini M1 2020 8 GB
 <a href="doc/FLOAT_MATRIX_ROW_MAJOR_Comparison_Among_NEON_Multithread_relative.png"><img src="doc/FLOAT_MATRIX_ROW_MAJOR_Comparison_Among_NEON_Multithread_relative.png" alt="comparison among NEON multithreaded" height="600"/></a>
 
-### Remarks
+### Plots: iPhone 13 mini 256 GB
+<a href="doc_ios/FLOAT_MATRIX_ROW_MAJOR_Comparison_Among_NEON_Multithread_relative.png"><img src="doc_ios/FLOAT_MATRIX_ROW_MAJOR_Comparison_Among_NEON_Multithread_relative.png" alt="comparison among NEON multithreaded" height="600"/></a>
+
+### Remarks on Mac Mini
 
 The overhead of the synchrnization of threads is amortized around *(1K, 1K)* and use of multithread is beneficial, though the benefit is not as dramatic as the case for the col-major.
 
@@ -101,10 +117,13 @@ The overhead of the synchrnization of threads is amortized around *(1K, 1K)* and
 
 * **METAL MPS 0 0** : Metal MPSMatrixVectorMultiplication
 
-
+### Plots: Mac Mini M1 2020 8 GB
 <a href="doc/FLOAT_MATRIX_ROW_MAJOR_Comparison_Among_Metal_relative.png"><img src="doc/FLOAT_MATRIX_ROW_MAJOR_Comparison_Among_Metal_relative.png" alt="comparison among Metal implementations" height="600"/></a>
 
-### Remarks
+### Plots: iPhone 13 mini 256 GB
+<a href="doc_ios/FLOAT_MATRIX_ROW_MAJOR_Comparison_Among_Metal_relative.png"><img src="doc_ios/FLOAT_MATRIX_ROW_MAJOR_Comparison_Among_Metal_relative.png" alt="comparison among Metal implementations" height="600"/></a>
+
+### Remarks on Mac Mini
 Since this is for the row-major, THREADS_OVER_COLUMNS reads in the threadgroup one row ideally coalesced, and the reduction is very effective.
 
 On the other hand, THREAD_OVER_ROWS reads one columns per threadgroup and the loop in the threadgroup iterates over the columns.
