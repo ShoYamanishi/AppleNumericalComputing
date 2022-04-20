@@ -1,3 +1,5 @@
+class CholeskyMetalObjCOwnShader;
+class CholeskyMetalObjCMPS;
 #include "cholesky_metal_cpp_impl.h"
 #include "cholesky_metal_cpp.h"
 

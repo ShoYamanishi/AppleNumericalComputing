@@ -2,8 +2,10 @@
 
 #include "test_case_cholesky.h"
 #include "test_case_cholesky_baseline.h"
+#if TARGET_OS_OSX
 #include "test_case_cholesky_eigen3.h"
 #include "test_case_cholesky_gsl.h"
+#endif
 #include "test_case_cholesky_lapack.h"
 #include "test_case_cholesky_metal.h"
 
@@ -73,12 +75,9 @@ class TestExecutorCholesky : public TestExecutor {
     }
 };
 
-
 static const size_t NUM_TRIALS = 10;
 
 int matrix_dims[]={ 64, 128, 256, 512, 1024, 2048, 4096 };
-
-//int matrix_dims[]={ 64 };
 
 template<class T, bool IS_COL_MAJOR>
 void testSuitePerType ( const T condition_num, const T gen_low, const T gen_high ) {
@@ -91,26 +90,38 @@ void testSuitePerType ( const T condition_num, const T gen_low, const T gen_high
         e.addTestCase( make_shared< TestCaseCholesky_baseline  <T, IS_COL_MAJOR> > ( dim, true  ) );
 
         if constexpr (IS_COL_MAJOR) {
-
+#if TARGET_OS_OSX
             e.addTestCase( make_shared< TestCaseCholesky_eigen3  <T, IS_COL_MAJOR> > ( dim ) );
+#endif
             e.addTestCase( make_shared< TestCaseCholesky_lapack  <T, IS_COL_MAJOR> > ( dim ) );
 
             if constexpr ( std::is_same< float,T >::value ) {
 
                 e.addTestCase( make_shared< TestCaseCholesky_metal   <T, IS_COL_MAJOR> > ( dim, true  ) );
+#if TARGET_OS_OSX
                 e.addTestCase( make_shared< TestCaseCholesky_metal   <T, IS_COL_MAJOR> > ( dim, false ) );
+#else
+                if ( dim <= 1024 ) {
+                    e.addTestCase( make_shared< TestCaseCholesky_metal   <T, IS_COL_MAJOR> > ( dim, false ) );
+                }
+#endif
             }
-            if constexpr ( std::is_same< double,T >::value ) {    
+#if TARGET_OS_OSX
+            if constexpr ( std::is_same< double,T >::value ) {
 
                 e.addTestCase( make_shared< TestCaseCholesky_gsl <T, IS_COL_MAJOR> > ( dim ) );
             }
+#endif
         }
         e.execute();
     }
 }
 
-
+#if TARGET_OS_OSX
 int main( int argc, char* argv[] )
+#else
+int run_test()
+#endif
 {
     TestCaseWithTimeMeasurements::printHeader( cout );
 

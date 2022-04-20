@@ -1,46 +1,73 @@
-#import "cholesky_metal_cpp_impl.h"
-
 #import "cholesky_metal_objc_own_shader.h"
 #import "cholesky_metal_objc_mps.h"
+#import "cholesky_metal_cpp_impl.h"
 
 CholeskyMetalCppImpl::CholeskyMetalCppImpl( const int dim, const bool use_mps )
+    :m_use_mps(use_mps)
 {
     if ( use_mps ) {
-        m_self = [ [ CholeskyMetalObjCMPS alloc ] initWithDim: dim ];
+        m_self_mps = [ [ CholeskyMetalObjCMPS alloc ] initWithDim: dim ];
     }
     else {
-        m_self = [ [ CholeskyMetalObjCOwnShader alloc ] initWithDim: dim ];
+        m_self_own_shader = [ [ CholeskyMetalObjCOwnShader alloc ] initWithDim: dim ];
     }
-}             
 
-CholeskyMetalCppImpl::~CholeskyMetalCppImpl(){ m_self = nullptr; }
+}
+
+CholeskyMetalCppImpl::~CholeskyMetalCppImpl(){ m_self_own_shader = nullptr; m_self_mps = nullptr; }
 
 void CholeskyMetalCppImpl::setInitialStates( float* L, float* b )
 {
-    [ (id)m_self setInitialStatesL: L B: b ];
+    if ( m_use_mps ) {
+        [ m_self_mps setInitialStatesL: L B: b ];
+    }
+    else {
+        [ m_self_own_shader setInitialStatesL: L B: b ];
+    }
 }
 
 float* CholeskyMetalCppImpl::getRawPointerL() {
-
-    return [ (id)m_self getRawPointerL ];
+    if ( m_use_mps ) {
+        return [ m_self_mps getRawPointerL ];
+    }
+    else {
+        return [ m_self_own_shader getRawPointerL ];
+    }
 }
 
 float* CholeskyMetalCppImpl::getRawPointerX() {
-
-    return [ (id)m_self getRawPointerX ];
+    if ( m_use_mps ) {
+        return [ m_self_mps getRawPointerX ];
+    }
+    else {
+        return [ m_self_own_shader getRawPointerX ];
+    }
 }
 
 float* CholeskyMetalCppImpl::getRawPointerY() {
-
-    return [ (id)m_self getRawPointerY ];
+    if ( m_use_mps ) {
+        return [ m_self_mps getRawPointerY ];
+    }
+    else {
+        return [ m_self_own_shader getRawPointerY ];
+    }
 }
 
 float* CholeskyMetalCppImpl::getRawPointerB() {
-
-    return [ (id)m_self getRawPointerB ];
+    if ( m_use_mps ) {
+        return [ m_self_mps getRawPointerB ];
+    }
+    else {
+        return [ m_self_own_shader getRawPointerB ];
+    }
 }
 
 void CholeskyMetalCppImpl::performComputation()
 {
-    [ (id)m_self performComputation ];
+    if ( m_use_mps ) {
+        [ m_self_mps performComputation ];
+    }
+    else {
+        [ m_self_own_shader performComputation ];
+    }
 }
