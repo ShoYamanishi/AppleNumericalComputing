@@ -26,26 +26,26 @@ void SparseMatrixVectorMetalCppImpl::setInitialStates(
     float*    csr_vector,
     float*    output_vector
 ) {
-    [ (id)m_self setInitialStatesBlockPtrs: csr_block_ptrs
-                             ThreadsPerRow: csr_threads_per_row
-                                  MaxIters: csr_max_iters
-                                 NumBlocks: num_blocks
-                                   RowPtrs: csr_row_ptrs
-                                   Columns: csr_columns
-                                    Values: csr_values
-                                    Vector: csr_vector
-                              OutputVector: output_vector ];
+    [ m_self setInitialStatesBlockPtrs: csr_block_ptrs
+                         ThreadsPerRow: csr_threads_per_row
+                              MaxIters: csr_max_iters
+                             NumBlocks: num_blocks
+                               RowPtrs: csr_row_ptrs
+                               Columns: csr_columns
+                                Values: csr_values
+                                Vector: csr_vector
+                          OutputVector: output_vector ];
 
 }
 
 float* SparseMatrixVectorMetalCppImpl::getRawPointerOutputVector() {
 
-    return [ (id)m_self getRawPointerOutputVector ];
+    return [ m_self getRawPointerOutputVector ];
 }
 
 void SparseMatrixVectorMetalCppImpl::performComputation()
 {
-    [ (id)m_self performComputation ];
+    [ m_self performComputation ];
 }
 
 
