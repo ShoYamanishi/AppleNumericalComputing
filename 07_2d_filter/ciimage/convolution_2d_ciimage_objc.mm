@@ -101,9 +101,9 @@
 
 - (void) release_explicit
 {
-    CGColorSpaceRelease   ( _mColorSpaceRef   );
-    CGDataProviderRelease ( _mDataProviderRef );
-    CGImageRelease        ( _mInputCGImageRef );
+//    CGColorSpaceRelease   ( _mColorSpaceRef   );
+//    CGDataProviderRelease ( _mDataProviderRef );
+//    CGImageRelease        ( _mInputCGImageRef );
 
     _mContextArc = nil;
     _mInputNSDataArc = nil;

@@ -13,25 +13,25 @@ Convolution2D_CIImageCppImpl::Convolution2D_CIImageCppImpl(
 
 Convolution2D_CIImageCppImpl::~Convolution2D_CIImageCppImpl()
 {
-    [ (id)m_self release_explicit];
+    [ m_self release_explicit];
 }
 
 void Convolution2D_CIImageCppImpl::copyToInputBuffer(const float* const p)
 {
-    [ (id)m_self copyToInputBuffer: p ];
+    [ m_self copyToInputBuffer: p ];
 }
 
 void Convolution2D_CIImageCppImpl::copyToKernelBuffer(const float* const p)
 {
-    [ (id)m_self copyToKernelBuffer: p ];
+    [ m_self copyToKernelBuffer: p ];
 }
 
 float* Convolution2D_CIImageCppImpl::getOutputImagePtr()
 {
-    return [ (id)m_self getOutputImagePtr ];
+    return [ m_self getOutputImagePtr ];
 }
 
 void Convolution2D_CIImageCppImpl::performConvolution()
 {
-    [ (id)m_self performConvolution ];
+    [ m_self performConvolution ];
 }

@@ -1,7 +1,7 @@
 #include "test_case_with_time_measurements.h"
 #include "test_pattern_generation.h"
 #include "thread_synchronizer.h"
-
+class Convolution2D_CIImageObjc;
 #include "convolution_2d_ciimage_cpp.h"
 #include "convolution_2d_metal_cpp.h"
 
@@ -371,13 +371,14 @@ class TestExecutorConvolution2D : public TestExecutor {
 };
 
 
-static const size_t NUM_TRIALS = 10;
+//static const size_t NUM_TRIALS = 10;
+static const size_t NUM_TRIALS = 1;
 
 struct image_dim {
     size_t width;
     size_t height;
 };
-
+#if TARGET_OS_OSX
 struct image_dim image_dims[]={
     {       64,      64}, 
     {      128,     128}, 
@@ -385,12 +386,22 @@ struct image_dim image_dims[]={
     {      512,     512}, 
     {     1024,    1024}, 
     {   2*1024,  2*1024}, 
-    {   4*1024,  4*1024}, 
-    {   8*1024,  8*1024}, 
-    {  16*1024, 16*1024}, 
+    {   4*1024,  4*1024},
+    {   8*1024,  8*1024},
+    {  16*1024, 16*1024},
     {  32*1024, 32*1024}
 };
-
+#else
+struct image_dim image_dims[]={
+    {       64,      64},
+    {      128,     128},
+    {      256,     256},
+    {      512,     512},
+    {     1024,    1024},
+    {   2*1024,  2*1024},
+    {   4*1024,  4*1024}
+};
+#endif
 template<class T, int KERNEL_DIM>
 void testSuitePerType ( const T gen_low, const T gen_high ) {
 
@@ -419,8 +430,11 @@ void testSuitePerType ( const T gen_low, const T gen_high ) {
     }
 }
 
-
+#if TARGET_OS_OSX
 int main( int argc, char* argv[] )
+#else
+int run_test()
+#endif
 {
     TestCaseWithTimeMeasurements::printHeader( cout );
 

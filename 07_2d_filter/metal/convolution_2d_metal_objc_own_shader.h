@@ -1,6 +1,6 @@
 #import "metal_compute_base.h"
 
-#include <convolution_2d_metal_cpp.h>
+#include "convolution_2d_metal_cpp.h"
 
 @interface Convolution2DMetalObjCOwnShader : MetalComputeBase
 

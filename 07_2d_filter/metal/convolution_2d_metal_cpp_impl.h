@@ -1,7 +1,7 @@
 #ifndef __CONVOLUTION_2D_METAL_CPP_IMPL_H__
 #define __CONVOLUTION_2D_METAL_CPP_IMPL_H__
 
-#include <convolution_2d_metal_cpp.h>
+#include "convolution_2d_metal_cpp.h"
 
 class Convolution2DMetalCppImpl
 {
@@ -14,8 +14,8 @@ class Convolution2DMetalCppImpl
     void   performConvolution();
 
   private:
-    void* m_self;
+    const int                         m_algo_type;
+    Convolution2DMetalObjCOwnShader*  m_self_own_shader;
+    Convolution2DMetalObjCMPS*        m_self_mps;
 };
-
-
 #endif /*__CONVOLUTION_2D_METAL_CPP_IMPL_H__*/
