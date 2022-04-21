@@ -15,6 +15,32 @@ This implies that the each row of the matrix must be processed serially.
 
 The following implementation include also the calculation of RMS of *x_new* and *x_old* in the each iteration to check the convergence.
 
+
+
+## 0. Instruction for iOS
+So far this has been tested on iPhone 13 mini 256GB.
+
+- Open `AppleNumericalComputing/iOSTester_12/iOSTester_12.xcodeproj` with Xcode
+
+- Build a release build
+
+- Run the iOS App in release build
+
+- Press 'Run' on the screen
+
+- Wait until App finished with 'finished!' on the log output.
+
+- Copy and paste the log into `12_gauss_seidel_solver/doc_ios/make_log.txt`.
+
+- Run the following in the terminal.
+```
+$ cd 10_cholesky_decomp
+$ grep '\(^INT\|^FLOAT\|^DOUBLE\|data element type\)' doc_ios/make_log.txt > doc_ios/make_log_cleaned.txt
+$ python ../common/process_log.py -logfile doc_ios/make_log_cleaned.txt -specfile doc_ios/plot_spec.json -show_impl -plot_charts -base_dir doc_ios/
+```
+- You will get the PNG files in  `12_gauss_seidel_solver/doc_ios/`.
+
+
 # 1. Key Points
 
 * The Matrix should be in the row-major for efficient computation.
@@ -72,9 +98,13 @@ X-axis is *Dim x Dim*, and Y-axis is the time taken in milliseconds.
 
 * **MATRIX_ROW_MAJOR:METAL MULTIPLE COMMITS 0 0** : Metal implementation, threads over columns, reduction over one row per thread-group, one commpt per iteration
 
+### Plots: Mac Mini M1 2020 8 GB
 <a href="doc/FLOAT_ANY_Overview.png"><img src="doc/FLOAT_ANY_Overview.png" alt="overview" height="600"/></a>
 
-### Remarks
+### Plots: iPhone 13 mini 256 GB
+<a href="doc_ios/FLOAT_ANY_Overview.png"><img src="doc_ios/FLOAT_ANY_Overview.png" alt="overview" height="600"/></a>
+
+### Remarks on Mac Mini
 
 * 'VDSP 1 1' shows the best running time for all the cases.
 
@@ -102,9 +132,13 @@ X-axis is *Dim x Dim*, and Y-axis is the relative running time of each implement
 
 * **NEON 8 1** : NEON implementation with 32 lanes over columns in a single row, loop unrolling factor 8.
 
+### Plots: Mac Mini M1 2020 8 GB
 <a href="doc/FLOAT_MATRIX_ROW_MAJOR_Comparison_Among_NEON_Loop_Unrolling_relative.png"><img src="doc/FLOAT_MATRIX_ROW_MAJOR_Comparison_Among_NEON_Loop_Unrolling_relative.png" alt="comparison among neon loop unrolling" height="600"/></a>
 
-### Remarks
+### Plots: iPhone 13 mini 256 GB
+<a href="doc_ios/FLOAT_MATRIX_ROW_MAJOR_Comparison_Among_NEON_Loop_Unrolling_relative.png"><img src="doc_ios/FLOAT_MATRIX_ROW_MAJOR_Comparison_Among_NEON_Loop_Unrolling_relative.png" alt="comparison among neon loop unrolling" height="600"/></a>
+
+### Remarks on Mac Mini
 There is a clear benefit in using NEON intrinsics and the sweet spot seems to be with the loop unrolling factor 4.
 
 
@@ -122,9 +156,13 @@ X-axis is *Dim x Dim*, and Y-axis is the time taken in milliseconds.
 
 * **MATRIX_ROW_MAJOR:VDSP 1 1** : vDSP implementation with **vDSP_vsubD()**, **vDSP_dotprD()**, and **vDSP_vdivD()**.
 
+### Plots: Mac Mini M1 2020 8 GB
 <a href="doc/DOUBLE_ANY_Overview.png"><img src="doc/DOUBLE_ANY_Overview.png" alt="overview" height="600"/></a>
 
-### Remarks
+### Plots: iPhone 13 mini 256 GB
+<a href="doc_ios/DOUBLE_ANY_Overview.png"><img src="doc_ios/DOUBLE_ANY_Overview.png" alt="overview" height="600"/></a>
+
+### Remarks on Mac Mini
 
 * 'VDSP 1 1' shows the best running time for all the cases.
 
@@ -145,9 +183,14 @@ X-axis is *Dim x Dim*, and Y-axis is the time taken in milliseconds.
 
 * **NEON 8 1** : NEON implementation with 16 lanes over columns in a single row, loop unrolling factor 8.
 
+### Plots: Mac Mini M1 2020 8 GB
 <a href="doc/DOUBLE_MATRIX_ROW_MAJOR_Comparison_Among_NEON_Loop_Unrolling_relative.png"><img src="doc/DOUBLE_MATRIX_ROW_MAJOR_Comparison_Among_NEON_Loop_Unrolling_relative.png" alt="comparison among neon loop unrolling" height="600"/></a>
 
-### Remarks
+### Plots: iPhone 13 mini 256 GB
+<a href="doc_ios/DOUBLE_MATRIX_ROW_MAJOR_Comparison_Among_NEON_Loop_Unrolling_relative.png"><img src="doc_ios/DOUBLE_MATRIX_ROW_MAJOR_Comparison_Among_NEON_Loop_Unrolling_relative.png" alt="comparison among neon loop unrolling" height="600"/></a>
+
+
+### Remarks on Mac Mini
 There is a clear benefit in using NEON intrinsics and also the explicit loop unrolling. The sweet spot seems to be the factor 4.
 
 

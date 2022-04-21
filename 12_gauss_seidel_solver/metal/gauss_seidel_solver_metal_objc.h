@@ -1,6 +1,6 @@
 #import "metal_compute_base.h"
 
-#include <gauss_seidel_solver_metal_cpp.h>
+#include "gauss_seidel_solver_metal_cpp.h"
 
 @interface GaussSeidelSolverMetalObjC : MetalComputeBase
 
