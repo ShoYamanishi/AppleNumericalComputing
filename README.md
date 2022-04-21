@@ -53,14 +53,13 @@ I have reorganized them into 13 sections above, and made it more presentable, an
 
 * To provide a Metal equivalent to Chap. 11-15 of CUDA Handbook
 
-* To present real running time information on MacOS (Apple Mac Mini 2020 8GB, for iOS devices planned later).
+* To present real running time information on MacOS (Apple Mac Mini 2020 8GB), and on iOS (iPhone 13 Mini 256GB)
 
 * To give an indication as to what type of technology/implementation works best for a particular type of problem in a given data size
 
 * To give a guideline on how to implement own solution if there is no existing framework or library available
 
 The target application is the realtime interactive applications on iOS and Macos that execute heavy numerical computation.
-For now, it provides implementations and results for MacOS BigSur on Mac Mini. An edition for the iOS devices is planned to be released later.
 
 The collection is split into 13 sections. About half of them are idioms in GPGPU computing, and the others are representative types of numerical computing.
 On CPU, each section first implements the algorithm in a plain C++ code, tests the running times for the problems in various sizes, and establish the baseline.
@@ -69,7 +68,7 @@ Then it tries to improve the baseline C++ implementation by reviewing the algori
 On GPU, if there is an idiom of GPGPU described in CUDA Handbook, it tries to implement the algorithms presented in the book to Metal. Some changes have to be made to absorb the differences between CUDA and Metal. Otherwise, it tries to make implementations according to the publicly available literature in GPGPU computing.
 In some cases I had to design the algorithms based on common knowledge in GPGPU computing.
 
-With those implementations and test results on the running time, it provides insight into what type of technology/implementation works best for particular type of problem in a given data size on the particular device (at the time of writing Mac Mini M1 8G BigSur 11.6).
+With those implementations and test results on the running time, it provides insight into what type of technology/implementation works best for particular type of problem in a given data size on the particular devices (at the time of writing Mac Mini M1 8G Monterey 12.3.1 and iPhone Mini 256GB iOS 15.4.1).
 It can also be used as a guideline on how to implement custom numerical solution if there is no existing framework or library, either by combining low-level routines in the libraries, or by writing in C++ with NEON intrinsics.
 For example, if you have to implement a variant of the projected Gauss-Seidel iterative solver, for which there is no direct routine is provided by either LAPACK, BLAS, or GNU Scientific Library, you can use this as a guideline for your own implementation in C++.
 
@@ -79,7 +78,7 @@ For example, if you have to implement a variant of the projected Gauss-Seidel it
 
 * **Apr 2022** : New Metal implementations with one commit for all the iterations/shifts are added for 05_radix_sort, 11_jacobi_solver, and 12_gauss_seidel_solver.
 
-* **May 2022** : Another version for Apple A15 Bionic using an iPhone 13 planned.
+* **Apr 2022** : Results from iPhone 13 Mini, Apple A15 Bionic added.
 
 # Technical Summary
 
@@ -120,6 +119,7 @@ This repo utilizes mainly condition variables, and provides OpenMP-like function
 
 ## How to Run the Experiments
 
+### macOS
 To run all the experiments, type `make all` on the top directory.
 To run the experiments for one section, `make all` in the directory. 
 The target *all* of Make does the following:
@@ -127,6 +127,30 @@ The target *all* of Make does the following:
 2. Run the executable and perform experiments according to the top-level C++-code 'test_*.cpp'.
 3. The executable generates a log in `doc/make_log.txt`
 4. A python script [common/process_log.py](./common/process_log.py) scan the make_log.txt and plots charts according to the specification given in 'doc/plot_spec.json'.
+
+### iOS
+
+1. Open `AppleNumericalComputing/iOSTester_XX/iOSTester_XX.xcodeproj` with Xcode.
+
+2. Build a release build.
+
+3. Run the iOS App in release build.
+
+4. Press 'Run' on the screen.
+
+5. Wait until App finished with 'finished!' on the log output.
+
+6. Copy and paste the log into `XX_*/doc_ios/make_log.txt`. (ex. `10_cholesky_decomp/doc_ios/make_log.txt`)
+
+- Run the following in the terminal.
+```
+$ cd XX_* (ex. 10_cholesky_decomp)
+$ grep '\(^INT\|^FLOAT\|^DOUBLE\|data element type\)' doc_ios/make_log.txt > doc_ios/make_log_cleaned.txt
+$ python ../common/process_log.py -logfile doc_ios/make_log_cleaned.txt -specfile doc_ios/plot_spec.json -show_impl -plot_charts -base_dir doc_ios/
+```
+- You will get the PNG files in  `XX_*/doc_ios/`.
+
+
 
 
 ## General Findings on CPU
@@ -136,6 +160,8 @@ The target *all* of Make does the following:
 * Explicit use of NEON intrinsics with explicit loop unrolling of factor 4 or 8 usually works well.
 
 * Multithreading are usually beneficial, and usually 4-8 threads are the sweet spots.
+
+* The iOS implementations performs comparable to the macOS counterparts.
 
 ## General Findings on GPU
 
@@ -156,6 +182,16 @@ explicit unrolling of the loop body does not only improve performance, but also 
 To make it work, the number of threads per thread-group has to be reduced from 1024 to 768. Otherwise, the output from this kernel is wrong, and there is no compiler or runtime error for it.
 
 * In general the more kernel dispatches per commit, the more efficient. However it does not necessarily hold for the problem sizes where Metal has an advantage over CPU. See [radix sort](./05_radix_sort), [Jacobi solver](./11_jacobi_solver), and [Gauss-Seldel solver](./12_gauss_seidel_solver).
+
+## Comparison between macOS (Mac Mini 2020 8GB) and iOS (iPhone 13 mini)
+
+* The performance of CPU is comparable between macOS and iOS. Especially vDSP seems to be highly tuned for iOS.
+
+* The kernel launch time taken in iOS (from the compute encoder configuration, commit, to the completion of the command) is much higher than in macOS (approximately 5 times higher). It is a bit disappointing, as the number of kernel launches on iOS will be severely limited for the realtime applications that perform processing at the frame rate (60 / sec).
+
+* The number of dispatches, or the size of data per command buffer is limited on iOS than macOS. Please see the configuration in [RadixSort](./05_radix_sort) for details. macOS can handle all the 200+ dispatches in one commit, while iOS can not.
+
+* The maximum time allowed for one compute (commit) seems to be shorter for iOS (approximately 200[ms] on iPhone 13 Mini tested). It is not clear if it is configurable somehow.
 
 # File Organization
 This repo consists of 13 independent sections at the top directory, numbered from '01_*' to '13_*'.
