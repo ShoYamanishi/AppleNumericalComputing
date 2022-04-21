@@ -1,7 +1,7 @@
 #ifndef __FFT_METAL_CPP_IMPL_H__
 #define __FFT_METAL_CPP_IMPL_H__
 
-#include <fft_metal_cpp.h>
+#include "fft_metal_cpp.h"
 
 #include <cstddef>
 
@@ -26,7 +26,7 @@ class FFTMetalCppImpl
     void   performComputation();
 
   private:
-    void * m_self;
+    FFTMetalObjC* m_self;
 };
 
 #endif /*__FFT_METAL_CPP_IMPL_H__*/

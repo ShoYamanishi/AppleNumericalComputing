@@ -1,6 +1,6 @@
 #import "metal_compute_base.h"
 
-#include <fft_metal_cpp.h>
+#include "fft_metal_cpp.h"
 
 @interface FFTMetalObjC : MetalComputeBase
 
