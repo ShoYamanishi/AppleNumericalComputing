@@ -1,0 +1,69 @@
+[
+{
+    "DataElementType": "INT",
+    "DataElementSubtype": "VECTOR",
+    "Width" : 13,
+    "Height" : 8,
+    "Title": "Overview",
+    "PlotType": "LOG-LOG",
+    "PlotBase": "CPP_STDLIB 1 1",
+    "UpperLimit" : 1.2,
+    "PlotCases": [ "CPP_STDLIB 1 1", "BOOST_SAMPLE_SORT 1 16", "METAL UNCOALESCED_WRITE_EARLY_OUT 0 0", "METAL COALESCED_WRITE_EARLY_OUT 0 0", "METAL UNCOALESCED_WRITE 0 0", "METAL COALESCED_WRITE 0 0"  ]
+},
+{
+    "DataElementType": "FLOAT",
+    "DataElementSubtype": "VECTOR",
+    "Width" : 13,
+    "Height" : 8,
+    "Title": "Overview",
+    "PlotType": "LOG-LOG",
+    "PlotBase": "CPP_STDLIB 1 1",
+    "UpperLimit" : 1.2,
+    "PlotCases": [ "CPP_STDLIB 1 1", "BOOST_SAMPLE_SORT 1 16", "METAL UNCOALESCED_WRITE_EARLY_OUT 0 0", "METAL COALESCED_WRITE_EARLY_OUT 0 0", "METAL UNCOALESCED_WRITE 0 0", "METAL COALESCED_WRITE 0 0" ]
+},
+{
+    "DataElementType": "INT",
+    "DataElementSubtype": "VECTOR",
+    "Width" : 13,
+    "Height" : 8,
+    "Title": "Comparison among CPU Sort",
+    "PlotType": "LOG-LIN-RELATIVE",
+    "PlotBase": "CPP_STDLIB 1 1",
+    "UpperLimit" : 3.0,
+    "PlotCases": [ "CPP_STDLIB 1 1", "BOOST_SPREAD_SORT 1 1", "BOOST_SAMPLE_SORT 1 1", "BOOST_SAMPLE_SORT 1 4", "BOOST_SAMPLE_SORT 1 16", "BOOST_SAMPLE_SORT 1 64" ]
+},
+{
+    "DataElementType": "FLOAT",
+    "DataElementSubtype": "VECTOR",
+    "Width" : 13,
+    "Height" : 8,
+    "Title": "Comparison among CPU Sort",
+    "PlotType": "LOG-LIN-RELATIVE",
+    "PlotBase": "CPP_STDLIB 1 1",
+    "UpperLimit" : 1.2,
+    "PlotCases": [ "CPP_STDLIB 1 1", "BOOST_SPREAD_SORT 1 1", "BOOST_SAMPLE_SORT 1 1", "BOOST_SAMPLE_SORT 1 4", "BOOST_SAMPLE_SORT 1 16", "BOOST_SAMPLE_SORT 1 64" ]
+},
+{
+    "DataElementType": "INT",
+    "DataElementSubtype": "VECTOR",
+    "Width" : 13,
+    "Height" : 8,
+    "Title": "Comparison Among Metal Implementations",
+    "PlotType": "LOG-LIN-RELATIVE",
+    "PlotBase": "METAL UNCOALESCED_WRITE_EARLY_OUT 0 0",
+    "UpperLimit" : 1.3,
+    "PlotCases": [ "METAL UNCOALESCED_WRITE_EARLY_OUT 0 0", "METAL COALESCED_WRITE_EARLY_OUT 0 0", "METAL UNCOALESCED_WRITE 0 0", "METAL COALESCED_WRITE 0 0" ]
+},
+{
+    "DataElementType": "FLOAT",
+    "DataElementSubtype": "VECTOR",
+    "Width" : 13,
+    "Height" : 8,
+    "Title": "Comparison Among Metal Implementations",
+    "PlotType": "LOG-LIN-RELATIVE",
+    "PlotBase": "METAL UNCOALESCED_WRITE_EARLY_OUT 0 0",
+    "UpperLimit" : 1.3,
+    "PlotCases": [ "METAL UNCOALESCED_WRITE_EARLY_OUT 0 0", "METAL COALESCED_WRITE_EARLY_OUT 0 0", "METAL UNCOALESCED_WRITE 0 0", "METAL COALESCED_WRITE 0 0" ]
+}
+]
+

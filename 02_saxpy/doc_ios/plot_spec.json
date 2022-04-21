@@ -1,0 +1,94 @@
+[
+{
+    "DataElementType": "FLOAT",
+    "DataElementSubtype": "VECTOR",
+    "Width" : 13,
+    "Height" : 8,
+    "Title": "Overview",
+    "PlotType": "LOG-LOG",
+    "PlotBase": "CPP_BLOCK 1 1",
+    "UpperLimit" : 5.0,
+    "PlotCases": [ "CPP_BLOCK 1 1", "CPP_BLOCK 1 2", "NEON 4 1", "VDSP 1 1", "BLAS 1 1", "METAL DEFAULT 0 0" ]
+
+},
+{
+    "DataElementType": "DOUBLE",
+    "DataElementSubtype": "VECTOR",
+    "Width" : 13,
+    "Height" : 8,
+    "Title": "Overview",
+    "PlotType": "LOG-LOG",
+    "PlotBase": "CPP_BLOCK 1 1",
+    "UpperLimit" : 5.0,
+    "PlotCases": [ "CPP_BLOCK 1 1", "CPP_BLOCK 1 2", "NEON 4 1", "VDSP 1 1", "BLAS 1 1" ]
+},
+{
+    "DataElementType": "FLOAT",
+    "DataElementSubtype": "VECTOR",
+    "Width" : 13,
+    "Height" : 8,
+    "Title": "Comparison Among CPU Implementations",
+    "PlotType": "LOG-LOG",
+    "PlotBase": "CPP_BLOCK 1 1",
+    "UpperLimit" : 5.0,
+    "PlotCases": [ "CPP_BLOCK 1 1", "CPP_BLOCK 1 2", "CPP_BLOCK 1 4", "CPP_BLOCK 1 8", "CPP_BLOCK 16 1", "CPP_INTERLEAVED 1 2", "CPP_INTERLEAVED 1 4", "CPP_INTERLEAVED 1 8", "CPP_INTERLEAVED 1 16", "NEON 1 1", "NEON 2 1", "NEON 4 1", "NEON 8 1", "NEON 8 2", "NEON 8 4", "NEON 8 8", "VDSP 1 1", "BLAS 1 1", "METAL DEFAULT 0 0" ]
+
+},
+{
+    "DataElementType": "DOUBLE",
+    "DataElementSubtype": "VECTOR",
+    "Width" : 13,
+    "Height" : 8,
+    "Title": "Comparison Among CPU Implementations",
+    "PlotType": "LOG-LOG",
+    "PlotBase": "CPP_BLOCK 1 1",
+    "UpperLimit" : 5.0,
+    "PlotCases": [ "CPP_BLOCK 1 1", "CPP_BLOCK 1 2", "CPP_BLOCK 1 4", "CPP_BLOCK 1 8", "CPP_BLOCK 1 16", "CPP_INTERLEAVED 1 2", "CPP_INTERLEAVED 1 4", "CPP_INTERLEAVED 1 8", "CPP_INTERLEAVED 1 16", "NEON 1 1", "NEON 2 1", "NEON 4 1", "NEON 8 1", "NEON 8 2", "NEON 8 4", "NEON 8 8", "VDSP 1 1", "BLAS 1 1" ]
+
+},
+{
+    "DataElementType": "FLOAT",
+    "DataElementSubtype": "VECTOR",
+    "Width" : 13,
+    "Height" : 8,
+    "Title": "Comparison Among NEON Implementations",
+    "PlotType": "LOG-LIN-RELATIVE",
+    "PlotBase": "CPP_BLOCK 1 1",
+    "UpperLimit" : 2.5,
+    "PlotCases": [ "CPP_BLOCK 1 1", "NEON 1 1", "NEON 2 1", "NEON 4 1", "NEON 8 1", "NEON 8 2", "NEON 8 4", "NEON 8 8" ]
+},
+{
+    "DataElementType": "DOUBLE",
+    "DataElementSubtype": "VECTOR",
+    "Width" : 13,
+    "Height" : 8,
+    "Title": "Comparison Among NEON Implementations",
+    "PlotType": "LOG-LIN-RELATIVE",
+    "PlotBase": "CPP_BLOCK 1 1",
+    "UpperLimit" : 2.5,
+    "PlotCases": [ "CPP_BLOCK 1 1", "NEON 1 1", "NEON 2 1", "NEON 4 1", "NEON 8 1", "NEON 8 2", "NEON 8 4", "NEON 8 8" ]
+},
+{
+    "DataElementType": "FLOAT",
+    "DataElementSubtype": "VECTOR",
+    "Width" : 13,
+    "Height" : 8,
+    "Title": "Comparison Among C++ Multithreaded Implementations",
+    "PlotType": "LOG-LIN-RELATIVE",
+    "PlotBase": "CPP_BLOCK 1 1",
+    "UpperLimit" : 5.0,
+    "PlotCases": [ "CPP_BLOCK 1 1", "CPP_BLOCK 1 2", "CPP_BLOCK 1 4", "CPP_BLOCK 1 8", "CPP_BLOCK 1 16", "CPP_INTERLEAVED 1 2", "CPP_INTERLEAVED 1 4", "CPP_INTERLEAVED 1 8", "CPP_INTERLEAVED 1 16" ]
+},
+{
+    "DataElementType": "DOUBLE",
+    "DataElementSubtype": "VECTOR",
+    "Width" : 13,
+    "Height" : 8,
+    "Title": "Comparison Among C++ Multithreaded Implementations",
+    "PlotType": "LOG-LIN-RELATIVE",
+    "PlotBase": "CPP_BLOCK 1 1",
+    "UpperLimit" : 5.0,
+    "PlotCases": [ "CPP_BLOCK 1 1", "CPP_BLOCK 1 2", "CPP_BLOCK 1 4", "CPP_BLOCK 1 8", "CPP_BLOCK 1 16", "CPP_INTERLEAVED 1 2", "CPP_INTERLEAVED 1 4", "CPP_INTERLEAVED 1 8", "CPP_INTERLEAVED 1 16" ]
+}
+]
+

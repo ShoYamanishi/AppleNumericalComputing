@@ -2136,8 +2136,11 @@ void testSuitePerType ( const T condition_num, const T gen_low, const T gen_high
     }
 }
 
-
+#if TARGET_OS_OSX
 int main( int argc, char* argv[] )
+#else
+int run_test()
+#endif
 {
     TestCaseWithTimeMeasurements::printHeader( cout );
 

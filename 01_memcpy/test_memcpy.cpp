@@ -447,11 +447,21 @@ class TestExecutorMemcpy : public TestExecutor {
 
 
 static const size_t NUM_TRIALS = 10;
-size_t nums_elements[] = { 32, 64, 128, 256, 512, 1024, 
+#if TARGET_OS_OSX
+size_t nums_elements[] = { 32, 64, 128, 256, 512, 1024,
                       2*1024, 4*1024, 8*1024, 16*1024, 32*1024, 64*1024, 128*1024, 256*1024, 512*1024, 
                      1024*1024, 2*1024*1024, 4*1024*1024, 8*1024*1024, 16*1024*1024, 32*1024*1024, 64*1024*1024, 128*1024*1024 };
+#else
+size_t nums_elements[] = { 32, 64, 128, 256, 512, 1024,
+                      2*1024, 4*1024, 8*1024, 16*1024, 32*1024, 64*1024, 128*1024, 256*1024, 512*1024,
+                     1024*1024, 2*1024*1024, 4*1024*1024, 8*1024*1024, 16*1024*1024, 32*1024*1024 };
+#endif
 
+#if TARGET_OS_OSX
 int main( int argc, char* argv[] ) {
+#else
+int run_test() {
+#endif
 
     TestCaseWithTimeMeasurements::printHeader( cout );
 
@@ -478,10 +488,13 @@ int main( int argc, char* argv[] ) {
         e.addTestCase( make_shared< TestCaseMemcpy_memcpy_multithread <int> > ( n , 4 ) );
         e.addTestCase( make_shared< TestCaseMemcpy_memcpy_multithread <int> > ( n , 8 ) );
         e.addTestCase( make_shared< TestCaseMemcpy_metal_kernel <int> > ( n , false ) );
+#if TARGET_OS_OSX
         e.addTestCase( make_shared< TestCaseMemcpy_metal_kernel <int> > ( n , true  ) );
+#endif
         e.addTestCase( make_shared< TestCaseMemcpy_metal_blit   <int> > ( n , false ) );
+#if TARGET_OS_OSX
         e.addTestCase( make_shared< TestCaseMemcpy_metal_blit   <int> > ( n , true  ) );
-
+#endif
         e.execute();
     }
     return 0;

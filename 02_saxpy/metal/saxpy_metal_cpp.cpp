@@ -1,3 +1,4 @@
+class SaxpyMetalObjC;
 #include "saxpy_metal_cpp_impl.h"
 #include "saxpy_metal_cpp.h"
 

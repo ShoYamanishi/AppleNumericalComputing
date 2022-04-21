@@ -189,7 +189,7 @@ kernel void scan_with_base_threadgroupwise_32_32(
 
         thread int local_sum =   in[ thread_position_in_grid ] 
 
-                               + (  ( thread_position_in_threadgroup == 0 )
+                               + (   ( ( thread_position_in_threadgroup == 0 ) && ( threadgroup_position_in_grid > 0) )
                                   ?( grid_prefix_sums[ threadgroup_position_in_grid - 1 ] )
                                   : 0  );
 

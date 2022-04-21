@@ -1,3 +1,4 @@
+class SparseMatrixVectorMetalObjC;
 #include "sparse_matrix_vector_metal_cpp_impl.h"
 #include "sparse_matrix_vector_metal_cpp.h"
 

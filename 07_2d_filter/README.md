@@ -2,6 +2,29 @@
 The image is in the *row-major* form with the *same* boundary condition with zero padding.
 The *same* boundary condition means the size of the output image is the same as the input image's.
 
+## 0. Instruction for iOS
+So far this has been tested on iPhone 13 mini 256GB.
+
+- Open `AppleNumericalComputing/iOSTester_07/iOSTester_07.xcodeproj` with Xcode
+
+- Build a release build
+
+- Run the iOS App in release build
+
+- Press 'Run' on the screen
+
+- Wait until App finished with 'finished!' on the log output.
+
+- Copy and paste the log into `07_2d_filter/doc_ios/make_log.txt`.
+
+- Run the following in the terminal.
+```
+$ cd 07_2d_filter
+$ grep '\(^INT\|^FLOAT\|^DOUBLE\|data element type\)' doc_ios/make_log.txt > doc_ios/make_log_cleaned.txt
+$ python ../common/process_log.py -logfile doc_ios/make_log_cleaned.txt -specfile doc_ios/plot_spec.json -show_impl -plot_charts -base_dir doc_ios/
+```
+- You will get the PNG files in  `07_2d_filter/doc_ios/`.
+
 # 1. Key Points
 
 * Multi-threading in CPU works well. If the number of threads are 8 or less, then the overhead of thread synchronization is amortized already with 64x64 image.
@@ -53,9 +76,13 @@ X-axis is the number of the pixels, and Y-axis is the time taken in milliseconds
 
 * **METAL MPS 0 0**: MPSImageConvolution
 
+### Plots: Mac Mini M1 2020 8 GB
 <a href="doc/FLOAT_MATRIX_ROW_MAJOR_Overview.png"><img src="doc/FLOAT_MATRIX_ROW_MAJOR_Overview.png" alt="overview" height="600"/></a>
 
-### Remarks
+### Plots: iPhone 13 mini 256 GB
+<a href="doc_ios/FLOAT_MATRIX_ROW_MAJOR_Overview.png"><img src="doc_ios/FLOAT_MATRIX_ROW_MAJOR_Overview.png" alt="overview" height="600"/></a>
+
+### Remarks on Mac Mini
 
 * 'METAL MPS 0 0' performs best if the image size is in (256x256 - 2048x2048), otherwise, 'METAL TWO_STAGE 0 0' performs best.
 
@@ -82,9 +109,13 @@ X-axis is the number of pixels, and Y-axis is the relative running time of each 
 
 * **CPP_BLOCK 1 32**: C++ implementation with 32 threads
 
+### Plots: Mac Mini M1 2020 8 GB
 <a href="doc/FLOAT_MATRIX_ROW_MAJOR_Comparison_Among_CPU_Multithreaded_Implementations_relative.png"><img src="doc/FLOAT_MATRIX_ROW_MAJOR_Comparison_Among_CPU_Multithreaded_Implementations_relative.png" alt="comparison among cpu multithreaded implementations" height="600"/></a>
 
-### Remarks
+### Plots: iPhone 13 mini 256 GB
+<a href="doc_ios/FLOAT_MATRIX_ROW_MAJOR_Comparison_Among_CPU_Multithreaded_Implementations_relative.png"><img src="doc_ios/FLOAT_MATRIX_ROW_MAJOR_Comparison_Among_CPU_Multithreaded_Implementations_relative.png" alt="comparison among cpu multithreaded implementations" height="600"/></a>
+
+### Remarks on Mac Mini
 
 * Multithreading in CPU works well.
 If the number of threads are 8 or less, then the overhead of thread synchronization is amortized already for the images of size 64x64.
@@ -105,9 +136,14 @@ X-axis is the number of pixels, and Y-axis is the relative running time of each 
 
 * **METAL MPS 0 0**: MPSImageConvolution
 
-<a href="doc/FLOAT_MATRIX_ROW_MAJOR_Comparison_Among_GPU_Implementations_relative.png"><img src="doc/FLOAT_MATRIX_ROW_MAJOR_Comparison_Among_GPU_Implementations_relative.png" alt="comparison among gpu implementations" height="600"/></a>
+### Plots: Mac Mini M1 2020 8 GB
+<a href="doc/FLOAT_MATRIX_ROW_MAJOR_Comparison_Among_GPU_Implementations_relative.png"><img src="doc/FLOAT_MATRIX_ROW_MAJOR_Comparison_Among_GPU_Implementations_relative.png" alt="comparison among
+ gpu implementations" height="600"/></a>
 
-### Remarks
+### Plots: iPhone 13 mini 256 GB
+<a href="doc_ios/FLOAT_MATRIX_ROW_MAJOR_Comparison_Among_GPU_Implementations_relative.png"><img src="doc_ios/FLOAT_MATRIX_ROW_MAJOR_Comparison_Among_GPU_Implementations_relative.png" alt="comparison among gpu implementations" height="600"/></a>
+
+### Remarks on Mac Mini
 
 * The version in two-pass with `simd_shuffle()` instructions works better than the naive one-pass version.
 * The performance of MPS varies depending on the size of the image. MPS uses *MTLTexture* to access the image. This result suggests *MTLTexture* is tuned for particular range of the image sizes.

@@ -1,3 +1,4 @@
+class FFTMetalObjC;
 #include "fft_metal_cpp_impl.h"
 #include "fft_metal_cpp.h"
 

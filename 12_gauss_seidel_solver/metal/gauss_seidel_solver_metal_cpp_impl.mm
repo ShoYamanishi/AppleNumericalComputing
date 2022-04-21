@@ -10,31 +10,31 @@ GaussSeidelSolverMetalCppImpl::~GaussSeidelSolverMetalCppImpl(){ m_self = nullpt
 
 void GaussSeidelSolverMetalCppImpl::setInitialStates( float* A, float* D, float* b, float* x1, float* x2 )
 {
-    [ (id)m_self setInitialStatesA: A D:D B: b X1: x1 X2: x2 ];
+    [ m_self setInitialStatesA: A D:D B: b X1: x1 X2: x2 ];
 }
 
 float* GaussSeidelSolverMetalCppImpl::getRawPointerA() {
 
-    return [ (id)m_self getRawPointerA ];
+    return [ m_self getRawPointerA ];
 }
 
 float* GaussSeidelSolverMetalCppImpl::getRawPointerB() {
 
-    return [ (id)m_self getRawPointerB ];
+    return [ m_self getRawPointerB ];
 }
 
 float* GaussSeidelSolverMetalCppImpl::getRawPointerActiveX() {
-    return [ (id)m_self getRawPointerActiveX ];
+    return [ m_self getRawPointerActiveX ];
 }
 
 float GaussSeidelSolverMetalCppImpl::getError() {
 
-    return [ (id)m_self getError ];
+    return [ m_self getError ];
 }
 
 void GaussSeidelSolverMetalCppImpl::performComputation()
 {
-    [ (id)m_self performComputation ];
+    [ m_self performComputation ];
 }
 
 

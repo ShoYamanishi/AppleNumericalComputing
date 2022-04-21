@@ -25,7 +25,7 @@ class RadixSortMetalCppImpl
 
     void performComputation();
   private:
-    void * m_self;
+    RadixSortMetalObjC* m_self;
 
 };
 

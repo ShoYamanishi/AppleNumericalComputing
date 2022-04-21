@@ -1,6 +1,6 @@
 #import "metal_compute_base.h"
 
-#include <sparse_matrix_vector_metal_cpp.h>
+#include "sparse_matrix_vector_metal_cpp.h"
 
 @interface SparseMatrixVectorMetalObjC : MetalComputeBase
 

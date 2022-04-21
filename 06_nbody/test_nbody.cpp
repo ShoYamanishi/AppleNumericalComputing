@@ -872,7 +872,7 @@ class TestExecutorNBody : public TestExecutor {
 
 static const size_t NUM_TRIALS = 10;
 static const float  TIMESTEP   = 0.1;
-static const float  TOLERANCE  = 0.001;
+static const float  TOLERANCE  = 0.01;
 
 size_t nums_elements[]{ 32, 64, 128, 256, 512, 1024, 2*1024, 4*1024, 8*1024, 16*1024, 32*1024 };
 
@@ -909,9 +909,11 @@ void testSuitePerType ( const T delta_t, const T tolerance ) {
         e.execute();
     }
 }
-
-int main( int argc, char* argv[] )
-{
+#if TARGET_OS_OSX
+int main( int argc, char* argv[] ) {
+#else
+int run_test() {
+#endif
     TestCaseWithTimeMeasurements::printHeader( cout );
 
     cerr << "\n\nTesting for type float.\n\n";

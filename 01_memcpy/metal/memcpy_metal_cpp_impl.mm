@@ -9,30 +9,30 @@ MemcpyMetalCppImpl::MemcpyMetalCppImpl( const size_t num_bytes, const bool useMa
 MemcpyMetalCppImpl::~MemcpyMetalCppImpl(){;}
 
 unsigned int MemcpyMetalCppImpl::numBytes() {
-    return [ (id)m_self numBytes ];
+    return [ m_self numBytes ];
 }
 
 unsigned int MemcpyMetalCppImpl::numGroupsPerGrid() {
-    return [ (id)m_self numGroupsPerGrid ];
+    return [ m_self numGroupsPerGrid ];
 }
 
 unsigned int MemcpyMetalCppImpl::numThreadsPerGroup() {
-    return [ (id)m_self numThreadsPerGroup ];
+    return [ m_self numThreadsPerGroup ];
 }
 
 void* MemcpyMetalCppImpl::getRawPointerIn() {
-    return [ (id)m_self getRawPointerIn ];
+    return [ m_self getRawPointerIn ];
 }
 
 void* MemcpyMetalCppImpl::getRawPointerOut() {
-    return [ (id)m_self getRawPointerOut ];
+    return [ m_self getRawPointerOut ];
 }
 
 void MemcpyMetalCppImpl::performComputationKernel() {
-    return [ (id)m_self performComputationKernel ];
+    return [ m_self performComputationKernel ];
 }
 
 void MemcpyMetalCppImpl::performComputationBlit() {
-    return [ (id)m_self performComputationBlit ];
+    return [ m_self performComputationBlit ];
 }
 

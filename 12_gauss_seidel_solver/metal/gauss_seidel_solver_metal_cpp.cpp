@@ -1,3 +1,4 @@
+class GaussSeidelSolverMetalObjC;
 #include "gauss_seidel_solver_metal_cpp_impl.h"
 #include "gauss_seidel_solver_metal_cpp.h"
 

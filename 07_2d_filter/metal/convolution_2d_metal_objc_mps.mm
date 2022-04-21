@@ -54,6 +54,8 @@ typedef unsigned int uint;
         tex_desc.width       = _mImageWidth;
         tex_desc.height      = _mImageHeight;
         tex_desc.pixelFormat = MTLPixelFormatR32Float; // Ordinary format with one 32-bit floating-point component.
+        tex_desc.usage       = MTLTextureUsageShaderRead | MTLTextureUsageShaderWrite;
+        tex_desc.textureType = MTLTextureType2D;
         _mMPSTexture = [ _mDevice newTextureWithDescriptor:tex_desc ];
         if (_mMPSTexture == nil) {
             NSLog(@"Failed to allocate _mMPSTexture.");
@@ -75,9 +77,9 @@ typedef unsigned int uint;
 {
     MTLRegion region = MTLRegionMake2D( 0, 0, _mImageWidth, _mImageHeight );
 
-    [ _mMPSTexture replaceRegion: region 
-                     mipmapLevel: 0 
-                       withBytes: p 
+    [ _mMPSTexture replaceRegion: region
+                     mipmapLevel: 0
+                       withBytes: p
                      bytesPerRow: sizeof(float)*_mImageWidth ];
 }
 
@@ -104,19 +106,30 @@ typedef unsigned int uint;
 
 // from https://developer.apple.com/documentation/metalperformanceshaders/mpscopyallocator?language=objc
 
+#if TARGET_OS_OSX
 MPSCopyAllocator myAllocator 
     = ^id <MTLTexture>( MPSKernel * __nonnull filter,
                         __nonnull id <MTLCommandBuffer> cmdBuf,
                         __nonnull id <MTLTexture> sourceTexture
 ) {
+#else
+MPSCopyAllocator myAllocator
+    = ^id <MTLTexture> __nonnull NS_RETURNS_RETAINED (
+                        MPSKernel * __nonnull filter,
+                        id <MTLCommandBuffer> __nonnull cmdBuf,
+                        id <MTLTexture> __nonnull sourceTexture
+) {
+#endif
     MTLPixelFormat format = sourceTexture.pixelFormat;
 
     MTLTextureDescriptor* d
-        = [MTLTextureDescriptor texture2DDescriptorWithPixelFormat: format 
-                                                             width: sourceTexture.width 
+        = [MTLTextureDescriptor texture2DDescriptorWithPixelFormat: format
+                                                             width: sourceTexture.width
                                                             height: sourceTexture.height
                                                          mipmapped: NO                   ];
- 
+
+    d.usage       = MTLTextureUsageShaderRead | MTLTextureUsageShaderWrite;
+    d.textureType = MTLTextureType2D;
     id <MTLTexture> result = [ cmdBuf.device newTextureWithDescriptor: d ];
  
     return result;    
@@ -141,7 +154,7 @@ MPSCopyAllocator myAllocator
 
     [ commandBuffer waitUntilCompleted ];
 
-    [ MPSConvKernel release ];
+    //[ MPSConvKernel release ];
 }
 
 @end

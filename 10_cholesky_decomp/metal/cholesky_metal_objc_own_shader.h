@@ -1,6 +1,6 @@
 #import "metal_compute_base.h"
 
-#include <cholesky_metal_cpp.h>
+#include "cholesky_metal_cpp.h"
 
 @interface CholeskyMetalObjCOwnShader : MetalComputeBase
 

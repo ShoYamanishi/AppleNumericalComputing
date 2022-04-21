@@ -1,7 +1,7 @@
 #ifndef __DENSE_MATRIX_VECTOR_METAL_CPP_IMPL_H__
 #define __DENSE_MATRIX_VECTOR_METAL_CPP_IMPL_H__
 
-#include <dense_matrix_vector_metal_cpp.h>
+#include "dense_matrix_vector_metal_cpp.h"
 
 #include <cstddef>
 
@@ -26,7 +26,9 @@ class DenseMatrixVectorMetalCppImpl
     void   performComputation();
 
   private:
-    void * m_self;
+    bool                                 m_own_shader;
+    DenseMatrixVectorMetalObjCOwnShader* m_self_own_shader;
+    DenseMatrixVectorMetalObjCMPS*       m_self_mps;
 };
 
 #endif /*__DENSE_MATRIX_VECTOR_METAL_CPP_IMPL_H__*/

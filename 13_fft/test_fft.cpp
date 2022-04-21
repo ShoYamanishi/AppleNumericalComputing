@@ -713,8 +713,11 @@ void testSuitePerType ( const T max_amp, const int num_sines ) {
     e.execute();
 }
 
-
+#if TARGET_OS_OSX
 int main( int argc, char* argv[] )
+#else
+int run_test()
+#endif
 {
     TestCaseWithTimeMeasurements::printHeader( cout );
 

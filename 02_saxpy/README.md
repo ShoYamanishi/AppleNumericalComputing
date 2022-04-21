@@ -2,6 +2,29 @@
 
 Multiply vector X by scalar α and add it to vector Y. This type operation is called *Streaming Workloads* in Chapter 11 of [CUDA Handbook](http://www.cudahandbook.com/).
 
+## 0. Instruction for iOS
+So far this has been tested on iPhone 13 mini 256GB.
+
+- Open `AppleNumericalComputing/iOSTester_02/iOSTester_02.xcodeproj` with Xcode
+
+- Build a release build
+
+- Run the iOS App in release build
+
+- Press 'Run' on the screen
+
+- Wait until App finished with 'finished!' on the log output.
+
+- Copy and paste the log into `02_saxpy/doc_ios/make_log.txt`.
+
+- Run the following in the terminal.
+```
+$ cd 01_memcpy
+$ grep '\(^INT\|^FLOAT\|^DOUBLE\|data element type\)' doc_ios/make_log.txt > doc_ios/make_log_cleaned.txt
+$ python ../common/process_log.py -logfile doc_ios/make_log_cleaned.txt -specfile doc_ios/plot_spec.json -show_impl -plot_charts -base_dir doc_ios/
+```
+- You will get the PNG files in  `02-saxpy/doc_ios/`.
+
 # 1. Key Points
 
 * For *float*, vDSP, BLAS, and the plain C++ version perform best depending on the problem size.
@@ -59,9 +82,13 @@ X-axis is the size of the vectors |X| & |Y|, and Y-axis is the time taken in mil
 
 * **METAL DEFAULT 0 0** : Metal compute kernel
 
+### Plots: Mac Mini M1 2020 8 GB
 <a href="doc/FLOAT_VECTOR_Overview.png"><img src="doc/FLOAT_VECTOR_Overview.png" alt="overview float"/></a>
 
-### Remarks
+### Plots: iPhone 13 mini 256 GB
+<a href="doc_ios/FLOAT_VECTOR_Overview.png"><img src="doc_ios/FLOAT_VECTOR_Overview.png" alt="overview float"/></a>
+
+### Remarks on Mac Mini
 
 * Plain C++ implementation (CPP_BLOCK 1 1) shows the best running times between |V| = 512 and 8K elements.
 Beyond that size BLAS & vDSP work best.
@@ -197,9 +224,14 @@ X-axis is the size of the vectors |X| & |Y|, and Y-axis is the time taken in mil
 
 * **BLAS 1 1** : cblas_daxpy() in the Accelerate framework.
 
+
+### Plots: Mac Mini M1 2020 8 GB
 <a href="doc/DOUBLE_VECTOR_Overview.png"><img src="doc/DOUBLE_VECTOR_Overview.png" alt="overview double"/></a>
 
-### Remarks
+### Plots: iPhone 13 mini 256 GB
+<a href="doc_ios/DOUBLE_VECTOR_Overview.png"><img src="doc_ios/DOUBLE_VECTOR_Overview.png" alt="overview double"/></a>
+
+### Remarks on Mac Mini
 
 * Plain C++ implementation (CPP_BLOCK 1 1) shows the best running time between |V| = 128 and 2K elements. Beyond that size BLAS works best.
 
@@ -302,9 +334,13 @@ The X-axis is the size of the vectors, and the Y-axis is the relative running ti
 
 * **NEON 8 8** : NEON intrinsics with loop unrolling of factor 8 with 8 threads
 
+### Plots: Mac Mini M1 2020 8 GB
 <a href="doc/FLOAT_VECTOR_Comparison_Among_NEON_Implementations_relative.png"><img src="doc/FLOAT_VECTOR_Comparison_Among_NEON_Implementations_relative.png" alt="float neon"/></a>
 
-### Remarks
+### Plots: iPhone 13 mini 256 GB
+<a href="doc_ios/FLOAT_VECTOR_Comparison_Among_NEON_Implementations_relative.png"><img src="doc_ios/FLOAT_VECTOR_Comparison_Among_NEON_Implementations_relative.png" alt="float neon"/></a>
+
+### Remarks on Mac Mini
 The 'CPP_BLOCK 1 1' version  works better than the other NEON implementations.
 As described above, this is because 'CPP_BLOCK 1 1' is better optimized with the SIMD instructions
 as well as with the better register allocations and the load & store with **ldp** & **stp**.
@@ -333,9 +369,13 @@ The following chart shows the relative running times among the NEON implementati
 
 * **NEON 8 8** : NEON SIMD with loop unrolling with factor 8 with 8 threads
 
+### Plots: Mac Mini M1 2020 8 GB
 <a href="doc/DOUBLE_VECTOR_Comparison_Among_NEON_Implementations_relative.png"><img src="doc/DOUBLE_VECTOR_Comparison_Among_NEON_Implementations_relative.png" alt="double neon"/></a>
 
-### Remarks
+### Plots: iPhone 13 mini 256 GB
+<a href="doc_ios/DOUBLE_VECTOR_Comparison_Among_NEON_Implementations_relative.png"><img src="doc_ios/DOUBLE_VECTOR_Comparison_Among_NEON_Implementations_relative.png" alt="double neon"/></a>
+
+### Remarks on Mac Mini
 The baseline in the plain C++ (CPP_BLOCK 1 1) works better against other implementations with explicit NEON intrinsics.
 As described above, this is because the plain C++ version is highly optimized with NEON instructions as well as the optimized register allocations and the load & store with `ldp` & `stp`.
 Increasing the factor of loop unrolling improves the performance, but it does not exceed the performance of CPP_BLOCK 1 1.
@@ -369,10 +409,15 @@ The following chart shows the negative impact of INTERLEAVED access in real numb
 
 * **CPP_INTERLEAVED 1 16** : Plain C++ 2 threads, each thread accesses interleaved memory locations.
 
+### Plots: Mac Mini M1 2020 8 GB
 <a href="doc/FLOAT_VECTOR_Comparison_Among_C++_Multithreaded_Implementations_relative.png">
 <img src="doc/FLOAT_VECTOR_Comparison_Among_C++_Multithreaded_Implementations_relative.png" alt="multi-threading float"/></a>
 
-### Remarks
+### Plots: iPhone 13 mini 256 GB
+<a href="doc_ios/FLOAT_VECTOR_Comparison_Among_C++_Multithreaded_Implementations_relative.png">
+<img src="doc_ios/FLOAT_VECTOR_Comparison_Among_C++_Multithreaded_Implementations_relative.png" alt="multi-threading float"/></a>
+
+### Remarks on Mac Mini
 As expected, the CPP_BLOCK versions benefit from cache locality, but the CPP_INTERLEAVED versions don't, and the running times fluctuate wildly.
 This indicates the performance is very susceptible to the cache residency.
 Also, the overhead of managing the multi threads is amortized at around the size |X|,|Y| = 512K.
@@ -408,10 +453,16 @@ The following chart shows the negative impact of INTERLEAVED access in real numb
 
 * **CPP_INTERLEAVED 1 16** : Plain C++ 2 threads, each thread accesses interleaved memory locations.
 
+### Plots: Mac Mini M1 2020 8 GB
 <a href="doc/DOUBLE_VECTOR_Comparison_Among_C++_Multithreaded_Implementations_relative.png">
 <img src="doc/DOUBLE_VECTOR_Comparison_Among_C++_Multithreaded_Implementations_relative.png" alt="multi-threading double"/></a>
 
-### Remarks
+### Plots: iPhone 13 mini 256 GB
+<a href="doc_ios/DOUBLE_VECTOR_Comparison_Among_C++_Multithreaded_Implementations_relative.png">
+<img src="doc_ios/DOUBLE_VECTOR_Comparison_Among_C++_Multithreaded_Implementations_relative.png" alt="multi-threading double"/></a>
+
+
+### Remarks on Mac Mini
 As expected, the CPP_BLOCK versions benefit from cache locality, but the CPP_INTERLEAVED versions don't, and the running times fluctuate wildly.
 This indicates the performance is very susceptible to the cache residency.
 Also, the overhead of managing the multi threads is amortized at around the size |X|,|Y| = 128K.

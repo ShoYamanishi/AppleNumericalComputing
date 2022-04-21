@@ -20,7 +20,7 @@ class DotMetalCppImpl
     void performComputation();
 
   private:
-    void * m_self;
+    DotMetalObjC* m_self;
 
 };
 

@@ -30,7 +30,8 @@ class PrefixSumMetalCppImpl
     void performComputation();
 
   private:
-    void * m_self;
+    PrefixSumMetalObjCRecursive*       m_self_recursive;
+    PrefixSumMetalObjCMerrillGrimshaw* m_self_merrill_grimshaw;
 
 };
 

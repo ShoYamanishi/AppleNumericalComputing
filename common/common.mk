@@ -24,7 +24,7 @@ CC_INC             = $(LOCAL_INC) -I$(METAL_DIR) -I../common -I../common/metal
 XCRUNCOMPILEFLAGS  = -sdk macosx metal -std=macos-metal2.3 -Werror
 XCRUNLINKFLAGS     = -sdk macosx metallib
 FRAMEWORKS         = -framework Metal -framework CoreGraphics -framework Accelerate -framework Foundation
-CCFLAGS            = -Wall -std=c++20 -stdlib=libc++ -O3
+CCFLAGS            = -Wall -std=c++20 -stdlib=libc++ -O3 -DTARGET_OS_OSX
 LDFLAGS            = -L/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk
 
 METAL_SHADER_BYTECODE = $(patsubst %,$(OBJ_DIR)/%,$(subst .metal,.air,$(subst $(METAL_DIR)/,,$(wildcard $(METAL_DIR)/*.metal))))
@@ -68,7 +68,7 @@ $(MAIN_BIN): $(OBJS)
 
 $(MAIN_LOG): $(MAIN_BIN) $(METAL_SHADER_LIB)
 	$(CD) $(BIN_DIR); $(subst $(BIN_DIR)/,./,$(MAIN_BIN)) > ../$@
-	$(PYTHON) $(PLOTTER) -logfile $@ -specfile $(PLOT_SPEC) -show_impl -plot_charts 
+	$(PYTHON) $(PLOTTER) -logfile $@ -specfile $(PLOT_SPEC) -show_impl -plot_charts -base_dir doc/
 
 all: $(MAIN_LOG)
 

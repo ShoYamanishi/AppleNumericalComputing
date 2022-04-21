@@ -1,0 +1,11 @@
+- Open AppleNumericalComputing/iOSTester_01/iOSTester_01.xcodeproj with Xcode
+- Build a release build
+- Run the iOS App in release build
+- Press 'Run' on the screen
+- Wait until App finished with 'finished!' on the log output.
+- Copy and paste the log into 01_memcpy/doc_ios/make_log.txt
+- Run the following in the terminal
+$ cd 01_memcpy
+$ grep '\(INT\|FLOAT\|DOUBLE\|data element type\)' doc_ios/make_log.txt > doc_ios/make_log_cleaned.txt
+$ python ../common/process_log.py -logfile doc_ios/make_log_cleaned.txt -specfile doc_ios/plot_spec.json -show_impl -plot_charts -base_dir doc_ios/
+- You will get the PNG file in  01_memcpy/doc_ios/make_log.txt.

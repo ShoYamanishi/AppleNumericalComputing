@@ -2,6 +2,30 @@
 
 Copying the contents of a memory buffer to another.
 
+## 0. Instruction for iOS
+So far this has been tested on iPhone 13 mini 256GB.
+
+- Open `AppleNumericalComputing/iOSTester_01/iOSTester_01.xcodeproj` with Xcode
+
+- Build a release build
+
+- Run the iOS App in release build
+
+- Press 'Run' on the screen
+
+- Wait until App finished with 'finished!' on the log output.
+
+- Copy and paste the log into `01_memcpy/doc_ios/make_log.txt`.
+
+- Run the following in the terminal.
+```
+$ cd 01_memcpy
+$ grep '\(^INT\|^FLOAT\|^DOUBLE\|data element type\)' doc_ios/make_log.txt > doc_ios/make_log_cleaned.txt
+$ python ../common/process_log.py -logfile doc_ios/make_log_cleaned.txt -specfile doc_ios/plot_spec.json -show_impl -plot_charts -base_dir doc_ios/
+```
+- You will get the PNG files in  `01_memcpy/doc_ios/`.
+
+
 # 1. Key Points
 
 * **memcpy()** is 5x-10x faster than the compiler-optimized simple loop in C++.
@@ -73,9 +97,13 @@ X-axis is the number of *ints* copied, and Y-axis is the time taken in milliseco
 
 * **METAL_BLIT 0 0** : Metal BLIT Command with shared MTL buffers.
 
+### Plots: Mac Mini M1 2020 8 GB
 <a href="doc/INT_VECTOR_Overview.png"> <img src="doc/INT_VECTOR_Overview.png" alt="Overview"/></a>
 
-### Remarks
+### Plots: iPhone 13 mini 256 GB
+<a href="doc_ios/INT_VECTOR_Overview.png"> <img src="doc_ios/INT_VECTOR_Overview.png" alt="Overview"/></a>
+
+### Remarks on Mac Mini
 
 The **memcpy()** performs best for all the problem sizes.
 Compared with the plain C++ implementation, memcpy() is 5x - 10x faster.
@@ -102,11 +130,17 @@ and the Y-axis is the relative running time of each implementation relative to '
 
 * **MEMCPY 1 1** : memcpy()
 
+### Plots: Mac Mini M1 2020 8 GB
 <a href="doc/INT_VECTOR_Effect_of_Loop_Unrolling_in_C++_relative.png">
     <img src="doc/INT_VECTOR_Effect_of_Loop_Unrolling_in_C++_relative.png" alt="Effect of Loop Unrolling in C++"/></a>
 
+### Plots: iPhone 13 mini 256 GB
+<a href="doc_ios/INT_VECTOR_Effect_of_Loop_Unrolling_in_C++_relative.png">
+    <img src="doc_ios/INT_VECTOR_Effect_of_Loop_Unrolling_in_C++_relative.png" alt="Effect of Loop Unrolling in C++"/></a>
 
-### Remarks
+
+
+### Remarks on Mac Mini
 
 **CPP BLOCK 1 1** uses non-interleaved  **ldp** & **stp** with loop unrolling factor of 2.
 
@@ -146,10 +180,17 @@ Except for memcpy(), all the other implementations use the loop unrolling of fac
 
 * **MEMCPY 1 1** : memcpy()
 
+### Plots: Mac Mini M1 2020 8 GB
 <a href="doc/INT_VECTOR_Effect_of_Multithreaddng_in_C++_relative.png">
     <img src="doc/INT_VECTOR_Effect_of_Multithreading_in_C++_relative.png" alt="Effect of Multithreading in C++"/></a>
 
-### Remarks
+
+### Plots: iPhone 13 mini 256 GB
+<a href="doc_ios/INT_VECTOR_Effect_of_Multithreaddng_in_C++_relative.png">
+    <img src="doc_ios/INT_VECTOR_Effect_of_Multithreading_in_C++_relative.png" alt="Effect of Multithreading in C++"/></a>
+
+
+### Remarks on Mac Mini
 The overhead of synchronizing multiple threads is amortized at around the problem size of 1 megabytes (256K ints).
 For the problems larger than 1 megabytes the multithreaded versions are 60-40 % faster than the single thread version.
 In most cases memcpy() achieves the best running time.
@@ -169,10 +210,17 @@ The following chart shows the effect of splitting the memcpy() into consecutive 
 
 * **MEMCPY 1 8** : Memory split into 8 blocks, each handled by a separate thread
 
+
+### Plots: Mac Mini M1 2020 8 GB
 <a href="doc/INT_VECTOR_Effect_of_Multithreading_with_memcpy()_relative.png">
     <img src="doc/INT_VECTOR_Effect_of_Multithreading_with_memcpy()_relative.png" alt="Effect of Multithreading with memcpy()"/></a>
 
-### Remarks
+### Plots: iPhone 13 mini 256 GB
+<a href="doc_ios/INT_VECTOR_Effect_of_Multithreading_with_memcpy()_relative.png">
+    <img src="doc_ios/INT_VECTOR_Effect_of_Multithreading_with_memcpy()_relative.png" alt="Effect of Multithreading with memcpy()"/></a>
+
+
+### Remarks on Mac Mini
 The overhead of synchronizing two threads is amortized at around 2 to 4 megabytes.
 There seems to be no clear benefit in multithreading, as this problem is purely I/O bound.
 
@@ -191,9 +239,13 @@ The following chart shows the difference among 4 Metal versions to copy data fro
 
 * **METAL BLIT_MANAGED** : MTLBlitCommandEncoder with two managed MTL buffers.
 
+### Plots: Mac Mini M1 2020 8 GB
 <a href="doc/INT_VECTOR_Comparison_Among_Metal_Implementations_relative.png"><img src="doc/INT_VECTOR_Comparison_Among_Metal_Implementations_relative.png" alt="Comparison among Metal Implementations"/></a>
 
-### Remarks
+### Plots: iPhone 13 mini 256 GB
+<a href="doc_ios/INT_VECTOR_Comparison_Among_Metal_Implementations_relative.png"><img src="doc_ios/INT_VECTOR_Comparison_Among_Metal_Implementations_relative.png" alt="Comparison among Metal Implementations"/></a>
+
+### Remarks on Mac Mini
 The running times fluctuate significantly for the sizes less than 256 megabytes.
 
 For the shared MTL buffers it is assumed that the views into those buffers from both CPUs and GPUs
@@ -502,7 +554,6 @@ This is similar to **METAL DEFAULT_SHARED** & **DEFAULT_MANAGED**, but uses the 
 Please see **performComputationBlit:** in 
 [metal/memcpy_metal_objc.h](./metal/memcpy_metal_objc.h) and [metal/memcpy_metal_objc.mm](./metal/memcpy_metal_objc.mm).
 
-
 # 7. References
 
 * [ARM-software/optimized-routines/memcpy.S](https://github.com/ARM-software/optimized-routines/blob/master/string/aarch64/memcpy.S)
@@ -510,7 +561,7 @@ Please see **performComputationBlit:** in
 * [Arm C/C++ Compiler reference guide: __builtin_prefetch()](https://developer.arm.com/documentation/101458/2010/Coding-best-practice/Prefetching-with---builtin-prefetch)
 
 
-# Appendix: How the Clang Compiler Generates Machine Codes
+# Appendix: How the Clang Compiler Generates Machine Codes (Mac Mini M1 2020)
 
 This section logs my attempt to make the C++ code closer to the performance of **memcpy()**.
 The machine code shown below is disassembled by `otool -t -v bin/test_memcpy`.

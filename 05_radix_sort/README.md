@@ -2,6 +2,33 @@
 Radix sort in Metal as an application of prefix-scan compared with `std::sort`, `boost::sort::spreadsort`,
 and `boost::sort::block_indirect_sort`.
 
+## 0. Instruction for iOS
+So far this has been tested on iPhone 13 mini 256GB.
+
+It is assumed that the boost library is located in `/opt/homebrew/include`.
+
+- Open `AppleNumericalComputing/iOSTester_05/iOSTester_05.xcodeproj` with Xcode
+
+- Build a release build
+
+- Run the iOS App in release build
+
+- Press 'Run' on the screen
+
+- Wait until App finished with 'finished!' on the log output.
+
+- Copy and paste the log into `05_radix_sort/doc_ios/make_log.txt`.
+
+- Run the following in the terminal.
+```
+$ cd 05_radix_sort
+$ grep '\(^INT\|^FLOAT\|^DOUBLE\|data element type\)' doc_ios/make_log.txt > doc_ios/make_log_cleaned.txt
+$ python ../common/process_log.py -logfile doc_ios/make_log_cleaned.txt -specfile doc_ios/plot_spec.json -show_impl -plot_charts -base_dir doc_ios/
+```
+- You will get the PNG files in  `05_radix_sort/doc_ios/`.
+
+
+
 # 1. Key Points
 
 * Probably the Metal implementation is one of the fastest sorting algorithms for *int* and *float* on Apple M1 for the problems with size 8M and larger.
@@ -14,6 +41,8 @@ and `boost::sort::block_indirect_sort`.
 
 * On Metal, adding the early-out detection mechanism increases the overall time by 50-100%. It may be worth activating it, if the array is almost sorted and 
 the loop outmost loop that runs from LSB to MSB can finish before 50% of the iteration.
+
+* On Metal, on iOS (iPhone 13 mini), it seems one encoder can not encode all the kernel dispatches (over 200) for all the 16 shifts. Therefore, only the configurations with one commit per shift are tested for iOS.
 
 
 # 2. Background and Context
@@ -70,9 +99,13 @@ X-axis is the size of the input array, and Y-axis is the time taken in milliseco
 
 * **METAL_COALESCED_WRITE_IN_ONE_COMMIT 0 0** : Metal without early-out & with coalesced write, one commit for all the 16 shifts
 
+### Plots: Mac Mini M1 2020 8 GB
 <a href="doc/INT_VECTOR_Overview.png"><img src="doc/INT_VECTOR_Overview.png" alt="overview" height="600"/></a>
 
-### Remarks
+### Plots: iPhone 13 mini 256 GB
+<a href="doc_ios/INT_VECTOR_Overview.png"><img src="doc_ios/INT_VECTOR_Overview.png" alt="overview" height="600"/></a>
+
+### Remarks on Mac Mini
 
 * BOOST_SAMPLE_SORT 1 16 shows the best running time for the problems of size less than 8M.
 
@@ -102,9 +135,13 @@ X-axis is the size of the input array, and Y-axis is the time taken in milliseco
 
 * **METAL_COALESCED_WRITE_IN_ONE_COMMIT 0 0** : Metal without early-out & with coalesced write, one commit for all the 16 shifts
 
+### Plots: Mac Mini M1 2020 8 GB
 <a href="doc/FLOAT_VECTOR_Overview.png"><img src="doc/FLOAT_VECTOR_Overview.png" alt="overview" height="600"/></a>
 
-### Remarks
+### Plots: iPhone 13 mini 256 GB
+<a href="doc_ios/FLOAT_VECTOR_Overview.png"><img src="doc_ios/FLOAT_VECTOR_Overview.png" alt="overview" height="600"/></a>
+
+### Remarks on Mac Mini
 
 * BOOST_SAMPLE_SORT 1 16 shows the best running time for the problems of size less than 8M.
 
@@ -128,9 +165,13 @@ X-axis is the size of the input array, and Y-axis is the relative running time o
 
 * **BOOST_SAMPLE_SORT 1 64** : `boost::sort::block_indirect_sort()` with 64 threads
 
+### Plots: Mac Mini M1 2020 8 GB
 <a href="doc/INT_VECTOR_Comparison_among_CPU_Sort_relative.png"><img src="doc/INT_VECTOR_Comparison_among_CPU_Sort_relative.png" alt="comparison among CPU implementations" height="600"/></a>
 
-### Remarks
+### Plots: iPhone 13 mini 256 GB
+<a href="doc_ios/INT_VECTOR_Comparison_among_CPU_Sort_relative.png"><img src="doc_ios/INT_VECTOR_Comparison_among_CPU_Sort_relative.png" alt="comparison among CPU implementations" height="600"/></a>
+
+### Remarks on Mac Mini
 The `std::sort()` runs fastest for small sizes around 32 elements in the array.
 For the problems with size from 512 up to 128K, `boost::sort::block_indirect_sort()` with 1 thread shows the best running time, and it may not worth multiple threads.
 For the problems with size greater than 128K, `boost::sort::block_indirect_sort()` with 16 thread gives the best performance.
@@ -153,9 +194,13 @@ X-axis is the size of the input array, and Y-axis is the relative running time o
 
 * **BOOST_SAMPLE_SORT 1 64** : `boost::sort::block_indirect_sort()` with 64 threads
 
+### Plots: Mac Mini M1 2020 8 GB
 <a href="doc/FLOAT_VECTOR_Comparison_among_CPU_Sort_relative.png"><img src="doc/FLOAT_VECTOR_Comparison_among_CPU_Sort_relative.png" alt="comparison among CPU implementations" height="600"/></a>
 
-### Remarks
+### Plots: iPhone 13 mini 256 GB
+<a href="doc_ios/FLOAT_VECTOR_Comparison_among_CPU_Sort_relative.png"><img src="doc_ios/FLOAT_VECTOR_Comparison_among_CPU_Sort_relative.png" alt="comparison among CPU implementations" height="600"/></a>
+
+### Remarks on Mac Mini
 For the problems with size up to 128K, `boost::sort::block_indirect_sort()` with 1 thread shows the best running time, and it may not worth multiple threads.
 For the problems with size greater than 128K, `boost::sort::block_indirect_sort()` with 16 thread gives the best performance.
 
@@ -175,11 +220,19 @@ The nubmers for the early-out implementations on this page were measured for the
 * **METAL_COALESCED_WRITE_IN_ONE_COMMIT 0 0** : Metal without early-out & with coalesced write, one commit for all the 16 shifts
 
 
+### Plots: Mac Mini M1 2020 8 GB
 <a href="doc/INT_VECTOR_Comparison_Among_Metal_Implementations_relative.png"><img src="doc/INT_VECTOR_Comparison_Among_Metal_Implementations_relative.png" alt="comparison among Metal implementations" height="600"/></a>
 
+### Plots: iPhone 13 mini 256 GB
+<a href="doc_ios/INT_VECTOR_Comparison_Among_Metal_Implementations_relative.png"><img src="doc_ios/INT_VECTOR_Comparison_Among_Metal_Implementations_relative.png" alt="comparison among Metal implementations" height="600"/></a>
+
+### Plots: Mac Mini M1 2020 8 GB
 <a href="doc/FLOAT_VECTOR_Comparison_Among_Metal_Implementations_relative.png"><img src="doc/FLOAT_VECTOR_Comparison_Among_Metal_Implementations_relative.png" alt="comparison among Metal implementations" height="600"/></a>
 
-### Remarks
+### Plots: iPhone 13 mini 256 GB
+<a href="doc_ios/FLOAT_VECTOR_Comparison_Among_Metal_Implementations_relative.png"><img src="doc_ios/FLOAT_VECTOR_Comparison_Among_Metal_Implementations_relative.png" alt="comparison among Metal implementations" height="600"/></a>
+
+### Remarks on Mac Mini
 Here we study the two aspects in the Metal implementations:
 * The effect of the coalesced and uncoalesced writes to the device memory.
 * The effect of the overhead of the extra check if the array is already sorted to enable an early break from the loop.

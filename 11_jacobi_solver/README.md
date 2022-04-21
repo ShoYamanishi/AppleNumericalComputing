@@ -17,6 +17,30 @@ As shown above, the main operations are the matrix-vector multiplication, vector
 Also the implementations below include the calculation of RMS of *x_new* and *x_old* in the each iteration to check the convergence.
 
 
+## 0. Instruction for iOS
+So far this has been tested on iPhone 13 mini 256GB.
+
+- Open `AppleNumericalComputing/iOSTester_11/iOSTester_11.xcodeproj` with Xcode
+
+- Build a release build
+
+- Run the iOS App in release build
+
+- Press 'Run' on the screen
+
+- Wait until App finished with 'finished!' on the log output.
+
+- Copy and paste the log into `11_jacobi_solver/doc_ios/make_log.txt`.
+
+- Run the following in the terminal.
+```
+$ cd 11_jacobi_solver
+$ grep '\(^INT\|^FLOAT\|^DOUBLE\|data element type\)' doc_ios/make_log.txt > doc_ios/make_log_cleaned.txt
+$ python ../common/process_log.py -logfile doc_ios/make_log_cleaned.txt -specfile doc_ios/plot_spec.json -show_impl -plot_charts -base_dir doc_ios/
+```
+- You will get the PNG files in  `11_jacobi_solver/doc_ios/`.
+
+
 # 1. Key Points
 
 * BLAS does not provide a direct solver, but combination of BLAS Mat-Vec multplier and vDSP's vector operations performs best among CPU implementations.
@@ -74,9 +98,14 @@ This can be used as an indicator for the decision on whether to use the column-m
 
 * **MATRIX_ROW_MAJOR:METAL MULTIPLE COMMITS 0 0**: Metal kernel, threads over columns, reduction over one row per thread-group, one commit per iteration
 
+
+### Plots: Mac Mini M1 2020 8 GB
 <a href="doc/FLOAT_ANY_Overview.png"><img src="doc/FLOAT_ANY_Overview.png" alt="overview : float" height="600"/></a>
 
-### Remarks
+### Plots: iPhone 13 mini 256 GB
+<a href="doc_ios/FLOAT_ANY_Overview.png"><img src="doc_ios/FLOAT_ANY_Overview.png" alt="overview : float" height="600"/></a>
+
+### Remarks on Mac Mini
 
 * The Metal implementations in a single commit have a noticeable advantage over the implementation with multiple commits, if the problem size is small. However this advantage is lost for the problem sizes for which the metal implementations have an advantage over the CPU implementations.
 
@@ -97,9 +126,13 @@ This can be used as an indicator for the decision on whether to use the column-m
 
 * **MATRIX_ROW_MAJOR:NEON 8 8**: NEON intrinsics with loop unrolling factor 8, 8 threads
 
+### Plots: Mac Mini M1 2020 8 GB
 <a href="doc/DOUBEL_ANY_Overview.png"><img src="doc/DOUBLE_ANY_Overview.png" alt="overview : double" height="600"/></a>
 
-### Remarks
+### Plots: iPhone 13 mini 256 GB
+<a href="doc_ios/DOUBEL_ANY_Overview.png"><img src="doc_ios/DOUBLE_ANY_Overview.png" alt="overview : double" height="600"/></a>
+
+### Remarks on Mac Mini
 
 
 # 5. Implementations

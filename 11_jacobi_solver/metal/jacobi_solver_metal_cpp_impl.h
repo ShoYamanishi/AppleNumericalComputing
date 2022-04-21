@@ -1,7 +1,7 @@
 #ifndef __JACOBI_SOLVER_METAL_CPP_IMPL_H__
 #define __JACOBI_SOLVER_METAL_CPP_IMPL_H__
 
-#include <jacobi_solver_metal_cpp.h>
+#include "jacobi_solver_metal_cpp.h"
 
 #include <cstddef>
 
@@ -26,7 +26,7 @@ class JacobiSolverMetalCppImpl
     void   performComputation();
 
   private:
-    void * m_self;
+    JacobiSolverMetalObjC* m_self;
 };
 
 #endif /*__JACOBI_SOLVER_METAL_CPP_IMPL_H__*/

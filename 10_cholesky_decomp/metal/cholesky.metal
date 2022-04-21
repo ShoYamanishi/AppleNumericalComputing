@@ -13,10 +13,8 @@ static inline int lower_mat_index( const int i, const int j, const int dim )
     const int num_elems = (dim + 1) * dim / 2;
     const int i_rev = (dim -1) - i;
     const int j_rev = (dim -1) - j;
-    return num_elems - 1 - ( j_rev * (j_rev + 1) /2 + i_rev );
+    return num_elems - 1 - ( j_rev * (j_rev + 1) / 2 + i_rev );
 }
-
-
 
 // Column-Cholesky
 // - outer-loop is over column
@@ -55,16 +53,17 @@ kernel void decompose_cholesky (
 
             const int row = iter_row_pos + thread_position_in_threadgroup;
 
-            const int Lpos = lower_mat_index( row, col, DIM );
-
             if ( row >= col && row < DIM ) {
 
+                const int Lpos = lower_mat_index( row, col, DIM );
+                
                 float Lval = L[ Lpos ];
-
+                
                 for ( int k = 0; k < col; k++ ) {
 
                     Lval -= ( L [ lower_mat_index( row, k, DIM ) ] * L [ lower_mat_index( col, k, DIM ) ] );
                 }
+
                 if ( col == row ) {
 
                     Lval = sqrt(Lval);
@@ -77,6 +76,7 @@ kernel void decompose_cholesky (
                 else {
                     L [ Lpos ] = Lval;
                 }
+
             }
         }
 

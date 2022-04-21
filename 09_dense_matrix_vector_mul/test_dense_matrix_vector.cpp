@@ -1132,9 +1132,11 @@ struct matrix_dim {
     size_t M;
     size_t N;
 };
-
+#if TARGET_OS_OSX
 struct matrix_dim matrix_dims[]={ {256, 256}, {512, 512}, {1024, 1024}, {2048, 2048}, {4096, 4096}, {8*1024, 8*1024}, {16*1024, 16* 1024} };
-
+#else
+struct matrix_dim matrix_dims[]={ {256, 256}, {512, 512}, {1024, 1024}, {2048, 2048}, {4096, 4096}, {8*1024, 8*1024} };
+#endif
 template<class T, bool IS_COL_MAJOR>
 void testSuitePerType ( const T gen_low, const T gen_high ) {
 
@@ -1194,8 +1196,11 @@ void testSuitePerType ( const T gen_low, const T gen_high ) {
     }
 }
 
-
+#if TARGET_OS_OSX
 int main( int argc, char* argv[] )
+#else
+int run_test()
+#endif
 {
     TestCaseWithTimeMeasurements::printHeader( cout );
 

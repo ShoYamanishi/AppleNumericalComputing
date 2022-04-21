@@ -312,8 +312,11 @@ class TestExecutorPrefixSum : public TestExecutor {
 
 static const size_t NUM_TRIALS = 100;
 
+#if TARGET_OS_OSX
 size_t nums_elements[]{ 32, 128, 512, 2*1024, 32*1024, 128*1024, 512*1024, 2*1024*1024, 32*1024*1024, 128*1024*1024 };
-
+#else
+size_t nums_elements[]{ 32, 128, 512, 2*1024, 32*1024, 128*1024, 512*1024, 2*1024*1024, 32*1024*1024 };
+#endif
 template<class T>
 void testSuitePerType () {
 
@@ -335,8 +338,11 @@ void testSuitePerType () {
     }
 }
 
+#if TARGET_OS_OSX
 int main(int argc, char* argv[]) {
-
+#else
+int run_test() {
+#endif
     cerr << "\n\nTesting for type int.\n\n";
 
     TestCaseWithTimeMeasurements::printHeader( cout );

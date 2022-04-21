@@ -1,8 +1,7 @@
 #ifndef __SPARSE_MATRIX_VECTOR_METAL_CPP_IMPL_H__
 #define __SPARSE_MATRIX_VECTOR_METAL_CPP_IMPL_H__
 
-#include <sparse_matrix_vector_metal_cpp.h>
-
+#include "sparse_matrix_vector_metal_cpp.h"
 #include <cstddef>
 
 class SparseMatrixVectorMetalCppImpl
@@ -29,7 +28,7 @@ class SparseMatrixVectorMetalCppImpl
     void performComputation();
 
   private:
-    void * m_self;
+    SparseMatrixVectorMetalObjC* m_self;
 };
 
 #endif /*__SPARSE_MATRIX_VECTOR_METAL_CPP_IMPL_H__*/

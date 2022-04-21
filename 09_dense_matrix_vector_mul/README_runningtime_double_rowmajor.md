@@ -18,9 +18,13 @@
 
 * **VDSP 1 1** : vDSP vDSP_mmulD()
 
+### Plots: Mac Mini M1 2020 8 GB
 <a href="doc/DOUBLE_MATRIX_ROW_MAJOR_Overview.png"><img src="doc/DOUBLE_MATRIX_ROW_MAJOR_Overview.png" alt="overview double row-major" height="600"/></a>
 
-### Remarks
+### Plots: iPhone 13 mini 256 GB
+<a href="doc_ios/DOUBLE_MATRIX_ROW_MAJOR_Overview.png"><img src="doc_ios/DOUBLE_MATRIX_ROW_MAJOR_Overview.png" alt="overview double row-major" height="600"/></a>
+
+### Remarks on Mac Mini
 
 * vDSP/BLAS shows the best running time up to the size *(1K, 1K)*.
 
@@ -41,9 +45,13 @@ This implies that the two implementations are identical.
 
 * **CPP_BLOCK 1 8** : C++ implementation with 8 threads
 
+### Plots: Mac Mini M1 2020 8 GB
 <a href="doc/DOUBLE_MATRIX_ROW_MAJOR_Comparison_Among_CPP_Multithread_relative.png"><img src="doc/DOUBLE_MATRIX_ROW_MAJOR_Comparison_Among_CPP_Multithread_relative.png" alt="comparison among C++ multithreaded" height="600"/></a>
 
-### Remarks
+### Plots: iPhone 13 mini 256 GB
+<a href="doc_ios/DOUBLE_MATRIX_ROW_MAJOR_Comparison_Among_CPP_Multithread_relative.png"><img src="doc_ios/DOUBLE_MATRIX_ROW_MAJOR_Comparison_Among_CPP_Multithread_relative.png" alt="comparison among C++ multithreaded" height="600"/></a>
+
+### Remarks on Mac Mini
 This shows the effectiveness of multithreading for the plain C++ implementations.
 The cost of synchronizing the threads is quickly amortized already around the size of *(256, 256)*.
 
@@ -61,9 +69,12 @@ The cost of synchronizing the threads is quickly amortized already around the si
 
 * **NEON 8 1** : NEON intrinsics loop unrolling of factor 8, single thread
 
+### Plots: Mac Mini M1 2020 8 GB
 <a href="doc/DOUBLE_MATRIX_ROW_MAJOR_Comparison_Among_NEON_loop_unrolling_relative.png"><img src="doc/DOUBLE_MATRIX_ROW_MAJOR_Comparison_Among_NEON_loop_unrolling_relative.png" alt="comparison among NEON with loop unrolling" height="600"/></a>
 
-### Remarks
+### Plots: iPhone 13 mini 256 GB
+<a href="doc_ios/DOUBLE_MATRIX_ROW_MAJOR_Comparison_Among_NEON_loop_unrolling_relative.png"><img src="doc_ios/DOUBLE_MATRIX_ROW_MAJOR_Comparison_Among_NEON_loop_unrolling_relative.png" alt="comparison among NEON with loop unrolling" height="600"/></a>
+### Remarks on Mac Mini
 
 NEON intrinsics make it run faster more than 200% than the plain C++ implementation.
 The explicit loop unrolling improves the performance and the sweet spot seems to be around the factor of 4.
@@ -76,9 +87,13 @@ The explicit loop unrolling improves the performance and the sweet spot seems to
 
 * **NEON 8 8** : NEON intrinsics loop unrolling of factor 8, 8 threads - baseline
 
+### Plots: Mac Mini M1 2020 8 GB
 <a href="doc/DOUBLE_MATRIX_ROW_MAJOR_Comparison_Among_NEON_Multithread_relative.png"><img src="doc/DOUBLE_MATRIX_ROW_MAJOR_Comparison_Among_NEON_Multithread_relative.png" alt="comparison among NEON multithreaded" height="600"/></a>
 
-### Remarks
+### Plots: iPhone 13 mini 256 GB
+<a href="doc_ios/DOUBLE_MATRIX_ROW_MAJOR_Comparison_Among_NEON_Multithread_relative.png"><img src="doc_ios/DOUBLE_MATRIX_ROW_MAJOR_Comparison_Among_NEON_Multithread_relative.png" alt="comparison among NEON multithreaded" height="600"/></a>
+
+### Remarks on Mac Mini
 
 The overhead of the synchronizing threads is amortized around the size *(1K, 1K)*, but use of multithreads does not seem to be particularly beneficial.
 

@@ -47,6 +47,29 @@ In this test the test pattern matrices where 10% of the elements are NNZ.
 Those NNZ are uniformly distributed over the matrix.
 
 
+## 0. Instruction for iOS
+So far this has been tested on iPhone 13 mini 256GB.
+
+- Open `AppleNumericalComputing/iOSTester_08/iOSTester_08.xcodeproj` with Xcode
+
+- Build a release build
+
+- Run the iOS App in release build
+
+- Press 'Run' on the screen
+
+- Wait until App finished with 'finished!' on the log output.
+
+- Copy and paste the log into `08_sparse_matrix_vector_mul/doc_ios/make_log.txt`.
+
+- Run the following in the terminal.
+```
+$ cd 08_sparse_matrix_vector_mul
+$ grep '\(^INT\|^FLOAT\|^DOUBLE\|data element type\)' doc_ios/make_log.txt > doc_ios/make_log_cleaned.txt
+$ python ../common/process_log.py -logfile doc_ios/make_log_cleaned.txt -specfile doc_ios/plot_spec.json -show_impl -plot_charts -base_dir doc_ios/
+```
+- You will get the PNG files in  `08_sparse_matrix_vector_mul/doc_ios/`.
+
 # 1. Key Points
 
 * Plain C++ implementation with 8 threads shows the best running time most of the time.
@@ -98,9 +121,13 @@ X-axis is the number of the NNZ, and Y-axis is the time taken in milliseconds.
 
 * **METAL ADAPTIVE 0 0**: Metal kernel, adaptive number of threads per row
 
+### Plots: Mac Mini M1 2020 8 GB
 <a href="doc/FLOAT_MATRIX_SPARSE_Overview_:_Float.png"><img src="doc/FLOAT_MATRIX_SPARSE_Overview_:_Float.png" alt="Overview Float" height="600"/></a>
 
-### Remarks
+### Plots: iPhone 13 mini 256 GB
+<a href="doc_ios/FLOAT_MATRIX_SPARSE_Overview_:_Float.png"><img src="doc_ios/FLOAT_MATRIX_SPARSE_Overview_:_Float.png" alt="Overview Float" height="600"/></a>
+
+### Remarks on Mac Mini
 * CPP implementation works best. The number of threads depends on the problem size. However the implementation with 8 threads works well in general.
 
 * There seems to be little benefit in using the Metal implementations for the problems of realistic sizes.
@@ -117,9 +144,13 @@ X-axis is the number of the NNZ, and Y-axis is the time taken in milliseconds.
 
 * **BLAS 1 1**: BLAS sparse_matrix_vector_product_dense_double()
 
+### Plots: Mac Mini M1 2020 8 GB
 <a href="doc/DOUBLE_MATRIX_SPARSE_Overview_:_Double.png"><img src="doc/DOUBLE_MATRIX_SPARSE_Overview_:_Double.png" alt="Overview Double" height="600"/></a>
 
-### Remarks
+### Plots: iPhone 13 mini 256 GB
+<a href="doc_ios/DOUBLE_MATRIX_SPARSE_Overview_:_Double.png"><img src="doc_ios/DOUBLE_MATRIX_SPARSE_Overview_:_Double.png" alt="Overview Double" height="600"/></a>
+
+### Remarks on Mac Mini
 The CPP implementations perform well.
 The number of threads depends on the problem size. However the implementation with 8 threads works well in general.
 
@@ -143,9 +174,13 @@ X-axis is the number of the NNZ, and Y-axis is the relative running time of each
 
 * **CPP_BLOCK 1 16**: C++ with 16 threads
 
+### Plots: Mac Mini M1 2020 8 GB
 <a href="doc/FLOAT_MATRIX_SPARSE_Comparison_Among_Multithreaded_Implementations_:_Float_relative.png"><img src="doc/FLOAT_MATRIX_SPARSE_Comparison_Among_Multithreaded_Implementations_:_Float_relative.png" alt="comparison among multithreaded implementations" height="600"/></a>
 
-### Remarks
+### Plots: iPhone 13 mini 256 GB
+<a href="doc_ios/FLOAT_MATRIX_SPARSE_Comparison_Among_Multithreaded_Implementations_:_Float_relative.png"><img src="doc_ios/FLOAT_MATRIX_SPARSE_Comparison_Among_Multithreaded_Implementations_:_Float_relative.png" alt="comparison among multithreaded implementations" height="600"/></a>
+
+### Remarks on Mac Mini
 
 Depending on the problem sizes, it seems the implementations with single thread, 2 threads, and 8 threads perform well.
 
@@ -168,9 +203,13 @@ X-axis is the number of the NNZ, and Y-axis is the relative running time of each
 
 * **CPP_BLOCK 1 16**: C++ with 16 threads
 
+### Plots: Mac Mini M1 2020 8 GB
 <a href="doc/DOUBLE_MATRIX_SPARSE_Comparison_Among_Multithreaded_Implementations_:_Double_relative.png"><img src="doc/DOUBLE_MATRIX_SPARSE_Comparison_Among_Multithreaded_Implementations_:_Double_relative.png" alt="Comparison among multithreaded implementations" height="600"/></a>
 
-### Remarks
+### Plots: iPhone 13 mini 256 GB
+<a href="doc_ios/DOUBLE_MATRIX_SPARSE_Comparison_Among_Multithreaded_Implementations_:_Double_relative.png"><img src="doc_ios/DOUBLE_MATRIX_SPARSE_Comparison_Among_Multithreaded_Implementations_:_Double_relative.png" alt="Comparison among multithreaded implementations" height="600"/></a>
+
+### Remarks on Mac Mini
 
 Depending on the problem sizes, it seems the implementations with single thread, 2 threads, and 8 threads perform well.
 
@@ -185,9 +224,13 @@ X-axis is the number of the NNZ, and Y-axis is the relative running time of each
 
 * **METAL ADAPTIVE 0 0**: Metal kernel, adaptive number of threads per row
 
+### Plots: Mac Mini M1 2020 8 GB
 <a href="doc/FLOAT_MATRIX_SPARSE_Comparison_Among_GPU_Implementations_:_Float_relative.png"><img src="doc/FLOAT_MATRIX_SPARSE_Comparison_Among_GPU_Implementations_:_Float_relative.png" alt="comparison among GPU implementations" height="600"/></a>
 
-### Remarks
+### Plots: iPhone 13 mini 256 GB
+<a href="doc_ios/FLOAT_MATRIX_SPARSE_Comparison_Among_GPU_Implementations_:_Float_relative.png"><img src="doc_ios/FLOAT_MATRIX_SPARSE_Comparison_Among_GPU_Implementations_:_Float_relative.png" alt="comparison among GPU implementations" height="600"/></a>
+
+### Remarks on Mac Mini
 It seems the adaptive version works better than the naive version. This suggests the threads are better utilized in the adaptive version.
 
 **NOTE:** As stated above, the 10% of the input matrices are NNZ, and they uniformly distributed over each matrix.

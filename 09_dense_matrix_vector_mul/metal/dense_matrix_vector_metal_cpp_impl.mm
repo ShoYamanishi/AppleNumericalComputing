@@ -3,38 +3,63 @@
 #import "dense_matrix_vector_metal_cpp_impl.h"
 
 DenseMatrixVectorMetalCppImpl::DenseMatrixVectorMetalCppImpl( const int m, const int n, const bool col_major, const bool threads_over_rows )
+    :m_own_shader(true)
 {
-    m_self = [ [ DenseMatrixVectorMetalObjCOwnShader alloc ] initWithM: m N: n ColMajor: col_major ThreadsOverRows: threads_over_rows ];
+    m_self_own_shader = [ [ DenseMatrixVectorMetalObjCOwnShader alloc ] initWithM: m N: n ColMajor: col_major ThreadsOverRows: threads_over_rows ];
 }
 
 DenseMatrixVectorMetalCppImpl::DenseMatrixVectorMetalCppImpl( const int m, const int n)
+    :m_own_shader(false)
 {
-    m_self = [ [ DenseMatrixVectorMetalObjCMPS alloc ] initWithM: m N: n ]; // MPS
+    m_self_mps = [ [ DenseMatrixVectorMetalObjCMPS alloc ] initWithM: m N: n ]; // MPS
 }             
 
-DenseMatrixVectorMetalCppImpl::~DenseMatrixVectorMetalCppImpl(){ m_self = nullptr; }
+DenseMatrixVectorMetalCppImpl::~DenseMatrixVectorMetalCppImpl(){ m_self_own_shader = nullptr; m_self_mps = nullptr; }
 
 void DenseMatrixVectorMetalCppImpl::setInitialStates( float* M, float* v )
 {
-    [ (id)m_self setInitialStatesMat: M Vec: v ];
+    if (m_own_shader) {
+        [ m_self_own_shader setInitialStatesMat: M Vec: v ];
+    }
+    else {
+        [ m_self_mps setInitialStatesMat: M Vec: v ];
+    }
 }
 
 float* DenseMatrixVectorMetalCppImpl::getRawPointerMat() {
-
-    return [ (id)m_self getRawPointerMat ];
+    if (m_own_shader) {
+        return [ m_self_own_shader getRawPointerMat ];
+    }
+    else {
+        return [ m_self_mps getRawPointerMat ];
+    }
 }
+        
 
 float* DenseMatrixVectorMetalCppImpl::getRawPointerVec() {
-
-    return [ (id)m_self getRawPointerVec ];
+    if (m_own_shader) {
+        return [ m_self_own_shader getRawPointerVec ];
+    }
+    else {
+        return [ m_self_mps getRawPointerVec ];
+    }
 }
 
 float* DenseMatrixVectorMetalCppImpl::getRawPointerOutVec() {
-
-    return [ (id)m_self getRawPointerOutVec ];
+    if (m_own_shader) {
+        return [ m_self_own_shader getRawPointerOutVec ];
+    }
+    else {
+        return [ m_self_mps getRawPointerOutVec ];
+    }
 }
 
 void DenseMatrixVectorMetalCppImpl::performComputation()
 {
-    [ (id)m_self performComputation ];
+    if (m_own_shader) {
+        [ m_self_own_shader performComputation ];
+    }
+    else {
+        [ m_self_mps performComputation ];
+    }
 }

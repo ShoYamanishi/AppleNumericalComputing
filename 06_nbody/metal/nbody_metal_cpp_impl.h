@@ -1,7 +1,7 @@
 #ifndef __NBODY_METAL_CPP_IMPL_H__
 #define __NBODY_METAL_CPP_IMPL_H__
 
-#include <nbody_metal_cpp.h>
+#include "nbody_metal_cpp.h"
 
 #include <cstddef>
 
@@ -20,7 +20,7 @@ class NBodyMetalCppImpl
     void performComputationDirectionIsP0ToP1( const bool p0_to_p1 );
 
   private:
-    void * m_self;
+    NBodyMetalObjC* m_self;
 
 };
 

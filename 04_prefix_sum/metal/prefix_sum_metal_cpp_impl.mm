@@ -9,12 +9,14 @@ PrefixSumMetalCppImpl<int>::PrefixSumMetalCppImpl( const size_t num_elements, co
 
     if ( algo_type == 3 ) {
 
-        m_self = [ [ PrefixSumMetalObjCMerrillGrimshaw alloc ] initWithNumElements : num_elements
+        m_self_merrill_grimshaw
+              = [ [ PrefixSumMetalObjCMerrillGrimshaw alloc ] initWithNumElements : num_elements
                                                                    NumPartialSums : num_partial_sums 
                                                                           ForFloat: false ];
     }
     else {  
-        m_self = [ [ PrefixSumMetalObjCRecursive alloc ] initWithNumElements : num_elements
+        m_self_recursive
+              = [ [ PrefixSumMetalObjCRecursive alloc ] initWithNumElements : num_elements
                                                                        Type : algo_type
                                                              NumPartialSums : num_partial_sums 
                                                                    ForFloat : false ];
@@ -29,12 +31,14 @@ PrefixSumMetalCppImpl<float>::PrefixSumMetalCppImpl( const size_t num_elements, 
 
     if ( algo_type == 3 ) {
 
-        m_self = [ [ PrefixSumMetalObjCMerrillGrimshaw alloc ] initWithNumElements : num_elements
+        m_self_merrill_grimshaw
+              = [ [ PrefixSumMetalObjCMerrillGrimshaw alloc ] initWithNumElements : num_elements
                                                                    NumPartialSums : num_partial_sums
                                                                           ForFloat: true ];
     }
     else {  
-        m_self = [ [ PrefixSumMetalObjCRecursive alloc ] initWithNumElements : num_elements
+        m_self_recursive
+              = [ [ PrefixSumMetalObjCRecursive alloc ] initWithNumElements : num_elements
                                                                        Type : algo_type
                                                              NumPartialSums : num_partial_sums
                                                                     ForFloat: true ];
@@ -53,10 +57,10 @@ PrefixSumMetalCppImpl<float>::~PrefixSumMetalCppImpl(){;}
 template<>
 unsigned int PrefixSumMetalCppImpl<int>::numElements(unsigned int layer) {
     if ( m_algo_type == 3 ) {
-        return [ (id)m_self numElements ];
+        return [ m_self_merrill_grimshaw numElements ];
     }
     else {
-        return [ (id)m_self numElements:layer ];
+        return [ m_self_recursive numElements:layer ];
     }
 }
 
@@ -64,10 +68,10 @@ unsigned int PrefixSumMetalCppImpl<int>::numElements(unsigned int layer) {
 template<>
 unsigned int PrefixSumMetalCppImpl<float>::numElements(unsigned int layer) {
     if ( m_algo_type == 3 ) {
-        return [ (id)m_self numElements ];
+        return [ m_self_merrill_grimshaw numElements ];
     }
     else {
-        return [ (id)m_self numElements:layer ];
+        return [ m_self_recursive numElements:layer ];
     }
 }
 
@@ -79,7 +83,7 @@ unsigned int PrefixSumMetalCppImpl<int>::numThreadsPerGroup( unsigned int layer 
         return 0;
     }
     else {
-        return [ (id)m_self numThreadsPerGroup:layer ];
+        return [ m_self_recursive numThreadsPerGroup:layer ];
     }
 }
 
@@ -91,7 +95,7 @@ unsigned int PrefixSumMetalCppImpl<float>::numThreadsPerGroup( unsigned int laye
         return 0;
     }
     else {
-        return [ (id)m_self numThreadsPerGroup:layer ];
+        return [ m_self_recursive numThreadsPerGroup:layer ];
     }
 }
 
@@ -102,7 +106,7 @@ unsigned int PrefixSumMetalCppImpl<int>::numGroupsPerGrid( unsigned int layer ) 
         return 0;
     }
     else {
-        return [ (id)m_self numGroupsPerGrid:layer ];
+        return [ m_self_recursive numGroupsPerGrid:layer ];
     }
 }
 
@@ -114,30 +118,50 @@ unsigned int PrefixSumMetalCppImpl<float>::numGroupsPerGrid( unsigned int layer 
         return 0;
     }
     else {
-        return [ (id)m_self numGroupsPerGrid:layer ];
+        return [ m_self_recursive numGroupsPerGrid:layer ];
     }
 }
 
 
 template<>
 int* PrefixSumMetalCppImpl<int>::getRawPointerIn() {
-    return [ (id)m_self getRawPointerInForInt ];
+    if ( m_algo_type == 3 ) {
+        return [ m_self_merrill_grimshaw getRawPointerInForInt ];
+    }
+    else {
+        return [ m_self_recursive getRawPointerInForInt ];
+    }
 }
 
 template<>
 float* PrefixSumMetalCppImpl<float>::getRawPointerIn() {
-    return [ (id)m_self getRawPointerInForFloat ];
+    if ( m_algo_type == 3 ) {
+        return [ m_self_merrill_grimshaw getRawPointerInForFloat ];
+    }
+    else {
+        return [ m_self_recursive getRawPointerInForFloat ];
+    }
 }
 
 template<>
 int* PrefixSumMetalCppImpl<int>::getRawPointerOut() {
-    return [ (id)m_self getRawPointerOutForInt ];
+    if ( m_algo_type == 3 ) {
+        return [ m_self_merrill_grimshaw getRawPointerOutForInt ];
+    }
+    else {
+        return [ m_self_recursive getRawPointerOutForInt ];
+    }
 }
 
 
 template<>
 float* PrefixSumMetalCppImpl<float>::getRawPointerOut() {
-    return [ (id)m_self getRawPointerOutForFloat ];
+    if ( m_algo_type == 3 ) {
+        return [ m_self_merrill_grimshaw getRawPointerOutForFloat ];
+    }
+    else {
+        return [ m_self_recursive getRawPointerOutForFloat ];
+    }
 }
 
 
@@ -148,7 +172,7 @@ int* PrefixSumMetalCppImpl<int>::getRawPointerGridPrefixSums( unsigned int layer
         return nullptr;
     }
     else {
-        return [ (id)m_self getRawPointerGridPrefixSumsForInt:layer ];
+        return [ m_self_recursive getRawPointerGridPrefixSumsForInt:layer ];
     }
 }
 
@@ -160,30 +184,50 @@ float* PrefixSumMetalCppImpl<float>::getRawPointerGridPrefixSums( unsigned int l
         return nullptr;
     }
     else {
-        return [ (id)m_self getRawPointerGridPrefixSumsForFloat:layer ];
+        return [ m_self_recursive getRawPointerGridPrefixSumsForFloat:layer ];
     }
 }
 
 
 template<>
 int* PrefixSumMetalCppImpl<int>::getRawPointerPartialSumsMerrillGrimshaw() {
-    return [ (id)m_self getRawPointerPartialSumsForInt ];
+    if ( m_algo_type == 3 ) {
+         return [ m_self_merrill_grimshaw getRawPointerPartialSumsForInt ];
+    }
+    else {
+        return nullptr;
+    }
 }
 
 
 template<>
 float* PrefixSumMetalCppImpl<float>::getRawPointerPartialSumsMerrillGrimshaw() {
-    return [ (id)m_self getRawPointerPartialSumsForFloat ];
+    if ( m_algo_type == 3 ) {
+        return [ m_self_merrill_grimshaw getRawPointerPartialSumsForFloat ];
+    }
+    else {
+        return nullptr;
+    }
 }
 
 template<>
 void PrefixSumMetalCppImpl<int>::performComputation() {
-    return [ (id)m_self performComputation ];
+    if ( m_algo_type == 3 ) {
+        return [ m_self_merrill_grimshaw performComputation ];
+    }
+    else {
+        return [ m_self_recursive performComputation ];
+    }
 }
 
 
 template<>
 void PrefixSumMetalCppImpl<float>::performComputation() {
-    return [ (id)m_self performComputation ];
+    if ( m_algo_type == 3 ) {
+        return [ m_self_merrill_grimshaw performComputation ];
+    }
+    else {
+        return [ m_self_recursive performComputation ];
+    }
 }
 

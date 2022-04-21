@@ -13,22 +13,22 @@ DotMetalCppImpl::DotMetalCppImpl( const size_t num_elements, const size_t num_th
 
 DotMetalCppImpl::~DotMetalCppImpl(){
 
-    [ (id)m_self dealloc ];
+    //[ m_self dealloc ];
     m_self = nil;
 }
 
 float* DotMetalCppImpl::getRawPointerX() {
-    return [ (id)m_self getRawPointerX ];
+    return [ m_self getRawPointerX ];
 }
 
 float* DotMetalCppImpl::getRawPointerY() {
-    return [ (id)m_self getRawPointerY ];
+    return [ m_self getRawPointerY ];
 }
 
 float DotMetalCppImpl::getDotXY() {
-    return [ (id)m_self getDotXY ];
+    return [ m_self getDotXY ];
 }
 
 void DotMetalCppImpl::performComputation() {
-    return [ (id)m_self performComputation ];
+    return [ m_self performComputation ];
 }

@@ -2,6 +2,31 @@
 
 Decomposing a symmetric real PD matrix *A* into *L x Lt*, and then solving *x* for  *Ax = b*, where *L* is a lower triangular matrix, and *Lt* is the transpose of *L*.
 
+
+## 0. Instruction for iOS
+So far this has been tested on iPhone 13 mini 256GB.
+
+- Open `AppleNumericalComputing/iOSTester_10/iOSTester_10.xcodeproj` with Xcode
+
+- Build a release build
+
+- Run the iOS App in release build
+
+- Press 'Run' on the screen
+
+- Wait until App finished with 'finished!' on the log output.
+
+- Copy and paste the log into `10_cholesky_decomp/doc_ios/make_log.txt`.
+
+- Run the following in the terminal.
+```
+$ cd 10_cholesky_decomp
+$ grep '\(^INT\|^FLOAT\|^DOUBLE\|data element type\)' doc_ios/make_log.txt > doc_ios/make_log_cleaned.txt
+$ python ../common/process_log.py -logfile doc_ios/make_log_cleaned.txt -specfile doc_ios/plot_spec.json -show_impl -plot_charts -base_dir doc_ios/
+```
+- You will get the PNG files in  `10_cholesky_decomp/doc_ios/`.
+
+
 # 1. Key Points
 
 * LAPACK shows best running time for all the cases
@@ -52,9 +77,13 @@ X-axis is *(M x N)*, and Y-axis is the time taken in milliseconds.
 
 * **MATRIX_COL_MAJOR:METAL DEFAULT 0 0** : Metal shader, the algorithm is type *column*.
 
+### Plots: Mac Mini M1 2020 8 GB
 <a href="doc/FLOAT_ANY_Overview_:_Float.png"><img src="doc/FLOAT_ANY_Overview_:_Float.png" alt="overview float" height="600"/></a>
 
-### Remarks
+### Plots: iPhone 13 mini 256 GB
+<a href="doc_ios/FLOAT_ANY_Overview_:_Float.png"><img src="doc_ios/FLOAT_ANY_Overview_:_Float.png" alt="overview float" height="600"/></a>
+
+### Remarks on Mac Mini
 
 * LAPACK is the clear winner.
 
@@ -73,9 +102,13 @@ X-axis is *(M x N)*, and Y-axis is the relative running time of each implementat
 
 * **MATRIX_COL_MAJOR:METAL DEFAULT 0 0** : own shader, the algorithm is type *column*.
 
+### Plots: Mac Mini M1 2020 8 GB
 <a href="doc/FLOAT_MATRIX_COL_MAJOR_Comparison_of_two_Metal_implementations_relative.png"><img src="doc/FLOAT_MATRIX_COL_MAJOR_Comparison_of_two_Metal_implementations_relative.png" alt="comparison two metal implementations" height="600"/></a>
 
-### Remarks
+### Plots: iPhone 13 mini 256 GB
+<a href="doc_ios/FLOAT_MATRIX_COL_MAJOR_Comparison_of_two_Metal_implementations_relative.png"><img src="doc_ios/FLOAT_MATRIX_COL_MAJOR_Comparison_of_two_Metal_implementations_relative.png" alt="comparison two metal implementations" height="600"/></a>
+
+### Remarks on Mac Mini
 My implementation based on the algorithm *column cholesky* performs better than **MPSMatrixDecompositionCholesky**.
 
 ## 4.3. Overview : Double
@@ -98,9 +131,13 @@ for each implementation in log-log scale. X-axis is *(M x N)*, and Y-axis is the
 
 * **MATRIX_COL_MAJOR:GSL 1 1** : col-major with **gsl_linalg_cholesky_decomp()**.
 
+### Plots: Mac Mini M1 2020 8 GB
 <a href="doc/DOUBLE_ANY_Overview_:_Double.png"><img src="doc/DOUBLE_ANY_Overview_:_Double.png" alt="overview double" height="600"/></a>
 
-### Remarks
+### Plots: iPhone 13 mini 256 GB
+<a href="doc_ios/DOUBLE_ANY_Overview_:_Double.png"><img src="doc_ios/DOUBLE_ANY_Overview_:_Double.png" alt="overview double" height="600"/></a>
+
+### Remarks on Mac Mini
 
 * LAPACK is the clear winner.
 

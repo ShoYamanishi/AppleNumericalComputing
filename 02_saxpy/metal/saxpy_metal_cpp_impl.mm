@@ -13,27 +13,27 @@ SaxpyMetalCppImpl::SaxpyMetalCppImpl( const size_t num_elements, const size_t nu
 
 SaxpyMetalCppImpl::~SaxpyMetalCppImpl(){
 
-    [ (id)m_self dealloc ];
+    //[ m_self dealloc ];
     m_self = nil;
 }
 
 float* SaxpyMetalCppImpl::getRawPointerX() {
 
-    return [ (id)m_self getRawPointerX ];
+    return [ m_self getRawPointerX ];
 }
 
 float* SaxpyMetalCppImpl::getRawPointerY() {
 
-    return [ (id)m_self getRawPointerY ];
+    return [ m_self getRawPointerY ];
 }
 
 void SaxpyMetalCppImpl::setScalar_a( const float a ) {
 
-    [ (id)m_self setScalar_a:a ];
+    [ m_self setScalar_a:a ];
 }
 
 void SaxpyMetalCppImpl::performComputation() {
 
-    return [ (id)m_self performComputation ];
+    return [ m_self performComputation ];
 }
 

@@ -1,5 +1,28 @@
 # 512-Point Radix 2 FFT
 
+## 0. Instruction for iOS
+So far this has been tested on iPhone 13 mini 256GB.
+
+- Open `AppleNumericalComputing/iOSTester_13/iOSTester_13.xcodeproj` with Xcode
+
+- Build a release build
+
+- Run the iOS App in release build
+
+- Press 'Run' on the screen
+
+- Wait until App finished with 'finished!' on the log output.
+
+- Copy and paste the log into `13_fft/doc_ios/make_log.txt`.
+
+- Run the following in the terminal.
+```
+$ cd 13_fft
+$ grep '\(^INT\|^FLOAT\|^DOUBLE\|data element type\)' doc_ios/make_log.txt > doc_ios/make_log_cleaned.txt
+$ python ../common/process_log.py -logfile doc_ios/make_log_cleaned.txt -specfile doc_ios/plot_spec.json -show_impl -plot_charts -base_dir doc_ios/
+```
+- You will get the PNG files in  `13_fft/doc_ios/`.
+
 
 # 1. Key Points
 
@@ -22,7 +45,7 @@ Also it is implemented in a Metal kernel to study the behavior.
 
 # 4. Results on Running Time
 
-## 4.1. Overview, Float
+## 4.1. Overview, Float: Mac Mini M1 2020 8 GB
 
 | Type          | Time in microseconds | Description                                     |
 | ------------- | --------------------:| ----------------------------------------------- |
@@ -32,12 +55,24 @@ Also it is implemented in a Metal kernel to study the behavior.
 | METAL 0 0     |  147.0               | METAL kernel                                    |
 | VDSP  1 1     |    0.832             | vDSP_DFT_zop_CreateSetup() & vDSP_DFT_Execute() |
 
+
 ### Remarks
 * VDSP runs in sub-micro second. NEON 1 1 version runs about 50% slower than VDSP.
 * The overhead of multi-threading is too big and not worth it.
 * The overhead of launching a Metal kernel is too big and not worth it.
 
-## 4.2. Overview, Double
+## 4.2. Overview, Float: iPhone 13 mini 256 GB
+
+| Type          | Time in microseconds | Description                                     |
+| ------------- | --------------------:| ----------------------------------------------- |
+| CPP_BLOCK 1 1 |    2.03              | Plain C++ implementation - baseline             |
+| NEON 1 1      |    1.50              | NEON Intrinsics                                 |
+| NEON 1 4      |   15.1               | NEON Intrinsics with 4 threads                  |
+| METAL 0 0     |  525.0               | METAL kernel                                    |
+| VDSP  1 1     |    0.572             | vDSP_DFT_zop_CreateSetup() & vDSP_DFT_Execute() |
+
+
+## 4.3. Overview, Double: Mac Mini M1 2020 8 GB
 
 | Type          | Time in microseconds | Description                                       |
 | ------------- | --------------------:| ------------------------------------------------- |
@@ -49,6 +84,15 @@ Also it is implemented in a Metal kernel to study the behavior.
 ### Remarks
 * VDSP runs in sub-micro second. NEON 1 1 version runs about 100% slower than VDSP.
 * The overhead of multithreading is too big and not worth it.
+
+## 4.4. Overview, Double: iPhone 13 mini 256 GB
+
+| Type          | Time in microseconds | Description                                       |
+| ------------- | --------------------:| ------------------------------------------------- |
+| CPP_BLOCK     |    4.31              | Plain C++ implementation - baseline               |
+| NEON 1 1      |    2.80              | NEON Intrinsics                                   |
+| NEON 1 4      |   19.7               | NEON Intrinsics with 4 threads                    |
+| VDSP 1 1      |    1.27              | vDSP_DFT_zop_CreateSetupD() & vDSP_DFT_ExecuteD() |
 
 # 5. Implementations
 

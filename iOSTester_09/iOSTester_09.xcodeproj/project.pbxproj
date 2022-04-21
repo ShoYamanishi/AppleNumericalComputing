@@ -1,0 +1,419 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 55;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		EF4F8EDC281054E300CCAAB1 /* iOSTester_09App.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF4F8EDB281054E300CCAAB1 /* iOSTester_09App.swift */; };
+		EF4F8EDE281054E300CCAAB1 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF4F8EDD281054E300CCAAB1 /* ContentView.swift */; };
+		EF4F8EE0281054E500CCAAB1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EF4F8EDF281054E500CCAAB1 /* Assets.xcassets */; };
+		EF4F8EE3281054E500CCAAB1 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EF4F8EE2281054E500CCAAB1 /* Preview Assets.xcassets */; };
+		EF4F8EEC2810552500CCAAB1 /* dense_matrix_vector_objc.mm in Sources */ = {isa = PBXBuildFile; fileRef = EF4F8EEB2810552500CCAAB1 /* dense_matrix_vector_objc.mm */; };
+		EF4F8EEF2810558D00CCAAB1 /* metal_compute_base.mm in Sources */ = {isa = PBXBuildFile; fileRef = EF4F8EED2810558D00CCAAB1 /* metal_compute_base.mm */; };
+		EF4F8EFC281055A800CCAAB1 /* dense_matrix_vector_metal_cpp_impl.mm in Sources */ = {isa = PBXBuildFile; fileRef = EF4F8EF3281055A800CCAAB1 /* dense_matrix_vector_metal_cpp_impl.mm */; };
+		EF4F8EFD281055A800CCAAB1 /* dense_matrix_vector.metal in Sources */ = {isa = PBXBuildFile; fileRef = EF4F8EF5281055A800CCAAB1 /* dense_matrix_vector.metal */; };
+		EF4F8EFE281055A800CCAAB1 /* dense_matrix_vector_metal_objc_own_shader.mm in Sources */ = {isa = PBXBuildFile; fileRef = EF4F8EF7281055A800CCAAB1 /* dense_matrix_vector_metal_objc_own_shader.mm */; };
+		EF4F8EFF281055A800CCAAB1 /* dense_matrix_vector_metal_cpp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EF4F8EF8281055A800CCAAB1 /* dense_matrix_vector_metal_cpp.cpp */; };
+		EF4F8F00281055A800CCAAB1 /* dense_matrix_vector_metal_objc_mps.mm in Sources */ = {isa = PBXBuildFile; fileRef = EF4F8EFB281055A800CCAAB1 /* dense_matrix_vector_metal_objc_mps.mm */; };
+		EF4F8F02281055B200CCAAB1 /* test_dense_matrix_vector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EF4F8F01281055B200CCAAB1 /* test_dense_matrix_vector.cpp */; };
+		EF4F8F052810572F00CCAAB1 /* MetalPerformanceShaders.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EF4F8F042810572F00CCAAB1 /* MetalPerformanceShaders.framework */; };
+		EF4F8F072810574300CCAAB1 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EF4F8F062810574300CCAAB1 /* Accelerate.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		EF4F8ED8281054E300CCAAB1 /* iOSTester_09.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = iOSTester_09.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		EF4F8EDB281054E300CCAAB1 /* iOSTester_09App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iOSTester_09App.swift; sourceTree = "<group>"; };
+		EF4F8EDD281054E300CCAAB1 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		EF4F8EDF281054E500CCAAB1 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		EF4F8EE2281054E500CCAAB1 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		EF4F8EE92810551100CCAAB1 /* test_dense_matrix_vector_objc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = test_dense_matrix_vector_objc.h; sourceTree = "<group>"; };
+		EF4F8EEA2810552500CCAAB1 /* iOSTester_09-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "iOSTester_09-Bridging-Header.h"; sourceTree = "<group>"; };
+		EF4F8EEB2810552500CCAAB1 /* dense_matrix_vector_objc.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = dense_matrix_vector_objc.mm; sourceTree = "<group>"; };
+		EF4F8EED2810558D00CCAAB1 /* metal_compute_base.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = metal_compute_base.mm; path = ../../common/metal/metal_compute_base.mm; sourceTree = "<group>"; };
+		EF4F8EEE2810558D00CCAAB1 /* metal_compute_base.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = metal_compute_base.h; path = ../../common/metal/metal_compute_base.h; sourceTree = "<group>"; };
+		EF4F8EF02810559A00CCAAB1 /* thread_synchronizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = thread_synchronizer.h; path = ../../common/thread_synchronizer.h; sourceTree = "<group>"; };
+		EF4F8EF12810559A00CCAAB1 /* test_case_with_time_measurements.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = test_case_with_time_measurements.h; path = ../../common/test_case_with_time_measurements.h; sourceTree = "<group>"; };
+		EF4F8EF22810559A00CCAAB1 /* test_pattern_generation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = test_pattern_generation.h; path = ../../common/test_pattern_generation.h; sourceTree = "<group>"; };
+		EF4F8EF3281055A800CCAAB1 /* dense_matrix_vector_metal_cpp_impl.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = dense_matrix_vector_metal_cpp_impl.mm; path = ../../09_dense_matrix_vector_mul/metal/dense_matrix_vector_metal_cpp_impl.mm; sourceTree = "<group>"; };
+		EF4F8EF4281055A800CCAAB1 /* dense_matrix_vector_metal_objc_mps.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = dense_matrix_vector_metal_objc_mps.h; path = ../../09_dense_matrix_vector_mul/metal/dense_matrix_vector_metal_objc_mps.h; sourceTree = "<group>"; };
+		EF4F8EF5281055A800CCAAB1 /* dense_matrix_vector.metal */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.metal; name = dense_matrix_vector.metal; path = ../../09_dense_matrix_vector_mul/metal/dense_matrix_vector.metal; sourceTree = "<group>"; };
+		EF4F8EF6281055A800CCAAB1 /* dense_matrix_vector_metal_cpp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = dense_matrix_vector_metal_cpp.h; path = ../../09_dense_matrix_vector_mul/metal/dense_matrix_vector_metal_cpp.h; sourceTree = "<group>"; };
+		EF4F8EF7281055A800CCAAB1 /* dense_matrix_vector_metal_objc_own_shader.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = dense_matrix_vector_metal_objc_own_shader.mm; path = ../../09_dense_matrix_vector_mul/metal/dense_matrix_vector_metal_objc_own_shader.mm; sourceTree = "<group>"; };
+		EF4F8EF8281055A800CCAAB1 /* dense_matrix_vector_metal_cpp.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = dense_matrix_vector_metal_cpp.cpp; path = ../../09_dense_matrix_vector_mul/metal/dense_matrix_vector_metal_cpp.cpp; sourceTree = "<group>"; };
+		EF4F8EF9281055A800CCAAB1 /* dense_matrix_vector_metal_cpp_impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = dense_matrix_vector_metal_cpp_impl.h; path = ../../09_dense_matrix_vector_mul/metal/dense_matrix_vector_metal_cpp_impl.h; sourceTree = "<group>"; };
+		EF4F8EFA281055A800CCAAB1 /* dense_matrix_vector_metal_objc_own_shader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = dense_matrix_vector_metal_objc_own_shader.h; path = ../../09_dense_matrix_vector_mul/metal/dense_matrix_vector_metal_objc_own_shader.h; sourceTree = "<group>"; };
+		EF4F8EFB281055A800CCAAB1 /* dense_matrix_vector_metal_objc_mps.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = dense_matrix_vector_metal_objc_mps.mm; path = ../../09_dense_matrix_vector_mul/metal/dense_matrix_vector_metal_objc_mps.mm; sourceTree = "<group>"; };
+		EF4F8F01281055B200CCAAB1 /* test_dense_matrix_vector.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = test_dense_matrix_vector.cpp; path = ../../09_dense_matrix_vector_mul/test_dense_matrix_vector.cpp; sourceTree = "<group>"; };
+		EF4F8F042810572F00CCAAB1 /* MetalPerformanceShaders.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MetalPerformanceShaders.framework; path = System/Library/Frameworks/MetalPerformanceShaders.framework; sourceTree = SDKROOT; };
+		EF4F8F062810574300CCAAB1 /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		EF4F8ED5281054E300CCAAB1 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EF4F8F052810572F00CCAAB1 /* MetalPerformanceShaders.framework in Frameworks */,
+				EF4F8F072810574300CCAAB1 /* Accelerate.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		EF4F8ECF281054E300CCAAB1 = {
+			isa = PBXGroup;
+			children = (
+				EF4F8EDA281054E300CCAAB1 /* iOSTester_09 */,
+				EF4F8ED9281054E300CCAAB1 /* Products */,
+				EF4F8F032810572F00CCAAB1 /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		EF4F8ED9281054E300CCAAB1 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				EF4F8ED8281054E300CCAAB1 /* iOSTester_09.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		EF4F8EDA281054E300CCAAB1 /* iOSTester_09 */ = {
+			isa = PBXGroup;
+			children = (
+				EF4F8F01281055B200CCAAB1 /* test_dense_matrix_vector.cpp */,
+				EF4F8EF9281055A800CCAAB1 /* dense_matrix_vector_metal_cpp_impl.h */,
+				EF4F8EF3281055A800CCAAB1 /* dense_matrix_vector_metal_cpp_impl.mm */,
+				EF4F8EF8281055A800CCAAB1 /* dense_matrix_vector_metal_cpp.cpp */,
+				EF4F8EF6281055A800CCAAB1 /* dense_matrix_vector_metal_cpp.h */,
+				EF4F8EF4281055A800CCAAB1 /* dense_matrix_vector_metal_objc_mps.h */,
+				EF4F8EFB281055A800CCAAB1 /* dense_matrix_vector_metal_objc_mps.mm */,
+				EF4F8EFA281055A800CCAAB1 /* dense_matrix_vector_metal_objc_own_shader.h */,
+				EF4F8EF7281055A800CCAAB1 /* dense_matrix_vector_metal_objc_own_shader.mm */,
+				EF4F8EF5281055A800CCAAB1 /* dense_matrix_vector.metal */,
+				EF4F8EF12810559A00CCAAB1 /* test_case_with_time_measurements.h */,
+				EF4F8EF22810559A00CCAAB1 /* test_pattern_generation.h */,
+				EF4F8EF02810559A00CCAAB1 /* thread_synchronizer.h */,
+				EF4F8EEE2810558D00CCAAB1 /* metal_compute_base.h */,
+				EF4F8EED2810558D00CCAAB1 /* metal_compute_base.mm */,
+				EF4F8EDB281054E300CCAAB1 /* iOSTester_09App.swift */,
+				EF4F8EDD281054E300CCAAB1 /* ContentView.swift */,
+				EF4F8EDF281054E500CCAAB1 /* Assets.xcassets */,
+				EF4F8EE1281054E500CCAAB1 /* Preview Content */,
+				EF4F8EE92810551100CCAAB1 /* test_dense_matrix_vector_objc.h */,
+				EF4F8EEB2810552500CCAAB1 /* dense_matrix_vector_objc.mm */,
+				EF4F8EEA2810552500CCAAB1 /* iOSTester_09-Bridging-Header.h */,
+			);
+			path = iOSTester_09;
+			sourceTree = "<group>";
+		};
+		EF4F8EE1281054E500CCAAB1 /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				EF4F8EE2281054E500CCAAB1 /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		EF4F8F032810572F00CCAAB1 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				EF4F8F062810574300CCAAB1 /* Accelerate.framework */,
+				EF4F8F042810572F00CCAAB1 /* MetalPerformanceShaders.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		EF4F8ED7281054E300CCAAB1 /* iOSTester_09 */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = EF4F8EE6281054E500CCAAB1 /* Build configuration list for PBXNativeTarget "iOSTester_09" */;
+			buildPhases = (
+				EF4F8ED4281054E300CCAAB1 /* Sources */,
+				EF4F8ED5281054E300CCAAB1 /* Frameworks */,
+				EF4F8ED6281054E300CCAAB1 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = iOSTester_09;
+			productName = iOSTester_09;
+			productReference = EF4F8ED8281054E300CCAAB1 /* iOSTester_09.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		EF4F8ED0281054E300CCAAB1 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1330;
+				LastUpgradeCheck = 1330;
+				TargetAttributes = {
+					EF4F8ED7281054E300CCAAB1 = {
+						CreatedOnToolsVersion = 13.3.1;
+						LastSwiftMigration = 1330;
+					};
+				};
+			};
+			buildConfigurationList = EF4F8ED3281054E300CCAAB1 /* Build configuration list for PBXProject "iOSTester_09" */;
+			compatibilityVersion = "Xcode 13.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = EF4F8ECF281054E300CCAAB1;
+			productRefGroup = EF4F8ED9281054E300CCAAB1 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				EF4F8ED7281054E300CCAAB1 /* iOSTester_09 */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		EF4F8ED6281054E300CCAAB1 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EF4F8EE3281054E500CCAAB1 /* Preview Assets.xcassets in Resources */,
+				EF4F8EE0281054E500CCAAB1 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		EF4F8ED4281054E300CCAAB1 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EF4F8EEC2810552500CCAAB1 /* dense_matrix_vector_objc.mm in Sources */,
+				EF4F8EFF281055A800CCAAB1 /* dense_matrix_vector_metal_cpp.cpp in Sources */,
+				EF4F8EFD281055A800CCAAB1 /* dense_matrix_vector.metal in Sources */,
+				EF4F8F02281055B200CCAAB1 /* test_dense_matrix_vector.cpp in Sources */,
+				EF4F8EDE281054E300CCAAB1 /* ContentView.swift in Sources */,
+				EF4F8F00281055A800CCAAB1 /* dense_matrix_vector_metal_objc_mps.mm in Sources */,
+				EF4F8EFC281055A800CCAAB1 /* dense_matrix_vector_metal_cpp_impl.mm in Sources */,
+				EF4F8EEF2810558D00CCAAB1 /* metal_compute_base.mm in Sources */,
+				EF4F8EDC281054E300CCAAB1 /* iOSTester_09App.swift in Sources */,
+				EF4F8EFE281055A800CCAAB1 /* dense_matrix_vector_metal_objc_own_shader.mm in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		EF4F8EE4281054E500CCAAB1 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.4;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		EF4F8EE5281054E500CCAAB1 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.4;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		EF4F8EE7281054E500CCAAB1 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"iOSTester_09/Preview Content\"";
+				DEVELOPMENT_TEAM = 64SMH392EJ;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "org.applenumericalcomputing.iOSTester-09";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "iOSTester_09/iOSTester_09-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		EF4F8EE8281054E500CCAAB1 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"iOSTester_09/Preview Content\"";
+				DEVELOPMENT_TEAM = 64SMH392EJ;
+				ENABLE_PREVIEWS = YES;
+				GCC_OPTIMIZATION_LEVEL = fast;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "org.applenumericalcomputing.iOSTester-09";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "iOSTester_09/iOSTester_09-Bridging-Header.h";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		EF4F8ED3281054E300CCAAB1 /* Build configuration list for PBXProject "iOSTester_09" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				EF4F8EE4281054E500CCAAB1 /* Debug */,
+				EF4F8EE5281054E500CCAAB1 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		EF4F8EE6281054E500CCAAB1 /* Build configuration list for PBXNativeTarget "iOSTester_09" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				EF4F8EE7281054E500CCAAB1 /* Debug */,
+				EF4F8EE8281054E500CCAAB1 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = EF4F8ED0281054E300CCAAB1 /* Project object */;
+}

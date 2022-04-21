@@ -1,0 +1,35 @@
+[
+{
+    "DataElementType": "INT",
+    "DataElementSubtype": "VECTOR",
+    "Width" : 13,
+    "Height" : 8,
+    "Title": "Overview",
+    "PlotType": "LOG-LOG",
+    "PlotBase": "CPP_BLOCK 1 1",
+    "UpperLimit" : 1.2,
+    "PlotCases": [ "CPP_BLOCK 1 1", "CPP_BLOCK 4 1", "CPP_STDLIB 1 1", "METAL SCAN_THEN_FAN 0 0", "METAL REDUCE_THEN_SCAN 0 0", "METAL MERRILL_AND_GRIMSHAW 0 0" ]
+},
+{
+    "DataElementType": "INT",
+    "DataElementSubtype": "VECTOR",
+    "Width" : 13,
+    "Height" : 8,
+    "Title": "Comparison Among CPU Implementations",
+    "PlotType": "LOG-LIN-RELATIVE",
+    "PlotBase": "CPP_BLOCK 1 1",
+    "UpperLimit" : 1.2,
+    "PlotCases": [ "CPP_BLOCK 1 1",  "CPP_BLOCK 2 1",  "CPP_BLOCK 4 1",  "CPP_BLOCK 8 1", "CPP_STDLIB 1 1" ]
+},
+{
+    "DataElementType": "INT",
+    "DataElementSubtype": "VECTOR",
+    "Width" : 13,
+    "Height" : 8,
+    "Title": "Comparison Among GPU Implementations",
+    "PlotType": "LOG-LIN-RELATIVE",
+    "PlotBase": "METAL SCAN_THEN_FAN 0 0",
+    "UpperLimit" : 1.5,
+    "PlotCases": ["METAL SCAN_THEN_FAN 0 0", "METAL REDUCE_THEN_SCAN 0 0", "METAL MERRILL_AND_GRIMSHAW 0 0" ]
+}
+]

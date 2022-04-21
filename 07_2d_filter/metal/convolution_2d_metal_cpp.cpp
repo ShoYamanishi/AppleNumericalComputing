@@ -1,3 +1,7 @@
+
+class Convolution2DMetalObjCOwnShader;
+class Convolution2DMetalObjCMPS;
+
 #include "convolution_2d_metal_cpp_impl.h"
 #include "convolution_2d_metal_cpp.h"
 

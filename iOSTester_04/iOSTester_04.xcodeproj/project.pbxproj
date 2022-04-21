@@ -1,0 +1,407 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 55;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		EF4F8DC8280F201400CCAAB1 /* iOSTester_04App.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF4F8DC7280F201400CCAAB1 /* iOSTester_04App.swift */; };
+		EF4F8DCA280F201400CCAAB1 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF4F8DC9280F201400CCAAB1 /* ContentView.swift */; };
+		EF4F8DCC280F201600CCAAB1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EF4F8DCB280F201600CCAAB1 /* Assets.xcassets */; };
+		EF4F8DCF280F201600CCAAB1 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EF4F8DCE280F201600CCAAB1 /* Preview Assets.xcassets */; };
+		EF4F8DD8280F20F300CCAAB1 /* test_prefix_sum_objc.mm in Sources */ = {isa = PBXBuildFile; fileRef = EF4F8DD7280F20F300CCAAB1 /* test_prefix_sum_objc.mm */; };
+		EF4F8DDB280F219800CCAAB1 /* metal_compute_base.mm in Sources */ = {isa = PBXBuildFile; fileRef = EF4F8DD9280F219800CCAAB1 /* metal_compute_base.mm */; };
+		EF4F8DE9280F21B700CCAAB1 /* prefix_sum_metal_cpp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EF4F8DE0280F21B700CCAAB1 /* prefix_sum_metal_cpp.cpp */; };
+		EF4F8DEA280F21B700CCAAB1 /* prefix_sum_metal_objc_recursive.mm in Sources */ = {isa = PBXBuildFile; fileRef = EF4F8DE2280F21B700CCAAB1 /* prefix_sum_metal_objc_recursive.mm */; };
+		EF4F8DEB280F21B700CCAAB1 /* prefix_sum_recursive.metal in Sources */ = {isa = PBXBuildFile; fileRef = EF4F8DE5280F21B700CCAAB1 /* prefix_sum_recursive.metal */; };
+		EF4F8DEC280F21B700CCAAB1 /* prefix_sum_metal_objc_merrill_grimshaw.mm in Sources */ = {isa = PBXBuildFile; fileRef = EF4F8DE6280F21B700CCAAB1 /* prefix_sum_metal_objc_merrill_grimshaw.mm */; };
+		EF4F8DED280F21B700CCAAB1 /* prefix_sum_merrill_grimshaw.metal in Sources */ = {isa = PBXBuildFile; fileRef = EF4F8DE7280F21B700CCAAB1 /* prefix_sum_merrill_grimshaw.metal */; };
+		EF4F8DEE280F21B700CCAAB1 /* prefix_sum_metal_cpp_impl.mm in Sources */ = {isa = PBXBuildFile; fileRef = EF4F8DE8280F21B700CCAAB1 /* prefix_sum_metal_cpp_impl.mm */; };
+		EF4F8DF0280F21BF00CCAAB1 /* test_prefix_sum.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EF4F8DEF280F21BF00CCAAB1 /* test_prefix_sum.cpp */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		EF4F8DC4280F201400CCAAB1 /* iOSTester_04.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = iOSTester_04.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		EF4F8DC7280F201400CCAAB1 /* iOSTester_04App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iOSTester_04App.swift; sourceTree = "<group>"; };
+		EF4F8DC9280F201400CCAAB1 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		EF4F8DCB280F201600CCAAB1 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		EF4F8DCE280F201600CCAAB1 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		EF4F8DD5280F20DD00CCAAB1 /* test_prefix_sum_objc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = test_prefix_sum_objc.h; sourceTree = "<group>"; };
+		EF4F8DD6280F20F300CCAAB1 /* iOSTester_04-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "iOSTester_04-Bridging-Header.h"; sourceTree = "<group>"; };
+		EF4F8DD7280F20F300CCAAB1 /* test_prefix_sum_objc.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = test_prefix_sum_objc.mm; sourceTree = "<group>"; };
+		EF4F8DD9280F219800CCAAB1 /* metal_compute_base.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = metal_compute_base.mm; path = ../../common/metal/metal_compute_base.mm; sourceTree = "<group>"; };
+		EF4F8DDA280F219800CCAAB1 /* metal_compute_base.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = metal_compute_base.h; path = ../../common/metal/metal_compute_base.h; sourceTree = "<group>"; };
+		EF4F8DDC280F21A800CCAAB1 /* test_pattern_generation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = test_pattern_generation.h; path = ../../common/test_pattern_generation.h; sourceTree = "<group>"; };
+		EF4F8DDD280F21A800CCAAB1 /* test_case_with_time_measurements.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = test_case_with_time_measurements.h; path = ../../common/test_case_with_time_measurements.h; sourceTree = "<group>"; };
+		EF4F8DDE280F21A800CCAAB1 /* thread_synchronizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = thread_synchronizer.h; path = ../../common/thread_synchronizer.h; sourceTree = "<group>"; };
+		EF4F8DDF280F21B700CCAAB1 /* prefix_sum_metal_objc_recursive.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = prefix_sum_metal_objc_recursive.h; path = ../../04_prefix_sum/metal/prefix_sum_metal_objc_recursive.h; sourceTree = "<group>"; };
+		EF4F8DE0280F21B700CCAAB1 /* prefix_sum_metal_cpp.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = prefix_sum_metal_cpp.cpp; path = ../../04_prefix_sum/metal/prefix_sum_metal_cpp.cpp; sourceTree = "<group>"; };
+		EF4F8DE1280F21B700CCAAB1 /* prefix_sum_metal_cpp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = prefix_sum_metal_cpp.h; path = ../../04_prefix_sum/metal/prefix_sum_metal_cpp.h; sourceTree = "<group>"; };
+		EF4F8DE2280F21B700CCAAB1 /* prefix_sum_metal_objc_recursive.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = prefix_sum_metal_objc_recursive.mm; path = ../../04_prefix_sum/metal/prefix_sum_metal_objc_recursive.mm; sourceTree = "<group>"; };
+		EF4F8DE3280F21B700CCAAB1 /* prefix_sum_metal_objc_merrill_grimshaw.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = prefix_sum_metal_objc_merrill_grimshaw.h; path = ../../04_prefix_sum/metal/prefix_sum_metal_objc_merrill_grimshaw.h; sourceTree = "<group>"; };
+		EF4F8DE4280F21B700CCAAB1 /* prefix_sum_metal_cpp_impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = prefix_sum_metal_cpp_impl.h; path = ../../04_prefix_sum/metal/prefix_sum_metal_cpp_impl.h; sourceTree = "<group>"; };
+		EF4F8DE5280F21B700CCAAB1 /* prefix_sum_recursive.metal */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.metal; name = prefix_sum_recursive.metal; path = ../../04_prefix_sum/metal/prefix_sum_recursive.metal; sourceTree = "<group>"; };
+		EF4F8DE6280F21B700CCAAB1 /* prefix_sum_metal_objc_merrill_grimshaw.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = prefix_sum_metal_objc_merrill_grimshaw.mm; path = ../../04_prefix_sum/metal/prefix_sum_metal_objc_merrill_grimshaw.mm; sourceTree = "<group>"; };
+		EF4F8DE7280F21B700CCAAB1 /* prefix_sum_merrill_grimshaw.metal */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.metal; name = prefix_sum_merrill_grimshaw.metal; path = ../../04_prefix_sum/metal/prefix_sum_merrill_grimshaw.metal; sourceTree = "<group>"; };
+		EF4F8DE8280F21B700CCAAB1 /* prefix_sum_metal_cpp_impl.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = prefix_sum_metal_cpp_impl.mm; path = ../../04_prefix_sum/metal/prefix_sum_metal_cpp_impl.mm; sourceTree = "<group>"; };
+		EF4F8DEF280F21BF00CCAAB1 /* test_prefix_sum.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = test_prefix_sum.cpp; path = ../../04_prefix_sum/test_prefix_sum.cpp; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		EF4F8DC1280F201400CCAAB1 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		EF4F8DBB280F201400CCAAB1 = {
+			isa = PBXGroup;
+			children = (
+				EF4F8DC6280F201400CCAAB1 /* iOSTester_04 */,
+				EF4F8DC5280F201400CCAAB1 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		EF4F8DC5280F201400CCAAB1 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				EF4F8DC4280F201400CCAAB1 /* iOSTester_04.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		EF4F8DC6280F201400CCAAB1 /* iOSTester_04 */ = {
+			isa = PBXGroup;
+			children = (
+				EF4F8DEF280F21BF00CCAAB1 /* test_prefix_sum.cpp */,
+				EF4F8DE7280F21B700CCAAB1 /* prefix_sum_merrill_grimshaw.metal */,
+				EF4F8DE4280F21B700CCAAB1 /* prefix_sum_metal_cpp_impl.h */,
+				EF4F8DE8280F21B700CCAAB1 /* prefix_sum_metal_cpp_impl.mm */,
+				EF4F8DE0280F21B700CCAAB1 /* prefix_sum_metal_cpp.cpp */,
+				EF4F8DE1280F21B700CCAAB1 /* prefix_sum_metal_cpp.h */,
+				EF4F8DE3280F21B700CCAAB1 /* prefix_sum_metal_objc_merrill_grimshaw.h */,
+				EF4F8DE6280F21B700CCAAB1 /* prefix_sum_metal_objc_merrill_grimshaw.mm */,
+				EF4F8DDF280F21B700CCAAB1 /* prefix_sum_metal_objc_recursive.h */,
+				EF4F8DE2280F21B700CCAAB1 /* prefix_sum_metal_objc_recursive.mm */,
+				EF4F8DE5280F21B700CCAAB1 /* prefix_sum_recursive.metal */,
+				EF4F8DDD280F21A800CCAAB1 /* test_case_with_time_measurements.h */,
+				EF4F8DDC280F21A800CCAAB1 /* test_pattern_generation.h */,
+				EF4F8DDE280F21A800CCAAB1 /* thread_synchronizer.h */,
+				EF4F8DDA280F219800CCAAB1 /* metal_compute_base.h */,
+				EF4F8DD9280F219800CCAAB1 /* metal_compute_base.mm */,
+				EF4F8DC7280F201400CCAAB1 /* iOSTester_04App.swift */,
+				EF4F8DC9280F201400CCAAB1 /* ContentView.swift */,
+				EF4F8DCB280F201600CCAAB1 /* Assets.xcassets */,
+				EF4F8DCD280F201600CCAAB1 /* Preview Content */,
+				EF4F8DD5280F20DD00CCAAB1 /* test_prefix_sum_objc.h */,
+				EF4F8DD7280F20F300CCAAB1 /* test_prefix_sum_objc.mm */,
+				EF4F8DD6280F20F300CCAAB1 /* iOSTester_04-Bridging-Header.h */,
+			);
+			path = iOSTester_04;
+			sourceTree = "<group>";
+		};
+		EF4F8DCD280F201600CCAAB1 /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				EF4F8DCE280F201600CCAAB1 /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		EF4F8DC3280F201400CCAAB1 /* iOSTester_04 */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = EF4F8DD2280F201600CCAAB1 /* Build configuration list for PBXNativeTarget "iOSTester_04" */;
+			buildPhases = (
+				EF4F8DC0280F201400CCAAB1 /* Sources */,
+				EF4F8DC1280F201400CCAAB1 /* Frameworks */,
+				EF4F8DC2280F201400CCAAB1 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = iOSTester_04;
+			productName = iOSTester_04;
+			productReference = EF4F8DC4280F201400CCAAB1 /* iOSTester_04.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		EF4F8DBC280F201400CCAAB1 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1330;
+				LastUpgradeCheck = 1330;
+				TargetAttributes = {
+					EF4F8DC3280F201400CCAAB1 = {
+						CreatedOnToolsVersion = 13.3.1;
+						LastSwiftMigration = 1330;
+					};
+				};
+			};
+			buildConfigurationList = EF4F8DBF280F201400CCAAB1 /* Build configuration list for PBXProject "iOSTester_04" */;
+			compatibilityVersion = "Xcode 13.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = EF4F8DBB280F201400CCAAB1;
+			productRefGroup = EF4F8DC5280F201400CCAAB1 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				EF4F8DC3280F201400CCAAB1 /* iOSTester_04 */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		EF4F8DC2280F201400CCAAB1 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EF4F8DCF280F201600CCAAB1 /* Preview Assets.xcassets in Resources */,
+				EF4F8DCC280F201600CCAAB1 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		EF4F8DC0280F201400CCAAB1 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EF4F8DCA280F201400CCAAB1 /* ContentView.swift in Sources */,
+				EF4F8DEC280F21B700CCAAB1 /* prefix_sum_metal_objc_merrill_grimshaw.mm in Sources */,
+				EF4F8DEB280F21B700CCAAB1 /* prefix_sum_recursive.metal in Sources */,
+				EF4F8DEE280F21B700CCAAB1 /* prefix_sum_metal_cpp_impl.mm in Sources */,
+				EF4F8DED280F21B700CCAAB1 /* prefix_sum_merrill_grimshaw.metal in Sources */,
+				EF4F8DF0280F21BF00CCAAB1 /* test_prefix_sum.cpp in Sources */,
+				EF4F8DE9280F21B700CCAAB1 /* prefix_sum_metal_cpp.cpp in Sources */,
+				EF4F8DC8280F201400CCAAB1 /* iOSTester_04App.swift in Sources */,
+				EF4F8DDB280F219800CCAAB1 /* metal_compute_base.mm in Sources */,
+				EF4F8DEA280F21B700CCAAB1 /* prefix_sum_metal_objc_recursive.mm in Sources */,
+				EF4F8DD8280F20F300CCAAB1 /* test_prefix_sum_objc.mm in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		EF4F8DD0280F201600CCAAB1 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.4;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		EF4F8DD1280F201600CCAAB1 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.4;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		EF4F8DD3280F201600CCAAB1 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"iOSTester_04/Preview Content\"";
+				DEVELOPMENT_TEAM = 64SMH392EJ;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "org.applenumericalcomputing.iOSTester-04";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "iOSTester_04/iOSTester_04-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		EF4F8DD4280F201600CCAAB1 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"iOSTester_04/Preview Content\"";
+				DEVELOPMENT_TEAM = 64SMH392EJ;
+				ENABLE_PREVIEWS = YES;
+				GCC_OPTIMIZATION_LEVEL = fast;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "org.applenumericalcomputing.iOSTester-04";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "iOSTester_04/iOSTester_04-Bridging-Header.h";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		EF4F8DBF280F201400CCAAB1 /* Build configuration list for PBXProject "iOSTester_04" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				EF4F8DD0280F201600CCAAB1 /* Debug */,
+				EF4F8DD1280F201600CCAAB1 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		EF4F8DD2280F201600CCAAB1 /* Build configuration list for PBXNativeTarget "iOSTester_04" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				EF4F8DD3280F201600CCAAB1 /* Debug */,
+				EF4F8DD4280F201600CCAAB1 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = EF4F8DBC280F201400CCAAB1 /* Project object */;
+}

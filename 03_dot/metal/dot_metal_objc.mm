@@ -121,7 +121,7 @@ struct dot_constants
 
     _mX     = [ self getSharedMTLBufferForBytes:  sizeof(float) * _mNumElements for:@"_mX"     ];
     _mY     = [ self getSharedMTLBufferForBytes:  sizeof(float) * _mNumElements for:@"_mY"     ];
-    _mSint  = [ self getPrivateMTLBufferForBytes: sizeof(uint)                  for:@"_mSint"  ];
+    _mSint  = [ self getSharedMTLBufferForBytes: sizeof(uint)                  for:@"_mSint"  ];
     _mConst = [ self getSharedMTLBufferForBytes:  sizeof(struct dot_constants)  for:@"_mConst" ];
 
     struct dot_constants c;
@@ -140,7 +140,7 @@ struct dot_constants
     _mDot   = [ self getSharedMTLBufferForBytes:  sizeof(float)                      for:@"_mDot"   ];
     _mThreadGroupCounter
             = [ self getSharedMTLBufferForBytes:  sizeof(uint)                       for:@"_mThreadGroupCounter"   ];
-    _mSint  = [ self getPrivateMTLBufferForBytes: sizeof(uint)                       for:@"_mSint"  ];
+    _mSint  = [ self getSharedMTLBufferForBytes: sizeof(uint)                       for:@"_mSint"  ];
     _mConst = [ self getSharedMTLBufferForBytes:  sizeof(struct dot_constants)       for:@"_mConst" ];
 
     struct dot_constants c;

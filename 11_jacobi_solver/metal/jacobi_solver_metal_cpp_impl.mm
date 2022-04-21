@@ -11,31 +11,31 @@ JacobiSolverMetalCppImpl::~JacobiSolverMetalCppImpl(){ m_self = nullptr; }
 
 void JacobiSolverMetalCppImpl::setInitialStates( float* A, float* D, float* b, float* x1, float* x2 )
 {
-    [ (id)m_self setInitialStatesA: A D:D B: b X1: x1 X2: x2 ];
+    [ m_self setInitialStatesA: A D:D B: b X1: x1 X2: x2 ];
 }
 
 float* JacobiSolverMetalCppImpl::getRawPointerA() {
 
-    return [ (id)m_self getRawPointerA ];
+    return [ m_self getRawPointerA ];
 }
 
 float* JacobiSolverMetalCppImpl::getRawPointerB() {
 
-    return [ (id)m_self getRawPointerB ];
+    return [ m_self getRawPointerB ];
 }
 
 float* JacobiSolverMetalCppImpl::getRawPointerActiveX() {
-    return [ (id)m_self getRawPointerActiveX ];
+    return [ m_self getRawPointerActiveX ];
 }
 
 float JacobiSolverMetalCppImpl::getError() {
 
-    return [ (id)m_self getError ];
+    return [ m_self getError ];
 }
 
 void JacobiSolverMetalCppImpl::performComputation()
 {
-    [ (id)m_self performComputation ];
+    [ m_self performComputation ];
 }
 
 

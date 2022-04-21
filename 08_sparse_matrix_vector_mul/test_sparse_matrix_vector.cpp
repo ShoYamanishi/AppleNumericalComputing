@@ -635,8 +635,10 @@ struct matrix_dim matrix_dims[]={
     , {    2048,    2048, 0.1  }
     , {    4096,    4096, 0.1  }
     , {  8*1024,  8*1024, 0.1  }
-    , { 16*1024, 16*1024, 0.1  }  
+#if TARGET_OS_OSX
+    , { 16*1024, 16*1024, 0.1  }
 //    , { 32*1024, 32*1024, 0.1  }  
+#endif
 };
 
 template<class T>
@@ -665,7 +667,11 @@ void testSuitePerType ( const T gen_low, const T gen_high ) {
     }
 }
 
+#if TARGET_OS_OSX
 int main( int argc, char* argv[] )
+#else
+int run_test()
+#endif
 {
     TestCaseWithTimeMeasurements::printHeader( cout );
 

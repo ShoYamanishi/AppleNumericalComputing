@@ -1,3 +1,4 @@
+class Convolution2D_CIImageObjc;
 #include "convolution_2d_ciimage_cpp_impl.h"
 #include "convolution_2d_ciimage_cpp.h"
 

@@ -20,6 +20,7 @@
     id<MTLBuffer>               _my;
     id<MTLBuffer>               _mb;
     id<MTLBuffer>               _mConst;
+
 }
 
 
@@ -97,7 +98,7 @@
 
     [ computeEncoder setBuffer:_mL     offset:0 atIndex:0 ];
     [ computeEncoder setBuffer:_mConst offset:0 atIndex:1 ];
-
+    
     int numGroupsPerGrid   = 1;
     int numThreadsPerGroup =   (_mDim>=1024)
                              ? 1024

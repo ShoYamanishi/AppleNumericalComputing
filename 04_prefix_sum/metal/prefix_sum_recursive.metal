@@ -202,10 +202,10 @@ kernel void scan_with_base_threadgroupwise_32_32_int(
 
         // Warp-wise prefix sum
 
-        thread int local_sum =   in[ thread_position_in_grid ] 
+        thread int local_sum =   in[ thread_position_in_grid ]
 
-                               + (  ( thread_position_in_threadgroup == 0 )
-                                  ?( grid_prefix_sums[ threadgroup_position_in_grid - 1 ] )
+                               + (  ( ( thread_position_in_threadgroup == 0 ) && ( threadgroup_position_in_grid > 0 ) )
+                                  ? ( grid_prefix_sums[ threadgroup_position_in_grid - 1 ] )
                                   : 0  );
 
         if ( thread_index_in_simdgroup >=  1 ) local_sum += simd_shuffle_up( local_sum,  1 );

@@ -218,8 +218,11 @@ class TestExecutorRadixSort : public TestExecutor {
 };
 
 static const size_t NUM_TRIALS = 10;
+#if TARGET_OS_OSX
 size_t nums_elements[]{ 32, 128, 512, 2* 1024, 8*1024, 32*1024, 128*1024, 512*1024, 2*1024*1024, 8*1024*1024, 32*1024*1024, 128*1024*1024 };
-
+#else
+size_t nums_elements[]{ 32, 128, 512, 2* 1024, 8*1024, 32*1024, 128*1024, 512*1024, 2*1024*1024, 8*1024*1024 };
+#endif
 template<class T>
 void testSuitePerType () {
 
@@ -237,16 +240,19 @@ void testSuitePerType () {
         e.addTestCase( make_shared< TestCaseRadixSort_Metal              <T> > ( num_elements , true,  true  , false ) );
         e.addTestCase( make_shared< TestCaseRadixSort_Metal              <T> > ( num_elements , false, false , false ) );
         e.addTestCase( make_shared< TestCaseRadixSort_Metal              <T> > ( num_elements , true,  false , false ) );
+#if TARGET_OS_OSX
         e.addTestCase( make_shared< TestCaseRadixSort_Metal              <T> > ( num_elements , false, false , true  ) );
         e.addTestCase( make_shared< TestCaseRadixSort_Metal              <T> > ( num_elements , true,  false , true  ) );
-
+#endif
         e.execute();
     }
 }
 
-
+#if TARGET_OS_OSX
 int main(int argc, char* argv[]) {
-
+#else
+int run_test() {
+#endif
     TestCaseWithTimeMeasurements::printHeader( cout );
 
     cerr << "\n\nTesting for type int.\n\n";

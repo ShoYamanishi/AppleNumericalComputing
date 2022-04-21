@@ -17,7 +17,7 @@ class Convolution2D_CIImageCppImpl
     void performConvolution();
 
   private:
-    void * m_self;
+    Convolution2D_CIImageObjc* m_self;
 };
 
 #endif /*__CONVOLUTION_2D_CIIMAGE_CPP_IMPL_H__*/

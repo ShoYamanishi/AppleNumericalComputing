@@ -1,3 +1,6 @@
+class PrefixSumMetalObjCRecursive;
+class PrefixSumMetalObjCMerrillGrimshaw;
+
 #include "prefix_sum_metal_cpp_impl.h"
 #include "prefix_sum_metal_cpp.h"
 

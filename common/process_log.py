@@ -5,14 +5,13 @@ import json
 import argparse
 import sys
 
-BASE_DIR = 'doc/'
-
 def parse_commandline():
 
     arg_parser = argparse.ArgumentParser( description = 'generate plots from the log output' )
     arg_parser.add_argument( '-logfile',   nargs = '?', default='make_log.txt',   help = 'log file' )
     arg_parser.add_argument( '-specfile',  nargs = '?', default='plot_spec.json', help = 'plot specification file' )       
     arg_parser.add_argument( '-plot_charts', action = "store_true", help = 'generates plots per spec' )
+    arg_parser.add_argument( '-base_dir',  default='doc/', help = 'output directory where the PNG files are saved' )
     arg_parser.add_argument( '-show_impl', action = "store_true", help = 'shows all the implementation types' )
     return arg_parser
 
@@ -116,7 +115,7 @@ def get_x_label(est):
 
         return 'NNZ'
 
-def plot_log_log( element_type, element_subtype, width, height, title, lengths, times, labels ):
+def plot_log_log( element_type, element_subtype, width, height, title, lengths, times, labels, base_dir ):
 
     fig = plt.figure( figsize = (width, height) )
     ax1 = fig.add_subplot(111)
@@ -135,11 +134,11 @@ def plot_log_log( element_type, element_subtype, width, height, title, lengths, 
     lgd = ax1.legend(ax_handles, ax_labels)
     ax1.grid('on')
 
-    plt.savefig(BASE_DIR + element_type + '_' + element_subtype + '_' + title.replace(' ','_').replace('+', 'P') + '.png')
+    plt.savefig(base_dir + element_type + '_' + element_subtype + '_' + title.replace(' ','_').replace('+', 'P') + '.png')
     plt.clf()
 
 
-def plot_log_lin_relative( element_type, element_subtype, width, height, title, lengths, times, labels, base_label, upper_limit ):
+def plot_log_lin_relative( element_type, element_subtype, width, height, title, lengths, times, labels, base_label, upper_limit, base_dir ):
 
     fig = plt.figure( figsize = (width, height) )
     ax1 = fig.add_subplot(111)
@@ -160,12 +159,12 @@ def plot_log_lin_relative( element_type, element_subtype, width, height, title, 
     lgd = ax1.legend(ax_handles, ax_labels)
     ax1.grid('on')
 
-    plt.savefig(BASE_DIR + element_type + '_' + element_subtype + '_' + title.replace(' ', '_') + '_relative.png')
+    plt.savefig(base_dir + element_type + '_' + element_subtype + '_' + title.replace(' ', '_') + '_relative.png')
     plt.clf()
 
 
 
-def plot_lin_lin( element_type, element_subtype, width, height, title, lengths, times, labels ):
+def plot_lin_lin( element_type, element_subtype, width, height, title, lengths, times, labels, base_dir ):
 
     fig = plt.figure( figsize = (width, height) )
     ax1 = fig.add_subplot(111)
@@ -184,7 +183,7 @@ def plot_lin_lin( element_type, element_subtype, width, height, title, lengths, 
     lgd = ax1.legend(ax_handles, ax_labels)
     ax1.grid('on')
 
-    plt.savefig(BASE_DIR + element_type + '_' + element_subtype + '_' + title.replace(' ','_').replace('+', 'P') + '.png')
+    plt.savefig(base_dir + element_type + '_' + element_subtype + '_' + title.replace(' ','_').replace('+', 'P') + '.png')
     plt.clf()
 
 
@@ -225,7 +224,7 @@ def show_implementations(df):
             print ('Implementation Combinarions: ' + out_str )
 
 
-def plot_charts( df, js ):
+def plot_charts( df, js, base_dir ):
 
     for plot_data in js:
         
@@ -314,11 +313,11 @@ def plot_charts( df, js ):
                 list_labels.append( pd )
 
         if pt == 'LOG-LIN-RELATIVE':
-            plot_log_lin_relative( det, des, width, height, title, list_lengths, list_times, list_labels, pb, ul )
+            plot_log_lin_relative( det, des, width, height, title, list_lengths, list_times, list_labels, pb, ul, base_dir )
         elif  pt == 'LOG-LOG':
-            plot_log_log( det, des, width, height, title, list_lengths, list_times, list_labels )
+            plot_log_log( det, des, width, height, title, list_lengths, list_times, list_labels, base_dir )
         elif  pt == 'LIN-LIN':
-            plot_lin_lin( det, des, width, height, title, list_lengths, list_times, list_labels )
+            plot_lin_lin( det, des, width, height, title, list_lengths, list_times, list_labels, base_dir )
 
 def main():
 
@@ -334,7 +333,7 @@ def main():
     if comm_args.plot_charts:
         with open(comm_args.specfile, 'r') as jf:
             js = json.load(jf)
-            plot_charts(df, js)
+            plot_charts(df, js, comm_args.base_dir + '/' )
 
         
 if __name__ == "__main__":

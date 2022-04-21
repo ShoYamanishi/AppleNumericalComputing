@@ -1,7 +1,7 @@
 #ifndef __GAUSS_SEIDEL_SOLVER_METAL_CPP_IMPL_H__
 #define __GAUSS_SEIDEL_SOLVER_METAL_CPP_IMPL_H__
 
-#include <gauss_seidel_solver_metal_cpp.h>
+#include "gauss_seidel_solver_metal_cpp.h"
 
 #include <cstddef>
 
@@ -26,7 +26,7 @@ class GaussSeidelSolverMetalCppImpl
     void   performComputation();
 
   private:
-    void * m_self;
+    GaussSeidelSolverMetalObjC* m_self;
 };
 
 #endif /*__GAUSS_SEIDEL_SOLVER_METAL_CPP_IMPL_H__*/

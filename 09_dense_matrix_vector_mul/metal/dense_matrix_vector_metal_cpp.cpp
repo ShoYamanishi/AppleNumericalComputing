@@ -1,3 +1,5 @@
+class DenseMatrixVectorMetalObjCOwnShader;
+class DenseMatrixVectorMetalObjCMPS;
 #include "dense_matrix_vector_metal_cpp_impl.h"
 #include "dense_matrix_vector_metal_cpp.h"
 
