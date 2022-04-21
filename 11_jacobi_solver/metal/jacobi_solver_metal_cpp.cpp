@@ -1,3 +1,4 @@
+class JacobiSolverMetalObjC;
 #include "jacobi_solver_metal_cpp_impl.h"
 #include "jacobi_solver_metal_cpp.h"
 

@@ -1,6 +1,6 @@
 #import "metal_compute_base.h"
 
-#include <jacobi_solver_metal_cpp.h>
+#include "jacobi_solver_metal_cpp.h"
 
 @interface JacobiSolverMetalObjC : MetalComputeBase
 
