@@ -210,10 +210,11 @@ class TestCasePrefixSum_Metal : public TestCasePrefixSum<T> {
     TestCasePrefixSum_Metal(
         const size_t num_elements,
         const int    algo_type,
-        const size_t num_partial_sums = 0
+        const size_t num_partial_sums,
+        const uint   num_threads_per_threadgroup
     )
         :TestCasePrefixSum<T>( num_elements )
-        ,m_metal( num_elements, algo_type, num_partial_sums )
+        ,m_metal( num_elements, algo_type, num_partial_sums, num_threads_per_threadgroup )
     {
         static_assert( is_same<int, T>::value );
 
@@ -232,7 +233,7 @@ class TestCasePrefixSum_Metal : public TestCasePrefixSum<T> {
 
           case 3:
           default:
-            this->setMetal( MERRILL_AND_GRIMSHAW, num_partial_sums,  1024 );
+            this->setMetal( MERRILL_AND_GRIMSHAW, num_partial_sums,  num_threads_per_threadgroup );
             break;
         }
     }
@@ -313,10 +314,17 @@ class TestExecutorPrefixSum : public TestExecutor {
 static const size_t NUM_TRIALS = 100;
 
 #if TARGET_OS_OSX
+
 size_t nums_elements[]{ 32, 128, 512, 2*1024, 32*1024, 128*1024, 512*1024, 2*1024*1024, 32*1024*1024, 128*1024*1024 };
+uint num_threads_per_threadgroup = 1024;
+
 #else
+
 size_t nums_elements[]{ 32, 128, 512, 2*1024, 32*1024, 128*1024, 512*1024, 2*1024*1024, 32*1024*1024 };
+uint num_threads_per_threadgroup = 512;
+
 #endif
+
 template<class T>
 void testSuitePerType () {
 
@@ -329,10 +337,10 @@ void testSuitePerType () {
         e.addTestCase( make_shared< TestCasePrefixSum_baseline <T> > ( num_elements, 4       ) );
         e.addTestCase( make_shared< TestCasePrefixSum_baseline <T> > ( num_elements, 8       ) );
         e.addTestCase( make_shared< TestCasePrefixSum_stdcpp   <T> > ( num_elements          ) );
-        e.addTestCase( make_shared< TestCasePrefixSum_Metal    <T> > ( num_elements, 1,    0 ) );
-        e.addTestCase( make_shared< TestCasePrefixSum_Metal    <T> > ( num_elements, 2,    0 ) );
-        e.addTestCase( make_shared< TestCasePrefixSum_Metal    <T> > ( num_elements, 3,   64 ) );
-        e.addTestCase( make_shared< TestCasePrefixSum_Metal    <T> > ( num_elements, 3, 1024 ) );
+        e.addTestCase( make_shared< TestCasePrefixSum_Metal    <T> > ( num_elements, 1,    0, num_threads_per_threadgroup ) );
+        e.addTestCase( make_shared< TestCasePrefixSum_Metal    <T> > ( num_elements, 2,    0, num_threads_per_threadgroup ) );
+        e.addTestCase( make_shared< TestCasePrefixSum_Metal    <T> > ( num_elements, 3,   64, num_threads_per_threadgroup ) );
+        e.addTestCase( make_shared< TestCasePrefixSum_Metal    <T> > ( num_elements, 3, 1024, num_threads_per_threadgroup ) );
 
         e.execute();
     }

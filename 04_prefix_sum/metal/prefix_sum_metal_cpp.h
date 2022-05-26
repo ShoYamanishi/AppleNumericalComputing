@@ -9,8 +9,7 @@ class PrefixSumMetalCpp
 {
 
   public:
-    PrefixSumMetalCpp( const size_t num_elements , const int algo_type, const size_t num_partial_sums );
-
+    PrefixSumMetalCpp( const size_t num_elements , const int algo_type, const size_t num_partial_sums, const int num_threads_per_threadgroup );
     virtual ~PrefixSumMetalCpp();
 
     unsigned int numElements(unsigned int layer);

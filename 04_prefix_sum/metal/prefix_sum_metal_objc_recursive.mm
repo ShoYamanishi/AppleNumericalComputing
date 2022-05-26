@@ -8,6 +8,11 @@ struct prefix_sum_constants
     uint  num_elements;
 };
 
+inline uint roundup_X(const uint x, uint n )
+{
+    return ((n + x - 1 ) / x) * x;
+}
+
 inline uint roundup_1024(uint n )
 {
     return ((n + 1023) / 1024) * 1024;
@@ -25,47 +30,65 @@ inline uint roundup_16(uint n)
 
 // Type 1: scan-then-fan
 //
-//   - 0 < num_elements <= 1024
-//     scan_threadgroupwise_intermediate_32_32
+//   - 0 < num_elements <= X
+//     scan_threadgroupwise_intermediate_32_X
 //
-//   - 1024 < num_elements <= 1024*1024
-//     scan_threadgroupwise_intermediate_32_32
-//     scan_threadgroupwise_intermediate_32_32
-//     add_base_32_32
+//   - X < num_elements <= X * X
+//     scan_threadgroupwise_intermediate_32_X
+//     scan_threadgroupwise_intermediate_32_X
+//     add_base_32_X
 //
-//   - 1024*1024 < num_elements <= 1024*1024*1024
-//     scan_threadgroupwise_intermediate_32_32
-//     scan_threadgroupwise_intermediate_32_32
-//     scan_threadgroupwise_intermediate_32_32
-//     add_base_32_32
-//     add_base_32_32
+//   - X * X < num_elements <= X * X * X
+//     scan_threadgroupwise_intermediate_32_X
+//     scan_threadgroupwise_intermediate_32_X
+//     scan_threadgroupwise_intermediate_32_X
+//     add_base_32_X
+//     add_base_32_X
+
+//   - X * X * X < num_elements <= X * X * X * X
+//     scan_threadgroupwise_intermediate_32_X
+//     scan_threadgroupwise_intermediate_32_X
+//     scan_threadgroupwise_intermediate_32_X
+//     scan_threadgroupwise_intermediate_32_X
+//     add_base_32_X
+//     add_base_32_X
+//     add_base_32_X
 //
 // Type 2: reduce-then_scan
 //
-//   - 0 < num_elements <= 1024
-//     scan_threadgroupwise_intermediate_32_32
+//   - 0 < num_elements <= X
+//     scan_threadgroupwise_intermediate_32_X
 //
-//   - 1024 < num_elements <= 1024*1024
-//     sum_threadgroup_32_32
-//     scan_threadgroupwise_intermediate_32_32
-//     scan_with_base_threadgroupwise_32_32
+//   - X < num_elements <= X * X
+//     sum_threadgroup_32_X
+//     scan_threadgroupwise_intermediate_32_X
+//     scan_with_base_threadgroupwise_32_X
 //
-//   - 1024*1024 < num_elements <= 1024*1024*1024
-//     sum_threadgroup_32_32
-//     sum_threadgroup_32_32
-//     scan_threadgroupwise_intermediate_32_32
-//     scan_with_base_threadgroupwise_32_32
-//     scan_with_base_threadgroupwise_32_32
+//   - X * X < num_elements <= X * X * X
+//     sum_threadgroup_32_X
+//     sum_threadgroup_32_X
+//     scan_threadgroupwise_intermediate_32_X
+//     scan_with_base_threadgroupwise_32_X
+//     scan_with_base_threadgroupwise_32_X
+//
+//   - X * X * X < num_elements <= X * X * X * X
+//     sum_threadgroup_32_X
+//     sum_threadgroup_32_X
+//     sum_threadgroup_32_X
+//     scan_threadgroupwise_intermediate_32_X
+//     scan_with_base_threadgroupwise_32_X
+//     scan_with_base_threadgroupwise_32_X
+//     scan_with_base_threadgroupwise_32_X
 
 @implementation PrefixSumMetalObjCRecursive
 {
     int _mAlgoType;
 
     // scan-then-fan & reduce-then-scan
-    id<MTLComputePipelineState> _mPSO_scan_threadgroupwise_intermediate_32_32;
-    id<MTLComputePipelineState> _mPSO_add_base_32_32;
-    id<MTLComputePipelineState> _mPSO_sum_threadgroup_32_32;
-    id<MTLComputePipelineState> _mPSO_scan_with_base_threadgroupwise_32_32;
+    id<MTLComputePipelineState> _mPSO_scan_threadgroupwise_intermediate_32_X;
+    id<MTLComputePipelineState> _mPSO_add_base_32_X;
+    id<MTLComputePipelineState> _mPSO_sum_threadgroup_32_X;
+    id<MTLComputePipelineState> _mPSO_scan_with_base_threadgroupwise_32_X;
 
     id<MTLBuffer> _mIn;
     id<MTLBuffer> _mOut;
@@ -73,7 +96,9 @@ inline uint roundup_16(uint n)
     id<MTLBuffer> _mConstLayer1;
     id<MTLBuffer> _mConstLayer2;
     id<MTLBuffer> _mConstLayer3;
+    id<MTLBuffer> _mConstLayer4;
 
+    size_t        _mNumThreadsPerThreadgroup;
     uint          _mConfiguration;
 
     // Layer 1
@@ -94,19 +119,30 @@ inline uint roundup_16(uint n)
     uint          _mNumGroupsPerGridLayer3;
     id<MTLBuffer> _mGridPrefixSumsLayer3;
 
+    // Layer 4
+    uint          _mNumElementsLayer4;
+    uint          _mNumThreadsPerGroupLayer4;
+    uint          _mNumGroupsPerGridLayer4;
+    id<MTLBuffer> _mGridPrefixSumsLayer4;
+
+
 }
 
 - (instancetype) initWithNumElements:(size_t) num_elements
                                 Type:(int)    algo_type
                       NumPartialSums:(size_t) num_partial_sums
                             ForFloat:(bool)   for_float
+            NumThreadsPerThreadgroup:(int)    num_threads_per_threadgroup
 {
     self = [super init];
+
     if (self)
     {
         [ self loadLibraryWithName:@"./prefix_sum.metallib" ];
 
         _mAlgoType = algo_type;
+
+        _mNumThreadsPerThreadgroup = num_threads_per_threadgroup;
 
         [self findConfiguration:num_elements ];
 
@@ -115,22 +151,22 @@ inline uint roundup_16(uint n)
             [ self findConfiguration:num_elements ];
 
             if (for_float) {
-                _mPSO_scan_threadgroupwise_intermediate_32_32 = [ self getPipelineStateForFunction: @"scan_threadgroupwise_intermediate_32_32_float" ];
-                _mPSO_add_base_32_32                          = [ self getPipelineStateForFunction: @"add_base_32_32_float"                          ];
-                _mPSO_sum_threadgroup_32_32                   = [ self getPipelineStateForFunction: @"sum_threadgroup_32_32_float"                   ];
-                _mPSO_scan_with_base_threadgroupwise_32_32    = [ self getPipelineStateForFunction: @"scan_with_base_threadgroupwise_32_32_float"    ];
+                _mPSO_scan_threadgroupwise_intermediate_32_X = [ self getPipelineStateForFunction: @"scan_threadgroupwise_intermediate_32_X_float" ];
+                _mPSO_add_base_32_X                          = [ self getPipelineStateForFunction: @"add_base_32_X_float"                          ];
+                _mPSO_sum_threadgroup_32_X                   = [ self getPipelineStateForFunction: @"sum_threadgroup_32_X_float"                   ];
+                _mPSO_scan_with_base_threadgroupwise_32_X    = [ self getPipelineStateForFunction: @"scan_with_base_threadgroupwise_32_X_float"    ];
             }
             else {
-                _mPSO_scan_threadgroupwise_intermediate_32_32 = [ self getPipelineStateForFunction: @"scan_threadgroupwise_intermediate_32_32_int" ];
-                _mPSO_add_base_32_32                          = [ self getPipelineStateForFunction: @"add_base_32_32_int"                          ];
-                _mPSO_sum_threadgroup_32_32                   = [ self getPipelineStateForFunction: @"sum_threadgroup_32_32_int"                   ];
-                _mPSO_scan_with_base_threadgroupwise_32_32    = [ self getPipelineStateForFunction: @"scan_with_base_threadgroupwise_32_32_int"    ];
+                _mPSO_scan_threadgroupwise_intermediate_32_X = [ self getPipelineStateForFunction: @"scan_threadgroupwise_intermediate_32_X_int" ];
+                _mPSO_add_base_32_X                          = [ self getPipelineStateForFunction: @"add_base_32_X_int"                          ];
+                _mPSO_sum_threadgroup_32_X                   = [ self getPipelineStateForFunction: @"sum_threadgroup_32_X_int"                   ];
+                _mPSO_scan_with_base_threadgroupwise_32_X    = [ self getPipelineStateForFunction: @"scan_with_base_threadgroupwise_32_X_int"    ];
             }
 
             _mIn  = [ self getSharedMTLBufferForBytes: _mNumElementsLayer1 * (for_float?sizeof(float):sizeof(int)) for:@"_mIn"   ];
             _mOut = [ self getSharedMTLBufferForBytes: _mNumElementsLayer1 * (for_float?sizeof(float):sizeof(int)) for:@"_mOut"  ];
 
-            if ( _mConfiguration == 1 || _mConfiguration == 2 ||_mConfiguration == 3 ) {
+            if ( _mConfiguration == 1 || _mConfiguration == 2 ||_mConfiguration == 3 || _mConfiguration == 4 ) {
 
                 _mGridPrefixSumsLayer1 = [ self getPrivateMTLBufferForBytes: _mNumGroupsPerGridLayer1 * (for_float?sizeof(float):sizeof(int))
                                                                         for: @"_mGridPrefixSumsLayer1" ];
@@ -142,7 +178,7 @@ inline uint roundup_16(uint n)
                 memcpy( _mConstLayer1.contents, &c, sizeof(struct prefix_sum_constants) );
             }
 
-            if ( _mConfiguration == 2 ||_mConfiguration == 3 ) {
+            if ( _mConfiguration == 2 ||_mConfiguration == 3 || _mConfiguration == 4 ) {
 
                 _mGridPrefixSumsLayer2 = [ self getPrivateMTLBufferForBytes: _mNumGroupsPerGridLayer2 * (for_float?sizeof(float):sizeof(int))
                                                                         for: @"_mGridPrefixSumsLayer2"  ];
@@ -154,7 +190,7 @@ inline uint roundup_16(uint n)
                 memcpy( _mConstLayer2.contents, &c, sizeof(struct prefix_sum_constants) );
             }
 
-            if ( _mConfiguration == 3 ) {
+            if ( _mConfiguration == 3 || _mConfiguration == 4 ) {
 
                 _mGridPrefixSumsLayer3 = [ self getPrivateMTLBufferForBytes: _mNumGroupsPerGridLayer3 * (for_float?sizeof(float):sizeof(int))
                                                                         for: @"_mGridPrefixSumsLayer3"  ];
@@ -165,15 +201,27 @@ inline uint roundup_16(uint n)
                 c.num_elements = _mNumElementsLayer3;
                 memcpy( _mConstLayer3.contents, &c, sizeof(struct prefix_sum_constants) );
             }
+
+            if ( _mConfiguration == 4 ) {
+
+                _mGridPrefixSumsLayer4 = [ self getPrivateMTLBufferForBytes: _mNumGroupsPerGridLayer4 * (for_float?sizeof(float):sizeof(int))
+                                                                        for: @"_mGridPrefixSumsLayer4"  ];
+                _mConstLayer4          = [ self getSharedMTLBufferForBytes:  sizeof(struct prefix_sum_constants)    for:@"_mConstLayer4"  ];
+
+                struct prefix_sum_constants c;
+                memset( &c, (uint)0, sizeof(struct prefix_sum_constants) );
+                c.num_elements = _mNumElementsLayer4;
+                memcpy( _mConstLayer4.contents, &c, sizeof(struct prefix_sum_constants) );
+            }
+
         }
     }
     return self;
 }
 
-
--(void) findConfiguration:(uint) num_elements
+-(void) findConfiguration:(size_t) num_elements
 {
-    if ( num_elements <= 1024 ) {
+    if ( num_elements <= _mNumThreadsPerThreadgroup ) {
 
         _mConfiguration = 1;
 
@@ -189,17 +237,21 @@ inline uint roundup_16(uint n)
 
         _mNumThreadsPerGroupLayer3 = 0;
         _mNumGroupsPerGridLayer3   = 0;
+
+        _mNumThreadsPerGroupLayer4 = 0;
+        _mNumGroupsPerGridLayer4   = 0;
+
     }
-    else if  ( num_elements <= 1024*1024 ) {
+    else if  ( num_elements <= _mNumThreadsPerThreadgroup * _mNumThreadsPerThreadgroup ) {
 
         _mConfiguration = 2;
 
         _mNumElementsLayer1        = num_elements;
-        _mNumElementsLayer2        = roundup_1024( _mNumElementsLayer1 ) / 1024;
+        _mNumElementsLayer2        = roundup_X( _mNumThreadsPerThreadgroup, _mNumElementsLayer1 ) / _mNumThreadsPerThreadgroup;
         _mNumElementsLayer3        = 0;
 
-        _mNumThreadsPerGroupLayer1 = 1024;
-        _mNumGroupsPerGridLayer1   = roundup_32( _mNumElementsLayer2 );
+        _mNumThreadsPerGroupLayer1 = _mNumThreadsPerThreadgroup;
+        _mNumGroupsPerGridLayer1   = _mNumElementsLayer2;
 
         _mNumThreadsPerGroupLayer2 = _mNumGroupsPerGridLayer1;
         _mNumGroupsPerGridLayer2   = 1;
@@ -207,26 +259,54 @@ inline uint roundup_16(uint n)
         _mNumThreadsPerGroupLayer3 = 0;
         _mNumGroupsPerGridLayer3   = 0;
 
+        _mNumThreadsPerGroupLayer4 = 0;
+        _mNumGroupsPerGridLayer4   = 0;
+
     }
-    else if  ( num_elements <= 1024*1024*1024 ) {
+    else if  ( num_elements <= _mNumThreadsPerThreadgroup * _mNumThreadsPerThreadgroup * _mNumThreadsPerThreadgroup ) {
 
         _mConfiguration = 3;
 
         _mNumElementsLayer1        = num_elements;
-        _mNumElementsLayer2        = roundup_1024( _mNumElementsLayer1 ) / 1024;
-        _mNumElementsLayer3        = roundup_1024( _mNumElementsLayer2 ) / 1024;
+        _mNumElementsLayer2        = roundup_X( _mNumThreadsPerThreadgroup, _mNumElementsLayer1 ) / _mNumThreadsPerThreadgroup;
+        _mNumElementsLayer3        = roundup_X( _mNumThreadsPerThreadgroup, _mNumElementsLayer2 ) / _mNumThreadsPerThreadgroup;
 
-        _mNumThreadsPerGroupLayer1 = 1024;
-        _mNumGroupsPerGridLayer1   = roundup_32( _mNumElementsLayer2 );
+        _mNumThreadsPerGroupLayer1 = _mNumThreadsPerThreadgroup;
+        _mNumGroupsPerGridLayer1   = _mNumElementsLayer2;
 
-        _mNumThreadsPerGroupLayer2 = 1024;
-        _mNumGroupsPerGridLayer2   = roundup_32( _mNumElementsLayer3 );
+        _mNumThreadsPerGroupLayer2 = _mNumThreadsPerThreadgroup;
+        _mNumGroupsPerGridLayer2   = _mNumElementsLayer3;
 
         _mNumThreadsPerGroupLayer3 = _mNumGroupsPerGridLayer2;
         _mNumGroupsPerGridLayer3   = 1;
+
+        _mNumThreadsPerGroupLayer4 = 0;
+        _mNumGroupsPerGridLayer4   = 0;
+
+    }
+    else if  ( num_elements <= _mNumThreadsPerThreadgroup * _mNumThreadsPerThreadgroup * _mNumThreadsPerThreadgroup * _mNumThreadsPerThreadgroup ) {
+
+        _mConfiguration = 4;
+
+        _mNumElementsLayer1        = num_elements;
+        _mNumElementsLayer2        = roundup_X( _mNumThreadsPerThreadgroup, _mNumElementsLayer1 ) / _mNumThreadsPerThreadgroup;
+        _mNumElementsLayer3        = roundup_X( _mNumThreadsPerThreadgroup, _mNumElementsLayer2 ) / _mNumThreadsPerThreadgroup;
+        _mNumElementsLayer4        = roundup_X( _mNumThreadsPerThreadgroup, _mNumElementsLayer3 ) / _mNumThreadsPerThreadgroup;
+
+        _mNumThreadsPerGroupLayer1 = _mNumThreadsPerThreadgroup;
+        _mNumGroupsPerGridLayer1   = _mNumElementsLayer2;
+
+        _mNumThreadsPerGroupLayer2 = _mNumThreadsPerThreadgroup;
+        _mNumGroupsPerGridLayer2   = _mNumElementsLayer3;
+
+        _mNumThreadsPerGroupLayer3 = _mNumThreadsPerThreadgroup;
+        _mNumGroupsPerGridLayer3   = _mNumElementsLayer4;
+
+        _mNumThreadsPerGroupLayer4 = _mNumGroupsPerGridLayer3;
+        _mNumGroupsPerGridLayer4   = 1;
+
     }
     else {
-
         _mConfiguration = 0;
 
         _mNumElementsLayer2        = 0;
@@ -240,7 +320,24 @@ inline uint roundup_16(uint n)
 
         _mNumThreadsPerGroupLayer3 = 0;
         _mNumGroupsPerGridLayer3   = 0;
+
+        _mNumThreadsPerGroupLayer4 = 0;
+        _mNumGroupsPerGridLayer4   = 0;
     }
+
+//    NSLog(@"_mConfiguration: %d.", _mConfiguration );
+//    NSLog(@"_mNumElementsLayer1: %d.", _mNumElementsLayer1 );
+//    NSLog(@"_mNumElementsLayer2: %d.", _mNumElementsLayer2 );
+//    NSLog(@"_mNumElementsLayer3: %d.", _mNumElementsLayer3 );
+//    NSLog(@"_mNumElementsLayer4: %d.", _mNumElementsLayer4 );
+//    NSLog(@"_mNumThreadsPerGroupLayer1: %d.", _mNumThreadsPerGroupLayer1 );
+//    NSLog(@"_mNumGroupsPerGridLayer1: %d.", _mNumGroupsPerGridLayer1 );
+//    NSLog(@"_mNumThreadsPerGroupLayer2: %d.", _mNumThreadsPerGroupLayer2 );
+//    NSLog(@"_mNumGroupsPerGridLayer2: %d.", _mNumGroupsPerGridLayer2 );
+//    NSLog(@"_mNumThreadsPerGroupLayer3: %d.", _mNumThreadsPerGroupLayer3 );
+//    NSLog(@"_mNumGroupsPerGridLayer3: %d.", _mNumGroupsPerGridLayer3 );
+//    NSLog(@"_mNumThreadsPerGroupLayer4: %d.", _mNumThreadsPerGroupLayer4 );
+//    NSLog(@"_mNumGroupsPerGridLayer4: %d.", _mNumGroupsPerGridLayer4 );
 }
 
 
@@ -253,6 +350,8 @@ inline uint roundup_16(uint n)
         return _mNumThreadsPerGroupLayer2;
       case 3:
         return _mNumThreadsPerGroupLayer3;
+      case 4:
+        return _mNumThreadsPerGroupLayer4;
       default:
         return 0;
     }
@@ -267,6 +366,8 @@ inline uint roundup_16(uint n)
           return _mNumGroupsPerGridLayer2;
       case 3:
           return _mNumGroupsPerGridLayer3;
+      case 4:
+          return _mNumGroupsPerGridLayer4;
       default:
         return 0;
     }
@@ -282,6 +383,8 @@ inline uint roundup_16(uint n)
           return _mNumElementsLayer2;
       case 3:
           return _mNumElementsLayer3;
+      case 4:
+          return _mNumElementsLayer4;
       default:
         return 0;
     }
@@ -318,7 +421,9 @@ inline uint roundup_16(uint n)
       case 2:
           return (int*)_mGridPrefixSumsLayer2.contents;
       case 3:
-          return (int*)_mGridPrefixSumsLayer2.contents;
+          return (int*)_mGridPrefixSumsLayer3.contents;
+      case 4:
+          return (int*)_mGridPrefixSumsLayer4.contents;
       default:
         return nullptr;
     }
@@ -333,7 +438,9 @@ inline uint roundup_16(uint n)
       case 2:
           return (float*)_mGridPrefixSumsLayer2.contents;
       case 3:
-          return (float*)_mGridPrefixSumsLayer2.contents;
+          return (float*)_mGridPrefixSumsLayer3.contents;
+      case 4:
+          return (float*)_mGridPrefixSumsLayer4.contents;
       default:
         return nullptr;
     }
@@ -365,7 +472,7 @@ inline uint roundup_16(uint n)
 
     if (_mConfiguration == 1) {
 
-        [ computeEncoder setComputePipelineState: _mPSO_scan_threadgroupwise_intermediate_32_32 ];
+        [ computeEncoder setComputePipelineState: _mPSO_scan_threadgroupwise_intermediate_32_X ];
 
         [ computeEncoder setBuffer:_mIn                    offset:0 atIndex:0 ];
         [ computeEncoder setBuffer:_mOut                   offset:0 atIndex:1 ];
@@ -379,7 +486,7 @@ inline uint roundup_16(uint n)
     }
     else if (_mConfiguration == 2) {
 
-        [ computeEncoder setComputePipelineState: _mPSO_scan_threadgroupwise_intermediate_32_32 ];
+        [ computeEncoder setComputePipelineState: _mPSO_scan_threadgroupwise_intermediate_32_X ];
 
         [ computeEncoder setBuffer:_mIn                    offset:0 atIndex:0 ];
         [ computeEncoder setBuffer:_mOut                   offset:0 atIndex:1 ];
@@ -403,7 +510,7 @@ inline uint roundup_16(uint n)
 
         [ computeEncoder memoryBarrierWithScope:MTLBarrierScopeBuffers ];
 
-        [ computeEncoder setComputePipelineState: _mPSO_add_base_32_32 ];
+        [ computeEncoder setComputePipelineState: _mPSO_add_base_32_X ];
 
         [ computeEncoder setBuffer:_mOut                   offset:0 atIndex:0 ];
         [ computeEncoder setBuffer:_mGridPrefixSumsLayer1  offset:0 atIndex:1 ];
@@ -415,7 +522,7 @@ inline uint roundup_16(uint n)
 
     else if (_mConfiguration == 3) {
 
-        [ computeEncoder setComputePipelineState: _mPSO_scan_threadgroupwise_intermediate_32_32 ];
+        [ computeEncoder setComputePipelineState: _mPSO_scan_threadgroupwise_intermediate_32_X ];
 
         [ computeEncoder setBuffer:_mIn                    offset:0 atIndex:0 ];
         [ computeEncoder setBuffer:_mOut                   offset:0 atIndex:1 ];
@@ -451,7 +558,82 @@ inline uint roundup_16(uint n)
 
         [ computeEncoder memoryBarrierWithScope:MTLBarrierScopeBuffers ];
 
-        [ computeEncoder setComputePipelineState: _mPSO_add_base_32_32 ];
+        [ computeEncoder setComputePipelineState: _mPSO_add_base_32_X ];
+
+        [ computeEncoder setBuffer:_mGridPrefixSumsLayer1  offset:0 atIndex:0 ];
+        [ computeEncoder setBuffer:_mGridPrefixSumsLayer2  offset:0 atIndex:1 ];
+        [ computeEncoder setBuffer:_mConstLayer2           offset:0 atIndex:2 ];
+
+        [ computeEncoder dispatchThreadgroups:MTLSizeMake( _mNumGroupsPerGridLayer2,   1, 1)
+                        threadsPerThreadgroup:MTLSizeMake( _mNumThreadsPerGroupLayer2, 1, 1) ];
+
+        [ computeEncoder memoryBarrierWithScope:MTLBarrierScopeBuffers ];
+
+        [ computeEncoder setBuffer:_mOut                   offset:0 atIndex:0 ];
+        [ computeEncoder setBuffer:_mGridPrefixSumsLayer1  offset:0 atIndex:1 ];
+        [ computeEncoder setBuffer:_mConstLayer1           offset:0 atIndex:2 ];
+
+        [ computeEncoder dispatchThreadgroups:MTLSizeMake( _mNumGroupsPerGridLayer1,   1, 1)
+                        threadsPerThreadgroup:MTLSizeMake( _mNumThreadsPerGroupLayer1, 1, 1) ];
+    }
+    else if (_mConfiguration == 4) {
+
+        [ computeEncoder setComputePipelineState: _mPSO_scan_threadgroupwise_intermediate_32_X ];
+
+        [ computeEncoder setBuffer:_mIn                    offset:0 atIndex:0 ];
+        [ computeEncoder setBuffer:_mOut                   offset:0 atIndex:1 ];
+        [ computeEncoder setBuffer:_mGridPrefixSumsLayer1  offset:0 atIndex:2 ];
+        [ computeEncoder setBuffer:_mConstLayer1           offset:0 atIndex:3 ];
+
+        [ computeEncoder setThreadgroupMemoryLength:roundup_16(sizeof(int)*_mNumThreadsPerGroupLayer1) atIndex:0 ];
+
+        [ computeEncoder dispatchThreadgroups:MTLSizeMake( _mNumGroupsPerGridLayer1,   1, 1)
+                        threadsPerThreadgroup:MTLSizeMake( _mNumThreadsPerGroupLayer1, 1, 1) ];
+
+        [ computeEncoder memoryBarrierWithScope:MTLBarrierScopeBuffers ];
+
+        [ computeEncoder setBuffer:_mGridPrefixSumsLayer1  offset:0 atIndex:0 ];
+        [ computeEncoder setBuffer:_mGridPrefixSumsLayer1  offset:0 atIndex:1 ];
+        [ computeEncoder setBuffer:_mGridPrefixSumsLayer2  offset:0 atIndex:2 ];
+        [ computeEncoder setBuffer:_mConstLayer2           offset:0 atIndex:3 ];
+
+        [ computeEncoder setThreadgroupMemoryLength:roundup_16(sizeof(int)*_mNumThreadsPerGroupLayer2) atIndex:0 ];
+
+        [ computeEncoder dispatchThreadgroups:MTLSizeMake( _mNumGroupsPerGridLayer2,   1, 1)
+                        threadsPerThreadgroup:MTLSizeMake( _mNumThreadsPerGroupLayer2, 1, 1) ];
+
+        [ computeEncoder memoryBarrierWithScope:MTLBarrierScopeBuffers ];
+
+        [ computeEncoder setBuffer:_mGridPrefixSumsLayer2  offset:0 atIndex:0 ];
+        [ computeEncoder setBuffer:_mGridPrefixSumsLayer2  offset:0 atIndex:1 ];
+        [ computeEncoder setBuffer:_mGridPrefixSumsLayer3  offset:0 atIndex:2 ];
+        [ computeEncoder setBuffer:_mConstLayer3           offset:0 atIndex:3 ];
+        [ computeEncoder setThreadgroupMemoryLength:roundup_16(sizeof(int)*_mNumThreadsPerGroupLayer3) atIndex:0 ];
+        [ computeEncoder dispatchThreadgroups:MTLSizeMake( _mNumGroupsPerGridLayer3,   1, 1)
+                        threadsPerThreadgroup:MTLSizeMake( _mNumThreadsPerGroupLayer3, 1, 1) ];
+
+        [ computeEncoder memoryBarrierWithScope:MTLBarrierScopeBuffers ];
+
+        [ computeEncoder setBuffer:_mGridPrefixSumsLayer3  offset:0 atIndex:0 ];
+        [ computeEncoder setBuffer:_mGridPrefixSumsLayer3  offset:0 atIndex:1 ];
+        [ computeEncoder setBuffer:_mGridPrefixSumsLayer4  offset:0 atIndex:2 ];
+        [ computeEncoder setBuffer:_mConstLayer4           offset:0 atIndex:3 ];
+        [ computeEncoder setThreadgroupMemoryLength:roundup_16(sizeof(int)*_mNumThreadsPerGroupLayer4) atIndex:0 ];
+        [ computeEncoder dispatchThreadgroups:MTLSizeMake( _mNumGroupsPerGridLayer4,   1, 1)
+                        threadsPerThreadgroup:MTLSizeMake( _mNumThreadsPerGroupLayer4, 1, 1) ];
+
+        [ computeEncoder memoryBarrierWithScope:MTLBarrierScopeBuffers ];
+
+        [ computeEncoder setComputePipelineState: _mPSO_add_base_32_X ];
+
+        [ computeEncoder setBuffer:_mGridPrefixSumsLayer2  offset:0 atIndex:0 ];
+        [ computeEncoder setBuffer:_mGridPrefixSumsLayer3  offset:0 atIndex:1 ];
+        [ computeEncoder setBuffer:_mConstLayer3           offset:0 atIndex:2 ];
+
+        [ computeEncoder dispatchThreadgroups:MTLSizeMake( _mNumGroupsPerGridLayer3,   1, 1)
+                        threadsPerThreadgroup:MTLSizeMake( _mNumThreadsPerGroupLayer3, 1, 1) ];
+
+        [ computeEncoder memoryBarrierWithScope:MTLBarrierScopeBuffers ];
 
         [ computeEncoder setBuffer:_mGridPrefixSumsLayer1  offset:0 atIndex:0 ];
         [ computeEncoder setBuffer:_mGridPrefixSumsLayer2  offset:0 atIndex:1 ];
@@ -492,7 +674,7 @@ inline uint roundup_16(uint n)
 
     if (_mConfiguration == 1) {
 
-        [ computeEncoder setComputePipelineState: _mPSO_scan_threadgroupwise_intermediate_32_32 ];
+        [ computeEncoder setComputePipelineState: _mPSO_scan_threadgroupwise_intermediate_32_X ];
 
         [ computeEncoder setBuffer:_mIn                     offset:0 atIndex:0 ];
         [ computeEncoder setBuffer:_mOut                    offset:0 atIndex:1 ];
@@ -506,7 +688,7 @@ inline uint roundup_16(uint n)
     }
     else if (_mConfiguration == 2) {
 
-        [ computeEncoder setComputePipelineState: _mPSO_sum_threadgroup_32_32 ];
+        [ computeEncoder setComputePipelineState: _mPSO_sum_threadgroup_32_X ];
 
         [ computeEncoder setBuffer:_mIn                    offset:0 atIndex:0 ];
         [ computeEncoder setBuffer:_mGridPrefixSumsLayer1  offset:0 atIndex:1 ];
@@ -519,7 +701,7 @@ inline uint roundup_16(uint n)
 
         [ computeEncoder memoryBarrierWithScope:MTLBarrierScopeBuffers ];
 
-        [ computeEncoder setComputePipelineState: _mPSO_scan_threadgroupwise_intermediate_32_32 ];
+        [ computeEncoder setComputePipelineState: _mPSO_scan_threadgroupwise_intermediate_32_X ];
 
         [ computeEncoder setBuffer:_mGridPrefixSumsLayer1  offset:0 atIndex:0 ];
         [ computeEncoder setBuffer:_mGridPrefixSumsLayer1  offset:0 atIndex:1 ];
@@ -531,7 +713,7 @@ inline uint roundup_16(uint n)
 
         [ computeEncoder memoryBarrierWithScope:MTLBarrierScopeBuffers ];
 
-        [ computeEncoder setComputePipelineState: _mPSO_scan_with_base_threadgroupwise_32_32 ];
+        [ computeEncoder setComputePipelineState: _mPSO_scan_with_base_threadgroupwise_32_X ];
 
         [ computeEncoder setBuffer:_mIn                    offset:0 atIndex:0 ];
         [ computeEncoder setBuffer:_mOut                   offset:0 atIndex:1 ];
@@ -545,7 +727,7 @@ inline uint roundup_16(uint n)
     else if (_mConfiguration == 3) {
 
 
-        [ computeEncoder setComputePipelineState: _mPSO_sum_threadgroup_32_32 ];
+        [ computeEncoder setComputePipelineState: _mPSO_sum_threadgroup_32_X ];
 
         [ computeEncoder setBuffer:_mIn                    offset:0 atIndex:0 ];
         [ computeEncoder setBuffer:_mGridPrefixSumsLayer1  offset:0 atIndex:1 ];
@@ -569,7 +751,7 @@ inline uint roundup_16(uint n)
 
         [ computeEncoder memoryBarrierWithScope:MTLBarrierScopeBuffers ];
 
-        [ computeEncoder setComputePipelineState: _mPSO_scan_threadgroupwise_intermediate_32_32 ];
+        [ computeEncoder setComputePipelineState: _mPSO_scan_threadgroupwise_intermediate_32_X ];
 
         [ computeEncoder setBuffer:_mGridPrefixSumsLayer2  offset:0 atIndex:0 ];
         [ computeEncoder setBuffer:_mGridPrefixSumsLayer2  offset:0 atIndex:1 ];
@@ -581,7 +763,90 @@ inline uint roundup_16(uint n)
 
         [ computeEncoder memoryBarrierWithScope:MTLBarrierScopeBuffers ];
 
-        [ computeEncoder setComputePipelineState: _mPSO_scan_with_base_threadgroupwise_32_32 ];
+        [ computeEncoder setComputePipelineState: _mPSO_scan_with_base_threadgroupwise_32_X ];
+
+        [ computeEncoder setBuffer:_mGridPrefixSumsLayer1  offset:0 atIndex:0 ];
+        [ computeEncoder setBuffer:_mGridPrefixSumsLayer1  offset:0 atIndex:1 ];
+        [ computeEncoder setBuffer:_mGridPrefixSumsLayer2  offset:0 atIndex:2 ];
+        [ computeEncoder setBuffer:_mConstLayer2           offset:0 atIndex:3 ];
+        [ computeEncoder setThreadgroupMemoryLength:roundup_32(sizeof(int)*_mNumThreadsPerGroupLayer2) atIndex:0 ];
+        [ computeEncoder dispatchThreadgroups:MTLSizeMake( _mNumGroupsPerGridLayer2,   1, 1)
+                        threadsPerThreadgroup:MTLSizeMake( _mNumThreadsPerGroupLayer2, 1, 1) ];
+
+        [ computeEncoder memoryBarrierWithScope:MTLBarrierScopeBuffers ];
+
+        [ computeEncoder setBuffer:_mIn                    offset:0 atIndex:0 ];
+        [ computeEncoder setBuffer:_mOut                   offset:0 atIndex:1 ];
+        [ computeEncoder setBuffer:_mGridPrefixSumsLayer1  offset:0 atIndex:2 ];
+        [ computeEncoder setBuffer:_mConstLayer1           offset:0 atIndex:3 ];
+        [ computeEncoder setThreadgroupMemoryLength:roundup_32(sizeof(int)*_mNumThreadsPerGroupLayer1) atIndex:0 ];
+        [ computeEncoder dispatchThreadgroups:MTLSizeMake( _mNumGroupsPerGridLayer1,   1, 1)
+                        threadsPerThreadgroup:MTLSizeMake( _mNumThreadsPerGroupLayer1, 1, 1) ];
+    }
+    else if (_mConfiguration == 4) {
+
+
+        [ computeEncoder setComputePipelineState: _mPSO_sum_threadgroup_32_X ];
+
+        [ computeEncoder setBuffer:_mIn                    offset:0 atIndex:0 ];
+        [ computeEncoder setBuffer:_mGridPrefixSumsLayer1  offset:0 atIndex:1 ];
+        [ computeEncoder setBuffer:_mConstLayer1           offset:0 atIndex:2 ];
+
+        [ computeEncoder setThreadgroupMemoryLength:roundup_32(sizeof(int)*_mNumThreadsPerGroupLayer1) atIndex:0 ];
+
+        [ computeEncoder dispatchThreadgroups:MTLSizeMake( _mNumGroupsPerGridLayer1,   1, 1)
+                        threadsPerThreadgroup:MTLSizeMake( _mNumThreadsPerGroupLayer1, 1, 1) ];
+
+        [ computeEncoder memoryBarrierWithScope:MTLBarrierScopeBuffers ];
+
+        [ computeEncoder setBuffer:_mGridPrefixSumsLayer1  offset:0 atIndex:0 ];
+        [ computeEncoder setBuffer:_mGridPrefixSumsLayer2  offset:0 atIndex:1 ];
+        [ computeEncoder setBuffer:_mConstLayer2           offset:0 atIndex:2 ];
+
+        [ computeEncoder setThreadgroupMemoryLength:roundup_32(sizeof(int)*_mNumThreadsPerGroupLayer2) atIndex:0 ];
+
+        [ computeEncoder dispatchThreadgroups:MTLSizeMake( _mNumGroupsPerGridLayer2,   1, 1)
+                        threadsPerThreadgroup:MTLSizeMake( _mNumThreadsPerGroupLayer2, 1, 1) ];
+
+        [ computeEncoder memoryBarrierWithScope:MTLBarrierScopeBuffers ];
+
+        [ computeEncoder setBuffer:_mGridPrefixSumsLayer2  offset:0 atIndex:0 ];
+        [ computeEncoder setBuffer:_mGridPrefixSumsLayer3  offset:0 atIndex:1 ];
+        [ computeEncoder setBuffer:_mConstLayer3           offset:0 atIndex:2 ];
+
+        [ computeEncoder setThreadgroupMemoryLength:roundup_32(sizeof(int)*_mNumThreadsPerGroupLayer3) atIndex:0 ];
+
+        [ computeEncoder dispatchThreadgroups:MTLSizeMake( _mNumGroupsPerGridLayer3,   1, 1)
+                        threadsPerThreadgroup:MTLSizeMake( _mNumThreadsPerGroupLayer3, 1, 1) ];
+
+        [ computeEncoder memoryBarrierWithScope:MTLBarrierScopeBuffers ];
+
+        [ computeEncoder setComputePipelineState: _mPSO_scan_threadgroupwise_intermediate_32_X ];
+
+        [ computeEncoder setBuffer:_mGridPrefixSumsLayer3  offset:0 atIndex:0 ];
+        [ computeEncoder setBuffer:_mGridPrefixSumsLayer3  offset:0 atIndex:1 ];
+        [ computeEncoder setBuffer:_mGridPrefixSumsLayer4  offset:0 atIndex:2 ];
+        [ computeEncoder setBuffer:_mConstLayer4           offset:0 atIndex:3 ];
+        [ computeEncoder setThreadgroupMemoryLength:roundup_32(sizeof(int)*_mNumThreadsPerGroupLayer4) atIndex:0 ];
+        [ computeEncoder dispatchThreadgroups:MTLSizeMake( _mNumGroupsPerGridLayer4,   1, 1)
+                        threadsPerThreadgroup:MTLSizeMake( _mNumThreadsPerGroupLayer4, 1, 1) ];
+
+
+        [ computeEncoder memoryBarrierWithScope:MTLBarrierScopeBuffers ];
+
+        [ computeEncoder setComputePipelineState: _mPSO_scan_with_base_threadgroupwise_32_X ];
+
+        [ computeEncoder setBuffer:_mGridPrefixSumsLayer2  offset:0 atIndex:0 ];
+        [ computeEncoder setBuffer:_mGridPrefixSumsLayer2  offset:0 atIndex:1 ];
+        [ computeEncoder setBuffer:_mGridPrefixSumsLayer3  offset:0 atIndex:2 ];
+        [ computeEncoder setBuffer:_mConstLayer3           offset:0 atIndex:3 ];
+        [ computeEncoder setThreadgroupMemoryLength:roundup_32(sizeof(int)*_mNumThreadsPerGroupLayer3) atIndex:0 ];
+        [ computeEncoder dispatchThreadgroups:MTLSizeMake( _mNumGroupsPerGridLayer3,   1, 1)
+                        threadsPerThreadgroup:MTLSizeMake( _mNumThreadsPerGroupLayer3, 1, 1) ];
+
+        [ computeEncoder memoryBarrierWithScope:MTLBarrierScopeBuffers ];
+
+        [ computeEncoder setComputePipelineState: _mPSO_scan_with_base_threadgroupwise_32_X ];
 
         [ computeEncoder setBuffer:_mGridPrefixSumsLayer1  offset:0 atIndex:0 ];
         [ computeEncoder setBuffer:_mGridPrefixSumsLayer1  offset:0 atIndex:1 ];

@@ -5,15 +5,25 @@ class PrefixSumMetalObjCMerrillGrimshaw;
 #include "prefix_sum_metal_cpp.h"
 
 template<>
-PrefixSumMetalCpp<int>::PrefixSumMetalCpp( const size_t num_elements, const int algo_type, const size_t num_partial_sums )
-    :m_impl( new PrefixSumMetalCppImpl<int>( num_elements, algo_type, num_partial_sums ) )
+PrefixSumMetalCpp<int>::PrefixSumMetalCpp(
+    const size_t num_elements,
+    const int    algo_type,
+    const size_t num_partial_sums,
+    const int    num_threads_per_threadgroup
+)
+    :m_impl( new PrefixSumMetalCppImpl<int>( num_elements, algo_type, num_partial_sums, num_threads_per_threadgroup ) )
 {
     ;
 }
 
 template<>
-PrefixSumMetalCpp<float>::PrefixSumMetalCpp( const size_t num_elements, const int algo_type, const size_t num_partial_sums )
-    :m_impl( new PrefixSumMetalCppImpl<float>( num_elements, algo_type, num_partial_sums ) )
+PrefixSumMetalCpp<float>::PrefixSumMetalCpp(
+    const size_t num_elements,
+    const int    algo_type,
+    const size_t num_partial_sums,
+    const int    num_threads_per_threadgroup
+)
+    :m_impl( new PrefixSumMetalCppImpl<float>( num_elements, algo_type, num_partial_sums, num_threads_per_threadgroup ) )
 {
     ;
 }

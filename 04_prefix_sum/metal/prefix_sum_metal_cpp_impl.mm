@@ -3,8 +3,12 @@
 #import "prefix_sum_metal_cpp_impl.h"
 
 template<>
-PrefixSumMetalCppImpl<int>::PrefixSumMetalCppImpl( const size_t num_elements, const int algo_type, const size_t num_partial_sums )
-{
+PrefixSumMetalCppImpl<int>::PrefixSumMetalCppImpl(
+    const size_t num_elements,
+    const int    algo_type,
+    const size_t num_partial_sums,
+    const int    num_threads_per_threadgroup 
+) {
     m_algo_type = algo_type;
 
     if ( algo_type == 3 ) {
@@ -12,21 +16,27 @@ PrefixSumMetalCppImpl<int>::PrefixSumMetalCppImpl( const size_t num_elements, co
         m_self_merrill_grimshaw
               = [ [ PrefixSumMetalObjCMerrillGrimshaw alloc ] initWithNumElements : num_elements
                                                                    NumPartialSums : num_partial_sums 
-                                                                          ForFloat: false ];
+                                                                          ForFloat: false
+                                                          NumThreadsPerThreadgroup: num_threads_per_threadgroup ];
     }
     else {  
         m_self_recursive
               = [ [ PrefixSumMetalObjCRecursive alloc ] initWithNumElements : num_elements
                                                                        Type : algo_type
                                                              NumPartialSums : num_partial_sums 
-                                                                   ForFloat : false ];
+                                                                   ForFloat : false
+                                                    NumThreadsPerThreadgroup: num_threads_per_threadgroup ];
     }
 }
 
 
 template<>
-PrefixSumMetalCppImpl<float>::PrefixSumMetalCppImpl( const size_t num_elements, const int algo_type, const size_t num_partial_sums )
-{
+PrefixSumMetalCppImpl<float>::PrefixSumMetalCppImpl(
+    const size_t num_elements,
+    const int    algo_type,
+    const size_t num_partial_sums,
+    const int    num_threads_per_threadgroup 
+) {
     m_algo_type = algo_type;
 
     if ( algo_type == 3 ) {
@@ -34,14 +44,16 @@ PrefixSumMetalCppImpl<float>::PrefixSumMetalCppImpl( const size_t num_elements, 
         m_self_merrill_grimshaw
               = [ [ PrefixSumMetalObjCMerrillGrimshaw alloc ] initWithNumElements : num_elements
                                                                    NumPartialSums : num_partial_sums
-                                                                          ForFloat: true ];
+                                                                          ForFloat: true
+                                                          NumThreadsPerThreadgroup: num_threads_per_threadgroup ];
     }
     else {  
         m_self_recursive
               = [ [ PrefixSumMetalObjCRecursive alloc ] initWithNumElements : num_elements
                                                                        Type : algo_type
                                                              NumPartialSums : num_partial_sums
-                                                                    ForFloat: true ];
+                                                                    ForFloat: true
+                                                    NumThreadsPerThreadgroup: num_threads_per_threadgroup ];
     }
 }
 

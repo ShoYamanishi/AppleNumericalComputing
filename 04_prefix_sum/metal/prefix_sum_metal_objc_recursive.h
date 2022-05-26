@@ -5,7 +5,8 @@
 - (instancetype) initWithNumElements:(size_t) numElements
                                 Type:(int)    algo_type
                       NumPartialSums:(size_t) num_partial_sums
-                            ForFloat:(bool)   for_float;
+                            ForFloat:(bool)   for_float
+            NumThreadsPerThreadgroup:(int)    num_threads_per_threadgroup;
 
 - (uint)   numElements:(uint) layer;
 - (uint)   numThreadsPerGroup:(uint) layer;

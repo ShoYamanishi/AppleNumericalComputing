@@ -12,6 +12,11 @@ struct prefix_sum_constants
     uint  num_threads_per_partial_sum;
 };
 
+inline uint roundup_X(uint x, uint n )
+{
+    return ((n + x - 1) / x) * x;
+}
+
 inline uint roundup_1024(uint n )
 {
     return ((n + 1023) / 1024) * 1024;
@@ -33,13 +38,15 @@ inline uint roundup_16(uint n)
     id<MTLBuffer> _mIn;
     id<MTLBuffer> _mOut;
 
+    int           _mNumThreadsPerThreadgroup;
+
     uint          _mNumPartialSumsRequested;
     uint          _mNumPartialSums;
     uint          _mNumThreadsPerPartialSum;
 
-    id<MTLComputePipelineState> _mPSO_get_partial_sums_32_32;
-    id<MTLComputePipelineState> _mPSO_scan_threadgroupwise_32_32;
-    id<MTLComputePipelineState> _mPSO_scan_final_32_32;
+    id<MTLComputePipelineState> _mPSO_get_partial_sums_32_X;
+    id<MTLComputePipelineState> _mPSO_scan_threadgroupwise_32_X;
+    id<MTLComputePipelineState> _mPSO_scan_final_32_X;
 
     id<MTLBuffer> _mPartialSums;
 
@@ -59,24 +66,29 @@ inline uint roundup_16(uint n)
     id<MTLBuffer> _mConstStep3;
 }
 
-- (instancetype) initWithNumElements:(size_t) num_elements NumPartialSums:(size_t) num_partial_sums ForFloat:(bool) for_float;
+- (instancetype) initWithNumElements:(size_t) num_elements
+                      NumPartialSums:(size_t) num_partial_sums 
+                            ForFloat:(bool)   for_float
+            NumThreadsPerThreadgroup:(int)    num_threads_per_threadgroup
 {
     self = [super init];
     if (self)
     {
+        _mNumThreadsPerThreadgroup = num_threads_per_threadgroup;
+
         [ self loadLibraryWithName:@"./prefix_sum.metallib" ];
 
         [ self findConfiguration: num_elements requestedNumPartialSums:num_partial_sums ];
 
         if ( for_float )  {
-            _mPSO_get_partial_sums_32_32     = [ self getPipelineStateForFunction: @"mg_get_partial_sums_32_32_float"     ];
-            _mPSO_scan_threadgroupwise_32_32 = [ self getPipelineStateForFunction: @"mg_scan_threadgroupwise_32_32_float" ];
-            _mPSO_scan_final_32_32           = [ self getPipelineStateForFunction: @"mg_scan_final_32_32_float"           ];
+            _mPSO_get_partial_sums_32_X     = [ self getPipelineStateForFunction: @"mg_get_partial_sums_32_X_float"     ];
+            _mPSO_scan_threadgroupwise_32_X = [ self getPipelineStateForFunction: @"mg_scan_threadgroupwise_32_X_float" ];
+            _mPSO_scan_final_32_X           = [ self getPipelineStateForFunction: @"mg_scan_final_32_X_float"           ];
         }
         else {
-            _mPSO_get_partial_sums_32_32     = [ self getPipelineStateForFunction: @"mg_get_partial_sums_32_32_int"     ];
-            _mPSO_scan_threadgroupwise_32_32 = [ self getPipelineStateForFunction: @"mg_scan_threadgroupwise_32_32_int" ];
-            _mPSO_scan_final_32_32           = [ self getPipelineStateForFunction: @"mg_scan_final_32_32_int"           ];
+            _mPSO_get_partial_sums_32_X     = [ self getPipelineStateForFunction: @"mg_get_partial_sums_32_X_int"     ];
+            _mPSO_scan_threadgroupwise_32_X = [ self getPipelineStateForFunction: @"mg_scan_threadgroupwise_32_X_int" ];
+            _mPSO_scan_final_32_X           = [ self getPipelineStateForFunction: @"mg_scan_final_32_X_int"           ];
         }
 
         _mIn          = [ self getSharedMTLBufferForBytes:  _mNumElementsStep1 * (for_float?sizeof(float):sizeof(int)) for:@"_mIn"          ];
@@ -110,15 +122,16 @@ inline uint roundup_16(uint n)
 {
 
     _mNumPartialSumsRequested = std::min( (uint)NUM_THREADS_PER_THREADGROUP, (uint)num_partial_sums_requested );
-    _mNumThreadsPerPartialSum = roundup_1024( 
 
+    _mNumThreadsPerPartialSum = roundup_X( 
+        _mNumThreadsPerThreadgroup,
         ( num_elements + num_partial_sums_requested - 1 ) / num_partial_sums_requested 
     );
 
     _mNumPartialSums = (num_elements + _mNumThreadsPerPartialSum - 1) / _mNumThreadsPerPartialSum;
 
     _mNumElementsStep1        = num_elements;
-    _mNumThreadsPerGroupStep1 = NUM_THREADS_PER_THREADGROUP;
+    _mNumThreadsPerGroupStep1 = _mNumThreadsPerThreadgroup;
     _mNumGroupsPerGridStep1   = _mNumPartialSums;
 
     _mNumElementsStep2        = _mNumPartialSums;
@@ -126,7 +139,7 @@ inline uint roundup_16(uint n)
     _mNumGroupsPerGridStep2   = 1;
 
     _mNumElementsStep3        = num_elements;;
-    _mNumThreadsPerGroupStep3 = NUM_THREADS_PER_THREADGROUP;
+    _mNumThreadsPerGroupStep3 = _mNumThreadsPerThreadgroup;
     _mNumGroupsPerGridStep3   = _mNumPartialSums;
 
 //    std::cerr << "_mNumElementsStep1: "        << _mNumElementsStep1 << "\n";
@@ -189,7 +202,7 @@ inline uint roundup_16(uint n)
 
     assert( computeEncoder != nil );
 
-    [ computeEncoder setComputePipelineState: _mPSO_get_partial_sums_32_32 ];
+    [ computeEncoder setComputePipelineState: _mPSO_get_partial_sums_32_X ];
 
     [ computeEncoder setBuffer:_mIn          offset:0 atIndex:0 ];
     [ computeEncoder setBuffer:_mPartialSums offset:0 atIndex:1 ];
@@ -201,7 +214,7 @@ inline uint roundup_16(uint n)
 
     [ computeEncoder memoryBarrierWithScope:MTLBarrierScopeBuffers ];
 
-    [ computeEncoder setComputePipelineState: _mPSO_scan_threadgroupwise_32_32 ];
+    [ computeEncoder setComputePipelineState: _mPSO_scan_threadgroupwise_32_X ];
 
     [ computeEncoder setBuffer:_mPartialSums offset:0 atIndex:0 ];
     [ computeEncoder setBuffer:_mConstStep2  offset:0 atIndex:1 ];
@@ -212,7 +225,7 @@ inline uint roundup_16(uint n)
 
     [ computeEncoder memoryBarrierWithScope:MTLBarrierScopeBuffers ];
 
-    [ computeEncoder setComputePipelineState: _mPSO_scan_final_32_32 ];
+    [ computeEncoder setComputePipelineState: _mPSO_scan_final_32_X ];
 
     [ computeEncoder setBuffer:_mIn          offset:0 atIndex:0 ];
     [ computeEncoder setBuffer:_mOut         offset:0 atIndex:1 ];

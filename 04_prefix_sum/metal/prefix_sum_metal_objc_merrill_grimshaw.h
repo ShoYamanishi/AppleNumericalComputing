@@ -2,7 +2,10 @@
 
 @interface PrefixSumMetalObjCMerrillGrimshaw : MetalComputeBase
 
-- (instancetype) initWithNumElements:(size_t) num_elements NumPartialSums:(size_t) num_partial_sums ForFloat:(bool) for_float;
+- (instancetype) initWithNumElements:(size_t) num_elements 
+                      NumPartialSums:(size_t) num_partial_sums 
+                            ForFloat:(bool)   for_float
+            NumThreadsPerThreadgroup:(int)    num_threads_per_threadgroup;
 - (uint)   numElements;
 - (int*)   getRawPointerInForInt;
 - (float*) getRawPointerInForFloat;
