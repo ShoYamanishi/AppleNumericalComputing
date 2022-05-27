@@ -49,8 +49,10 @@ class TestCasePrefixSum : public TestCaseWithTimeMeasurements {
         for ( size_t i = 0; i < m_num_elements; i++ ) {
 
             sum += fabs( (double)( m_out[i] - baseline[i] ) );
-//            cerr << "baseline[" << i << "]:" << baseline[i] << "\t";
-//            cerr << "m_out[" << i << "]:" << m_out[i] << "\n";
+//            if ( m_out[i] != baseline[i] ) {
+//                cerr << "baseline[" << i << "]:" << baseline[i] << "\t";
+//                cerr << "m_out[" << i << "]:" << m_out[i] << "\n";
+//            }
         }
         this->setDist( sum /(double)(m_num_elements));
     }
@@ -101,18 +103,24 @@ class TestCasePrefixSum_baseline : public TestCasePrefixSum<T> {
         else if ( m_factor_loop_unrolling == 2 ) {
 
             T sum = 0;
-            for ( size_t i = 0; i < this->m_num_elements ; i+= 2 ) {
+            size_t i;
+            for ( i = 0; i < this->m_num_elements - 2 ; i+= 2 ) {
 
                 this->m_out[i  ] = this->m_in[i] + sum ;
                 this->m_out[i+1] = this->m_in[i] + this->m_in[i+1] + sum ;
 
                 sum = this->m_out[i+1];
             }
+            for ( ; i < this->m_num_elements ; i++ ) {
+                this->m_out[i] = this->m_in[i] + sum ;
+                sum = this->m_out[i];
+            }
         }
         else if ( m_factor_loop_unrolling == 4 ) {
 
             T sum = 0;
-            for ( size_t i = 0; i < this->m_num_elements ; i+= 4 ) {
+            size_t i;
+            for ( i = 0; i < this->m_num_elements - 4 ; i+= 4 ) {
 
                 this->m_out[i  ] = this->m_in[i] + sum ;
                 this->m_out[i+1] = this->m_in[i] + this->m_in[i+1] + sum ;
@@ -121,11 +129,17 @@ class TestCasePrefixSum_baseline : public TestCasePrefixSum<T> {
 
                 sum = this->m_out[i+3];
             }
+            for ( ; i < this->m_num_elements ; i++ ) {
+                this->m_out[i] = this->m_in[i] + sum ;
+                sum = this->m_out[i];
+            }
+
         }
         else if ( m_factor_loop_unrolling == 8 ) {
 
             T sum = 0;
-            for ( size_t i = 0; i < this->m_num_elements ; i+= 8 ) {
+            size_t i;
+            for ( i = 0; i < this->m_num_elements - 8 ; i+= 8 ) {
 
                 this->m_out[i  ] = this->m_in[i] + sum ;
                 this->m_out[i+1] = this->m_in[i] + this->m_in[i+1] + sum ;
@@ -144,6 +158,10 @@ class TestCasePrefixSum_baseline : public TestCasePrefixSum<T> {
                                     + this->m_in[i+4] + this->m_in[i+5] + this->m_in[i+6] + this->m_in[i+7] + sum ;
 
                 sum = this->m_out[i+7];
+            }
+            for ( ; i < this->m_num_elements ; i++ ) {
+                this->m_out[i] = this->m_in[i] + sum ;
+                sum = this->m_out[i];
             }
         }
     }
@@ -316,6 +334,7 @@ static const size_t NUM_TRIALS = 100;
 #if TARGET_OS_OSX
 
 size_t nums_elements[]{ 32, 128, 512, 2*1024, 32*1024, 128*1024, 512*1024, 2*1024*1024, 32*1024*1024, 128*1024*1024 };
+
 uint num_threads_per_threadgroup = 1024;
 
 #else

@@ -85,15 +85,15 @@ float* PrefixSumMetalCpp<float>::getRawPointerOut()
 }
 
 template<>
-int* PrefixSumMetalCpp<int>::getRawPointerGridPrefixSums(unsigned int layer)
+int* PrefixSumMetalCpp<int>::getRawPointerGridPrefixSums(unsigned int layer, bool forIn )
 {
-    return m_impl->getRawPointerGridPrefixSums(layer);
+    return m_impl->getRawPointerGridPrefixSums(layer, forIn);
 }
 
 template<>
-float* PrefixSumMetalCpp<float>::getRawPointerGridPrefixSums(unsigned int layer)
+float* PrefixSumMetalCpp<float>::getRawPointerGridPrefixSums(unsigned int layer, bool forIn )
 {
-    return m_impl->getRawPointerGridPrefixSums(layer);
+    return m_impl->getRawPointerGridPrefixSums(layer, forIn);
 }
 
 template<>

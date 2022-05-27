@@ -22,7 +22,7 @@ class PrefixSumMetalCppImpl
 
     T* getRawPointerOut();
 
-    T* getRawPointerGridPrefixSums(unsigned int layer);
+    T* getRawPointerGridPrefixSums(unsigned int layer, bool forIn );
 
     T* getRawPointerPartialSumsMerrillGrimshaw();
 

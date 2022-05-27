@@ -4,8 +4,6 @@
 
 #import "prefix_sum_metal_objc_merrill_grimshaw.h"
 
-#define NUM_THREADS_PER_THREADGROUP 1024
-
 struct prefix_sum_constants
 {
     uint  num_elements;
@@ -121,7 +119,7 @@ inline uint roundup_16(uint n)
   requestedNumPartialSums:(size_t) num_partial_sums_requested
 {
 
-    _mNumPartialSumsRequested = std::min( (uint)NUM_THREADS_PER_THREADGROUP, (uint)num_partial_sums_requested );
+    _mNumPartialSumsRequested = std::min(  (uint)_mNumThreadsPerThreadgroup, (uint)num_partial_sums_requested );
 
     _mNumThreadsPerPartialSum = roundup_X( 
         _mNumThreadsPerThreadgroup,
@@ -207,7 +205,6 @@ inline uint roundup_16(uint n)
     [ computeEncoder setBuffer:_mIn          offset:0 atIndex:0 ];
     [ computeEncoder setBuffer:_mPartialSums offset:0 atIndex:1 ];
     [ computeEncoder setBuffer:_mConstStep1  offset:0 atIndex:2 ];
-    [ computeEncoder setThreadgroupMemoryLength: roundup_16(sizeof(int)*_mNumThreadsPerGroupStep1 / 32) atIndex:0 ];
 
     [ computeEncoder dispatchThreadgroups:MTLSizeMake( _mNumGroupsPerGridStep1,   1, 1)
                     threadsPerThreadgroup:MTLSizeMake( _mNumThreadsPerGroupStep1, 1, 1) ];
@@ -218,7 +215,6 @@ inline uint roundup_16(uint n)
 
     [ computeEncoder setBuffer:_mPartialSums offset:0 atIndex:0 ];
     [ computeEncoder setBuffer:_mConstStep2  offset:0 atIndex:1 ];
-    [ computeEncoder setThreadgroupMemoryLength:roundup_16(sizeof(int)*_mNumThreadsPerGroupStep2 / 32) atIndex:0 ];
 
     [ computeEncoder dispatchThreadgroups:MTLSizeMake( _mNumGroupsPerGridStep2,   1, 1)
                     threadsPerThreadgroup:MTLSizeMake( _mNumThreadsPerGroupStep2, 1, 1) ];
@@ -231,8 +227,6 @@ inline uint roundup_16(uint n)
     [ computeEncoder setBuffer:_mOut         offset:0 atIndex:1 ];
     [ computeEncoder setBuffer:_mPartialSums offset:0 atIndex:2 ];
     [ computeEncoder setBuffer:_mConstStep3  offset:0 atIndex:3 ];
-
-    [ computeEncoder setThreadgroupMemoryLength:sizeof(int)*_mNumThreadsPerGroupStep3 / 32 atIndex:0 ];
 
     [ computeEncoder dispatchThreadgroups:MTLSizeMake( _mNumGroupsPerGridStep3,   1, 1)
                     threadsPerThreadgroup:MTLSizeMake( _mNumThreadsPerGroupStep3, 1, 1) ];

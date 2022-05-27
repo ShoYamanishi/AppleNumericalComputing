@@ -235,7 +235,6 @@ def plot_charts( df, js, base_dir ):
         list_lengths = []
         list_times   = []
         list_labels  = []
-
         det = plot_data[ 'DataElementType'    ]
         des = plot_data[ 'DataElementSubtype' ]
         pt  = plot_data[ 'PlotType'           ]
@@ -257,8 +256,7 @@ def plot_charts( df, js, base_dir ):
                 if  pt == 'LOG-LIN-RELATIVE':
 
                     if len( base_times ) < len( times ):
-
-                        print ('Number of elements does not match to the base.')
+                        print ('Number of elements does not match to the base. ckp1')
                         exit(1)
 
                     relative_times = []
@@ -293,8 +291,7 @@ def plot_charts( df, js, base_dir ):
                 if  pt == 'LOG-LIN-RELATIVE':
 
                     if len( base_times ) < len( times ):
-
-                        print ('Number of elements does not match to the base.')
+                        print ('Number of elements does not match to the base. ckp2')
                         exit(1)
 
                     relative_times = []

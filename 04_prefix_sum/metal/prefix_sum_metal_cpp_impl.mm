@@ -178,25 +178,25 @@ float* PrefixSumMetalCppImpl<float>::getRawPointerOut() {
 
 
 template<>
-int* PrefixSumMetalCppImpl<int>::getRawPointerGridPrefixSums( unsigned int layer ) {
+int* PrefixSumMetalCppImpl<int>::getRawPointerGridPrefixSums( unsigned int layer, bool forIn ) {
 
     if ( m_algo_type == 3 ) {
         return nullptr;
     }
     else {
-        return [ m_self_recursive getRawPointerGridPrefixSumsForInt:layer ];
+        return [ m_self_recursive getRawPointerGridPrefixSumsForInt:layer ForIn: forIn];
     }
 }
 
 
 template<>
-float* PrefixSumMetalCppImpl<float>::getRawPointerGridPrefixSums( unsigned int layer ) {
+float* PrefixSumMetalCppImpl<float>::getRawPointerGridPrefixSums( unsigned int layer, bool forIn ) {
 
     if ( m_algo_type == 3 ) {
         return nullptr;
     }
     else {
-        return [ m_self_recursive getRawPointerGridPrefixSumsForFloat:layer ];
+        return [ m_self_recursive getRawPointerGridPrefixSumsForFloat:layer ForIn: forIn];
     }
 }
 

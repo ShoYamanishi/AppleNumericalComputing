@@ -15,8 +15,8 @@
 - (float*) getRawPointerInForFloat;
 - (int*)   getRawPointerOutForInt;
 - (float*) getRawPointerOutForFloat;
-- (int*)   getRawPointerGridPrefixSumsForInt:(uint)layer;
-- (float*) getRawPointerGridPrefixSumsForFloat:(uint)layer;
+- (int*)   getRawPointerGridPrefixSumsForInt:(uint)layer ForIn:(bool) forIn;
+- (float*) getRawPointerGridPrefixSumsForFloat:(uint)layer ForIn:(bool) forIn;
 - (void)   performComputation;
 
 @end
