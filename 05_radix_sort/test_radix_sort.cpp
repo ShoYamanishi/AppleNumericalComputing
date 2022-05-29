@@ -137,17 +137,17 @@ class TestCaseRadixSort_Metal : public TestCaseRadixSort<T> {
         const size_t num_elements, 
         const bool   coalesced_write, 
         const bool   early_out, 
-        const bool   in_one_commit,
+        const int    num_iterations_per_commit,
         const size_t num_threads_per_threadgroup )
         :TestCaseRadixSort<T>( num_elements )
-        ,m_metal( num_elements, is_same<float, T>::value, coalesced_write, early_out, in_one_commit, num_threads_per_threadgroup )
+        ,m_metal( num_elements, is_same<float, T>::value, coalesced_write, early_out, num_iterations_per_commit, num_threads_per_threadgroup )
     {
         static_assert( std::is_same<int, T>::value || std::is_same<long, T>::value || std::is_same<float,T>::value );
 
         if ( early_out ) {
             this->setMetal( coalesced_write ? COALESCED_WRITE_EARLY_OUT : UNCOALESCED_WRITE_EARLY_OUT, 1, num_threads_per_threadgroup );
         }
-        else if ( in_one_commit ) {
+        else if ( num_iterations_per_commit > 1 ) {
             this->setMetal( coalesced_write ? COALESCED_WRITE_IN_ONE_COMMIT : UNCOALESCED_WRITE_IN_ONE_COMMIT, 1, num_threads_per_threadgroup );
         }
         else {
@@ -226,13 +226,14 @@ static const size_t NUM_TRIALS = 10;
 
 #if TARGET_OS_OSX
 
-size_t nums_elements[]{ 32, 128, 512, 2*1024, 8*1024, 32*1024, 128*1024, 512*1024, 2*1024*1024, 8*1024*1024, 32*1024*1024, 128*1024*1024 };
+//size_t nums_elements[]{ 32, 128, 512, 2*1024, 8*1024, 32*1024, 128*1024, 512*1024, 2*1024*1024, 8*1024*1024, 32*1024*1024, 128*1024*1024 };
+size_t nums_elements[]{ 32, 128, 512, 2*1024, 8*1024, 32*1024, 128*1024, 512*1024, 2*1024*1024, 8*1024*1024 };
 uint num_threads_per_threadgroup = 1024;
-
+int num_iterations_per_commit = 16;
 #else
 size_t nums_elements[]{ 32, 128, 512, 2*1024, 8*1024, 32*1024, 128*1024, 512*1024, 2*1024*1024, 8*1024*1024 };
 uint num_threads_per_threadgroup = 1024;
-
+int num_iterations_per_commit = 16;
 #endif
 
 template<class T>
@@ -248,14 +249,13 @@ void testSuitePerType () {
         e.addTestCase( make_shared< TestCaseRadixSort_boost_sample_sort  <T> > ( num_elements,     4  ) );
         e.addTestCase( make_shared< TestCaseRadixSort_boost_sample_sort  <T> > ( num_elements,    16  ) );
         e.addTestCase( make_shared< TestCaseRadixSort_boost_sample_sort  <T> > ( num_elements,    64  ) );
-        e.addTestCase( make_shared< TestCaseRadixSort_Metal              <T> > ( num_elements , false, true  , false, num_threads_per_threadgroup ) );
-        e.addTestCase( make_shared< TestCaseRadixSort_Metal              <T> > ( num_elements , true,  true  , false, num_threads_per_threadgroup ) );
-        e.addTestCase( make_shared< TestCaseRadixSort_Metal              <T> > ( num_elements , false, false , false, num_threads_per_threadgroup ) );
-        e.addTestCase( make_shared< TestCaseRadixSort_Metal              <T> > ( num_elements , true,  false , false, num_threads_per_threadgroup ) );
-#if TARGET_OS_OSX
-        e.addTestCase( make_shared< TestCaseRadixSort_Metal              <T> > ( num_elements , false, false , true , num_threads_per_threadgroup ) );
-        e.addTestCase( make_shared< TestCaseRadixSort_Metal              <T> > ( num_elements , true,  false , true , num_threads_per_threadgroup ) );
-#endif
+        e.addTestCase( make_shared< TestCaseRadixSort_Metal              <T> > ( num_elements , false, true  , 1, num_threads_per_threadgroup ) );
+        e.addTestCase( make_shared< TestCaseRadixSort_Metal              <T> > ( num_elements , true,  true  , 1, num_threads_per_threadgroup ) );
+        e.addTestCase( make_shared< TestCaseRadixSort_Metal              <T> > ( num_elements , false, false , 1, num_threads_per_threadgroup ) );
+        e.addTestCase( make_shared< TestCaseRadixSort_Metal              <T> > ( num_elements , true,  false , 1, num_threads_per_threadgroup ) );
+        e.addTestCase( make_shared< TestCaseRadixSort_Metal              <T> > ( num_elements , false, false , num_iterations_per_commit, num_threads_per_threadgroup ) );
+        e.addTestCase( make_shared< TestCaseRadixSort_Metal              <T> > ( num_elements , true,  false , num_iterations_per_commit, num_threads_per_threadgroup ) );
+
         e.execute();
     }
 }

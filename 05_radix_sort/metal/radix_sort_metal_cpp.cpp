@@ -7,10 +7,10 @@ RadixSortMetalCpp::RadixSortMetalCpp(
     const bool   for_float, 
     const bool   coalesced_write, 
     const bool   early_out, 
-    const bool   in_one_commit,
+    const int    num_iterations_per_commit,
     const size_t num_threads_per_threadgroup
 )
-    :m_impl( new RadixSortMetalCppImpl( num_elements , for_float , coalesced_write, early_out, in_one_commit, num_threads_per_threadgroup ) )
+    :m_impl( new RadixSortMetalCppImpl( num_elements , for_float , coalesced_write, early_out, num_iterations_per_commit, num_threads_per_threadgroup ) )
 {
     ;
 }

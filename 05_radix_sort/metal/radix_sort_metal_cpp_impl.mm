@@ -6,7 +6,7 @@ RadixSortMetalCppImpl::RadixSortMetalCppImpl(
     const bool   for_float,
     const bool   coalesced_write,
     const bool   early_out,
-    const bool   in_one_commit,
+    const int    num_iterations_per_commit,
     const size_t num_threads_per_threadgroup
 ) {
 
@@ -14,7 +14,7 @@ RadixSortMetalCppImpl::RadixSortMetalCppImpl(
                                                        forFloat: for_float    
                                                  CoalescedWrite: coalesced_write
                                                        EarlyOut: early_out
-                                                    InOneCommit: in_one_commit
+                                         NumIterationsPerCommit: num_iterations_per_commit
                                       NumThreadsPerThreadgrouop: num_threads_per_threadgroup ];
 }
 

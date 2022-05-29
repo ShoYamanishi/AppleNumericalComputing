@@ -5,7 +5,7 @@
                             forFloat:(bool)    for_float 
                       CoalescedWrite:(bool)    coalesced_write 
                             EarlyOut:(bool)    early_out
-                         InOneCommit:(bool)    in_one_commit
+              NumIterationsPerCommit:(int)     num_iterations_per_commit
            NumThreadsPerThreadgrouop:(size_t)  num_threads_per_threadgroup;
 - (void) resetBufferFlag;
 - (uint) numElements;

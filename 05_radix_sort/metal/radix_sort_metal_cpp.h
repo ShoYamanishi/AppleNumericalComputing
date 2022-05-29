@@ -12,7 +12,7 @@ class RadixSortMetalCpp
         const bool   for_float, 
         const bool   coalesced_write, 
         const bool   early_out , 
-        const bool   in_one_commit,
+        const int    num_iterations_per_commit,
         const size_t num_threads_per_threadgroup );
 
     virtual ~RadixSortMetalCpp();

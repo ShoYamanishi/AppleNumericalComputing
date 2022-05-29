@@ -121,7 +121,7 @@ class PrefixSumLayerParams {
     bool                        _mForFloat;
     bool                        _mCoalescedWrite;
     bool                        _mEarlyOut;
-    bool                        _mInOneCommit;
+    int                         _mNumIterationsPerCommit;
 
     size_t                      _mNumThreadsPerThreadgroup;
     uint                        _mPrefixSumConfiguration;
@@ -417,7 +417,7 @@ class PrefixSumLayerParams {
                             forFloat:(bool)    for_float 
                       CoalescedWrite:(bool)    coalesced_write 
                             EarlyOut:(bool)    early_out
-                         InOneCommit:(bool)    in_one_commit
+              NumIterationsPerCommit:(int)     num_iterations_per_commit
            NumThreadsPerThreadgrouop:(size_t)  num_threads_per_threadgroup
 {
     self = [super init];
@@ -429,7 +429,7 @@ class PrefixSumLayerParams {
         _mForFloat                 = for_float;
         _mCoalescedWrite           = coalesced_write;
         _mEarlyOut                 = early_out;
-        _mInOneCommit              = in_one_commit;
+        _mNumIterationsPerCommit   = num_iterations_per_commit;
         _mNumThreadsPerThreadgroup = num_threads_per_threadgroup;
 
         [ self createMetalPipelineStates ];
@@ -881,8 +881,9 @@ class PrefixSumLayerParams {
 
 - (void) performComputation
 {
-    if ( _mInOneCommit ) {
-        [ self performComputationInOneCommit ];
+        
+    if ( _mNumIterationsPerCommit > 1 ) {
+        [ self performComputationInFewerCommits ];
     }
     else {
 
@@ -907,7 +908,7 @@ class PrefixSumLayerParams {
     }
 }
 
-- (void) performComputationInOneCommit
+- (void) performComputationInFewerCommits
 {
     for ( int i = 0; i < 16; i++ ) {
 
@@ -991,16 +992,24 @@ class PrefixSumLayerParams {
     }
 
 
-    id<MTLCommandBuffer> metal_command_buffer = [ self.commandQueue commandBuffer ];
+    id<MTLCommandBuffer> metal_command_buffer;
 
-    assert( metal_command_buffer != nil );
-
-    id<MTLComputeCommandEncoder> metal_encoder = [ metal_command_buffer computeCommandEncoder ];
-
-    assert( metal_encoder != nil );
+    id<MTLComputeCommandEncoder> metal_encoder;
 
     for ( int i = 0; i < 16; i++ ) {
 
+        if ( (i % _mNumIterationsPerCommit) == 0 ) {
+
+            metal_command_buffer = [ self.commandQueue commandBuffer ];
+
+            assert( metal_command_buffer != nil );
+
+            metal_encoder = [ metal_command_buffer computeCommandEncoder ];
+
+            assert( metal_encoder != nil );
+        }
+        
+        
         _mResultOn1 = ( (i%2) == 0 ) ? false : true;
 
         [ metal_encoder setComputePipelineState: _mPSO_four_way_prefix_sum_with_inblock_shuffle ];
@@ -1202,14 +1211,16 @@ class PrefixSumLayerParams {
 
         [ metal_encoder memoryBarrierWithScope:MTLBarrierScopeBuffers ];
 
+
+        if ( (i % _mNumIterationsPerCommit) == ( _mNumIterationsPerCommit - 1) ) {
+
+            [ metal_encoder endEncoding ];
+
+            [ metal_command_buffer commit ];
+
+            [ metal_command_buffer waitUntilCompleted ];
+        }
     }
-
-    [ metal_encoder endEncoding ];
-
-    [ metal_command_buffer commit ];
-
-    [ metal_command_buffer waitUntilCompleted ];
-
 }
 
 @end
