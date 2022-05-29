@@ -260,10 +260,10 @@ inline uint roundup_16(uint n)
         _mNumElementsLayer3        = 0;
         _mNumElementsLayer4        = 0;
 
-        _mNumThreadsPerGroupLayer1 = roundup_X( 32, _mNumThreadsPerThreadgroup );
+        _mNumThreadsPerGroupLayer1 = _mNumThreadsPerThreadgroup;
         _mNumGroupsPerGridLayer1   = _mNumElementsLayer2;
 
-        _mNumThreadsPerGroupLayer2 = _mNumGroupsPerGridLayer1;
+        _mNumThreadsPerGroupLayer2 = roundup_X( 32, _mNumGroupsPerGridLayer1 );
         _mNumGroupsPerGridLayer2   = 1;
 
         _mNumThreadsPerGroupLayer3 = 0;

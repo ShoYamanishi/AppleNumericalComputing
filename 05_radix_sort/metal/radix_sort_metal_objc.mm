@@ -41,23 +41,32 @@ struct parallel_order_checking_constants
 //
 //     % prefix-sum of theradgroups
 // 
-//     else if num elements <= 1024:
+//     else if num elements <= X:
 //     then
-//         scan_threadgroupwise_intermediate_32_32()
+//         scan_threadgroupwise_intermediate_32_X()
 // 
-//     else if 1024 < num elements <= 1024*1024:
+//     else if X < num elements <= X*X:
 //     then
-//         sum_threadgroup_32_32()
-//         scan_threadgroupwise_intermediate_32_32()
-//         scan_with_base_threadgroupwise_32_32()
+//         sum_threadgroup_32_X()
+//         scan_threadgroupwise_intermediate_32_X()
+//         scan_with_base_threadgroupwise_32_X()
 //
-//     else if 1024*1024 < num elements <= 1024*1024*1024:
+//     else if X*X < num elements <= X*X*X:
 //     then
-//         sum_threadgroup_32_32()
-//         sum_threadgroup_32_32()
-//         scan_threadgroupwise_intermediate_32_32()
-//         scan_with_base_threadgroupwise_32_32()
-//         scan_with_base_threadgroupwise_32_32()
+//         sum_threadgroup_32_X()
+//         sum_threadgroup_32_X()
+//         scan_threadgroupwise_intermediate_32_X()
+//         scan_with_base_threadgroupwise_32_X()
+//         scan_with_base_threadgroupwise_32_X()
+//     else if X*X*X < num elements <= X*X*X*X:
+//     then
+//         sum_threadgroup_32_X()
+//         sum_threadgroup_32_X()
+//         sum_threadgroup_32_X()
+//         scan_threadgroupwise_intermediate_32_X()
+//         scan_with_base_threadgroupwise_32_X()
+//         scan_with_base_threadgroupwise_32_X()
+//         scan_with_base_threadgroupwise_32_X()
 //     endif
 // 
 //     % final sort In1 => In2 (even) or In2 => In1 (odd)
@@ -114,11 +123,13 @@ class PrefixSumLayerParams {
     bool                        _mEarlyOut;
     bool                        _mInOneCommit;
 
+    size_t                      _mNumThreadsPerThreadgroup;
     uint                        _mPrefixSumConfiguration;
 
     PrefixSumLayerParams        _mPrefixSumParamsLayer1;
     PrefixSumLayerParams        _mPrefixSumParamsLayer2;
     PrefixSumLayerParams        _mPrefixSumParamsLayer3;
+    PrefixSumLayerParams        _mPrefixSumParamsLayer4;
 
     id<MTLComputePipelineState> _mPSO_four_way_prefix_sum_with_inblock_shuffle;
     id<MTLComputePipelineState> _mPSO_coalesced_block_mapping_for_the_n_chunk_input;
@@ -127,9 +138,9 @@ class PrefixSumLayerParams {
     id<MTLComputePipelineState> _mPSO_is_sorted_within_threadgroups;
     id<MTLComputePipelineState> _mPSO_are_all_less_than_equal;
 
-    id<MTLComputePipelineState> _mPSO_scan_threadgroupwise_intermediate_32_32;
-    id<MTLComputePipelineState> _mPSO_sum_threadgroup_32_32;
-    id<MTLComputePipelineState> _mPSO_scan_with_base_threadgroupwise_32_32;
+    id<MTLComputePipelineState> _mPSO_scan_threadgroupwise_intermediate_32_X;
+    id<MTLComputePipelineState> _mPSO_sum_threadgroup_32_X;
+    id<MTLComputePipelineState> _mPSO_scan_with_base_threadgroupwise_32_X;
 
     id<MTLBuffer> _mMetalArray1;
     id<MTLBuffer> _mMetalArray2;
@@ -140,22 +151,32 @@ class PrefixSumLayerParams {
     id<MTLBuffer> _mMetalConstRadixSortConstants;
     id<MTLBuffer> _mMetalConstParallelOrderCheckingConstants;
 
-    id<MTLBuffer> _mMetalPartialSumsPerThreadgroupLane0;
-    id<MTLBuffer> _mMetalPartialSumsPerThreadgroupLane1;
-    id<MTLBuffer> _mMetalPartialSumsPerThreadgroupLane2;
-    id<MTLBuffer> _mMetalPartialSumsPerThreadgroupLane3;
+    id<MTLBuffer> _mMetalPartialSumsPerThreadgroupLane0In;
+    id<MTLBuffer> _mMetalPartialSumsPerThreadgroupLane0Out;
+    id<MTLBuffer> _mMetalPartialSumsPerThreadgroupLane1In;
+    id<MTLBuffer> _mMetalPartialSumsPerThreadgroupLane1Out;
+    id<MTLBuffer> _mMetalPartialSumsPerThreadgroupLane2In;
+    id<MTLBuffer> _mMetalPartialSumsPerThreadgroupLane2Out;
+    id<MTLBuffer> _mMetalPartialSumsPerThreadgroupLane3In;
+    id<MTLBuffer> _mMetalPartialSumsPerThreadgroupLane3Out;
 
     id<MTLBuffer> _mMetalStartPosWithinThreadgroupLane1;
     id<MTLBuffer> _mMetalStartPosWithinThreadgroupLane2;
     id<MTLBuffer> _mMetalStartPosWithinThreadgroupLane3;
 
-    id<MTLBuffer> _mMetalPrefixSumGridPrefixSumLayer1;
-    id<MTLBuffer> _mMetalPrefixSumGridPrefixSumLayer2;
-    id<MTLBuffer> _mMetalPrefixSumGridPrefixSumLayer3;
+    id<MTLBuffer> _mMetalPrefixSumGridPrefixSumLayer1In;
+    id<MTLBuffer> _mMetalPrefixSumGridPrefixSumLayer1Out;
+    id<MTLBuffer> _mMetalPrefixSumGridPrefixSumLayer2In;
+    id<MTLBuffer> _mMetalPrefixSumGridPrefixSumLayer2Out;
+    id<MTLBuffer> _mMetalPrefixSumGridPrefixSumLayer3In;
+    id<MTLBuffer> _mMetalPrefixSumGridPrefixSumLayer3Out;
+    id<MTLBuffer> _mMetalPrefixSumGridPrefixSumLayer4In;
+    id<MTLBuffer> _mMetalPrefixSumGridPrefixSumLayer4Out;
 
     id<MTLBuffer> _mMetalPrefixSumConstantsLayer1;
     id<MTLBuffer> _mMetalPrefixSumConstantsLayer2;
     id<MTLBuffer> _mMetalPrefixSumConstantsLayer3;
+    id<MTLBuffer> _mMetalPrefixSumConstantsLayer4;
 
     id<MTLBuffer> _mMetalConstRadixSortConstants_01;
     id<MTLBuffer> _mMetalConstRadixSortConstants_02;
@@ -177,36 +198,58 @@ class PrefixSumLayerParams {
 
 
 -(void) prefixSumFindConfiguration
-{
+{ 
+    const uint num_elems_layer1 = alignUpAndDivide( _mNumElements,    _mNumThreadsPerThreadgroup );
+    const uint num_elems_layer2 = alignUpAndDivide( num_elems_layer1, _mNumThreadsPerThreadgroup );
+    const uint num_elems_layer3 = alignUpAndDivide( num_elems_layer2, _mNumThreadsPerThreadgroup );
+    const uint num_elems_layer4 = alignUpAndDivide( num_elems_layer3, _mNumThreadsPerThreadgroup );
 
-    const uint num_elems_layer1 = alignUpAndDivide( _mNumElements,    1024 );
-    const uint num_elems_layer2 = alignUpAndDivide( num_elems_layer1, 1024 );
-    const uint num_elems_layer3 = alignUpAndDivide( num_elems_layer2, 1024 );
-
-    if ( num_elems_layer1 <= 1024 ) {
+    if ( num_elems_layer1 <= _mNumThreadsPerThreadgroup ) {
 
         _mPrefixSumConfiguration = 1;
 
         _mPrefixSumParamsLayer1.set( num_elems_layer1, alignUp( num_elems_layer1, 32 ), 1 );
     }
-    else if  ( num_elems_layer1 <= 1024*1024 ) {
+    else if  ( num_elems_layer1 <= _mNumThreadsPerThreadgroup * _mNumThreadsPerThreadgroup ) {
 
         _mPrefixSumConfiguration = 2;
 
-        _mPrefixSumParamsLayer1.set( num_elems_layer1, 1024, num_elems_layer2 );
-        _mPrefixSumParamsLayer2.set( num_elems_layer2, alignUp( num_elems_layer2, 32 ), 1 );
+        _mPrefixSumParamsLayer1.set( num_elems_layer1, _mNumThreadsPerThreadgroup,      num_elems_layer2 );
+        _mPrefixSumParamsLayer2.set( num_elems_layer2, alignUp( num_elems_layer2, 32 ), 1                );
     }
-    else if  ( num_elems_layer1 <= 1024*1024*1024 ) {
+    else if  ( num_elems_layer1 <= _mNumThreadsPerThreadgroup * _mNumThreadsPerThreadgroup * _mNumThreadsPerThreadgroup ) {
 
         _mPrefixSumConfiguration = 3;
 
-        _mPrefixSumParamsLayer1.set( num_elems_layer1, 1024, num_elems_layer2 );
-        _mPrefixSumParamsLayer1.set( num_elems_layer2, 1024, num_elems_layer3 );
-        _mPrefixSumParamsLayer2.set( num_elems_layer3, alignUp( num_elems_layer3, 32 ), 1 );
+        _mPrefixSumParamsLayer1.set( num_elems_layer1, _mNumThreadsPerThreadgroup,      num_elems_layer2 );
+        _mPrefixSumParamsLayer2.set( num_elems_layer2, _mNumThreadsPerThreadgroup,      num_elems_layer3 );
+        _mPrefixSumParamsLayer3.set( num_elems_layer3, alignUp( num_elems_layer3, 32 ), 1                );
+    }
+    else if  ( num_elems_layer1 <= _mNumThreadsPerThreadgroup * _mNumThreadsPerThreadgroup * _mNumThreadsPerThreadgroup * _mNumThreadsPerThreadgroup ) {
+
+        _mPrefixSumConfiguration = 4;
+
+        _mPrefixSumParamsLayer1.set( num_elems_layer1, _mNumThreadsPerThreadgroup,      num_elems_layer2 );
+        _mPrefixSumParamsLayer2.set( num_elems_layer2, _mNumThreadsPerThreadgroup,      num_elems_layer3 );
+        _mPrefixSumParamsLayer3.set( num_elems_layer3, _mNumThreadsPerThreadgroup,      num_elems_layer4 );
+        _mPrefixSumParamsLayer4.set( num_elems_layer4, alignUp( num_elems_layer4, 32 ), 1                );
     }
     else {
         _mPrefixSumConfiguration = 0;
     }
+
+//    NSLog( @"_mPrefixSumParamsLayer1.num_elements_:                %d", _mPrefixSumParamsLayer1.num_elements_                );
+//    NSLog( @"_mPrefixSumParamsLayer1.num_threads_per_threadgroup_: %d", _mPrefixSumParamsLayer1.num_threads_per_threadgroup_ );
+//    NSLog( @"_mPrefixSumParamsLayer1.num_threadgroups_per_grid_:   %d", _mPrefixSumParamsLayer1.num_threadgroups_per_grid_   );
+//    NSLog( @"_mPrefixSumParamsLayer2.num_elements_:                %d", _mPrefixSumParamsLayer2.num_elements_                );
+//    NSLog( @"_mPrefixSumParamsLayer2.num_threads_per_threadgroup_: %d", _mPrefixSumParamsLayer2.num_threads_per_threadgroup_ );
+//    NSLog( @"_mPrefixSumParamsLayer2.num_threadgroups_per_grid_:   %d", _mPrefixSumParamsLayer2.num_threadgroups_per_grid_   );
+//    NSLog( @"_mPrefixSumParamsLayer3.num_elements_:                %d", _mPrefixSumParamsLayer3.num_elements_                );
+//    NSLog( @"_mPrefixSumParamsLayer3.num_threads_per_threadgroup_: %d", _mPrefixSumParamsLayer3.num_threads_per_threadgroup_ );
+//    NSLog( @"_mPrefixSumParamsLayer3.num_threadgroups_per_grid_:   %d", _mPrefixSumParamsLayer3.num_threadgroups_per_grid_   );
+//    NSLog( @"_mPrefixSumParamsLayer4.num_elements_:                %d", _mPrefixSumParamsLayer4.num_elements_                );
+//    NSLog( @"_mPrefixSumParamsLayer4.num_threads_per_threadgroup_: %d", _mPrefixSumParamsLayer4.num_threads_per_threadgroup_ );
+//    NSLog( @"_mPrefixSumParamsLayer4.num_threadgroups_per_grid_:   %d", _mPrefixSumParamsLayer4.num_threadgroups_per_grid_   );
 }
 
 
@@ -219,34 +262,53 @@ class PrefixSumLayerParams {
     _mMetalArrayIsUnsorted                     = [ self getSharedMTLBufferForBytes:  sizeof(int)                              for:@"_mMetalArrayIsUnsorted"                     ];
     _mMetalConstRadixSortConstants             = [ self getSharedMTLBufferForBytes:  sizeof(struct radix_sort_constants)      for:@"_mMetalConstRadixSortConstants"             ];
     _mMetalConstParallelOrderCheckingConstants = [ self getSharedMTLBufferForBytes:  sizeof(struct radix_sort_constants)      for:@"_mMetalConstParallelOrderCheckingConstants" ];
-    _mMetalPartialSumsPerThreadgroupLane0      = [ self getPrivateMTLBufferForBytes: alignUp(sizeof(int)* _mNumThreadgroups, 16)          for:@"_mMetalPartialSumsPerThreadgroupLane0"      ];
-    _mMetalPartialSumsPerThreadgroupLane1      = [ self getPrivateMTLBufferForBytes: alignUp(sizeof(int)* _mNumThreadgroups, 16)           for:@"_mMetalPartialSumsPerThreadgroupLane1"      ];
-    _mMetalPartialSumsPerThreadgroupLane2      = [ self getPrivateMTLBufferForBytes: alignUp(sizeof(int)* _mNumThreadgroups, 16)           for:@"_mMetalPartialSumsPerThreadgroupLane2"      ];
-    _mMetalPartialSumsPerThreadgroupLane3      = [ self getPrivateMTLBufferForBytes: alignUp(sizeof(int)* _mNumThreadgroups, 16)           for:@"_mMetalPartialSumsPerThreadgroupLane3"      ];
+    _mMetalPartialSumsPerThreadgroupLane0In    = [ self getPrivateMTLBufferForBytes: alignUp(sizeof(int)* _mNumThreadgroups, 16)          for:@"_mMetalPartialSumsPerThreadgroupLane0In"     ];
+    _mMetalPartialSumsPerThreadgroupLane0Out   = [ self getPrivateMTLBufferForBytes: alignUp(sizeof(int)* _mNumThreadgroups, 16)          for:@"_mMetalPartialSumsPerThreadgroupLane0Out"    ];
+    _mMetalPartialSumsPerThreadgroupLane1In    = [ self getPrivateMTLBufferForBytes: alignUp(sizeof(int)* _mNumThreadgroups, 16)           for:@"_mMetalPartialSumsPerThreadgroupLane1In"    ];
+    _mMetalPartialSumsPerThreadgroupLane1Out   = [ self getPrivateMTLBufferForBytes: alignUp(sizeof(int)* _mNumThreadgroups, 16)           for:@"_mMetalPartialSumsPerThreadgroupLane1Out"   ];
+    _mMetalPartialSumsPerThreadgroupLane2In    = [ self getPrivateMTLBufferForBytes: alignUp(sizeof(int)* _mNumThreadgroups, 16)           for:@"_mMetalPartialSumsPerThreadgroupLane2In"    ];
+    _mMetalPartialSumsPerThreadgroupLane2Out   = [ self getPrivateMTLBufferForBytes: alignUp(sizeof(int)* _mNumThreadgroups, 16)           for:@"_mMetalPartialSumsPerThreadgroupLane2Out"   ];
+    _mMetalPartialSumsPerThreadgroupLane3In    = [ self getPrivateMTLBufferForBytes: alignUp(sizeof(int)* _mNumThreadgroups, 16)           for:@"_mMetalPartialSumsPerThreadgroupLane3In"    ];
+    _mMetalPartialSumsPerThreadgroupLane3Out   = [ self getPrivateMTLBufferForBytes: alignUp(sizeof(int)* _mNumThreadgroups, 16)           for:@"_mMetalPartialSumsPerThreadgroupLane3Out"   ];
     _mMetalStartPosWithinThreadgroupLane1      = [ self getPrivateMTLBufferForBytes: alignUp(sizeof(unsigned short)*_mNumThreadgroups, 16) for:@"_mMetalStartPosWithinThreadgroupLane1"      ];
     _mMetalStartPosWithinThreadgroupLane2      = [ self getPrivateMTLBufferForBytes: alignUp(sizeof(unsigned short)*_mNumThreadgroups, 16) for:@"_mMetalStartPosWithinThreadgroupLane2"      ];
     _mMetalStartPosWithinThreadgroupLane3      = [ self getPrivateMTLBufferForBytes: alignUp(sizeof(unsigned short)*_mNumThreadgroups, 16) for:@"_mMetalStartPosWithinThreadgroupLane3"      ];
 
-    if ( _mPrefixSumConfiguration == 1 || _mPrefixSumConfiguration == 2 || _mPrefixSumConfiguration == 3 ) {
+    if ( _mPrefixSumConfiguration == 1 || _mPrefixSumConfiguration == 2 || _mPrefixSumConfiguration == 3 || _mPrefixSumConfiguration == 4 ) {
 
-        _mMetalPrefixSumGridPrefixSumLayer1    = [ self getPrivateMTLBufferForBytes: sizeof(int)*_mPrefixSumParamsLayer1.num_threadgroups_per_grid_
-                                                                                for: @"_mMetalPrefixSumGridPrefixSumLayer1" ];
+        _mMetalPrefixSumGridPrefixSumLayer1In  = [ self getPrivateMTLBufferForBytes: sizeof(int)*_mPrefixSumParamsLayer1.num_threadgroups_per_grid_
+                                                                                for: @"_mMetalPrefixSumGridPrefixSumLayer1In" ];
+        _mMetalPrefixSumGridPrefixSumLayer1Out = [ self getPrivateMTLBufferForBytes: sizeof(int)*_mPrefixSumParamsLayer1.num_threadgroups_per_grid_
+                                                                                for: @"_mMetalPrefixSumGridPrefixSumLayer1Out" ];
         _mMetalPrefixSumConstantsLayer1        = [ self getSharedMTLBufferForBytes: sizeof(struct prefix_sum_constants)
                                                                                 for: @"_mMetalPrefixSumConstantsLayer1"     ];
     }
-    if ( _mPrefixSumConfiguration == 2 || _mPrefixSumConfiguration == 3 ) {
+    if ( _mPrefixSumConfiguration == 2 || _mPrefixSumConfiguration == 3 || _mPrefixSumConfiguration == 4 ) {
 
-        _mMetalPrefixSumGridPrefixSumLayer2    = [ self getPrivateMTLBufferForBytes: sizeof(int)*_mPrefixSumParamsLayer2.num_threadgroups_per_grid_
-                                                                                for: @"_mMetalPrefixSumGridPrefixSumLayer2" ];
+        _mMetalPrefixSumGridPrefixSumLayer2In  = [ self getPrivateMTLBufferForBytes: sizeof(int)*_mPrefixSumParamsLayer2.num_threadgroups_per_grid_
+                                                                                for: @"_mMetalPrefixSumGridPrefixSumLayer2In" ];
+        _mMetalPrefixSumGridPrefixSumLayer2Out = [ self getPrivateMTLBufferForBytes: sizeof(int)*_mPrefixSumParamsLayer2.num_threadgroups_per_grid_
+                                                                                for: @"_mMetalPrefixSumGridPrefixSumLayer2Out" ];
         _mMetalPrefixSumConstantsLayer2        = [ self getSharedMTLBufferForBytes: sizeof(struct prefix_sum_constants)
                                                                                 for: @"_mMetalPrefixSumConstantsLayer2"     ];
     }
-    if ( _mPrefixSumConfiguration == 3 ) {
+    if ( _mPrefixSumConfiguration == 3 || _mPrefixSumConfiguration == 4 ) {
 
-        _mMetalPrefixSumGridPrefixSumLayer3    = [ self getPrivateMTLBufferForBytes: sizeof(int)*_mPrefixSumParamsLayer3.num_threadgroups_per_grid_
-                                                                                for: @"_mMetalPrefixSumGridPrefixSumLayer3" ];
+        _mMetalPrefixSumGridPrefixSumLayer3In  = [ self getPrivateMTLBufferForBytes: sizeof(int)*_mPrefixSumParamsLayer3.num_threadgroups_per_grid_
+                                                                                for: @"_mMetalPrefixSumGridPrefixSumLayer3In" ];
+        _mMetalPrefixSumGridPrefixSumLayer3Out = [ self getPrivateMTLBufferForBytes: sizeof(int)*_mPrefixSumParamsLayer3.num_threadgroups_per_grid_
+                                                                                for: @"_mMetalPrefixSumGridPrefixSumLayer3Out" ];
         _mMetalPrefixSumConstantsLayer3        = [ self getSharedMTLBufferForBytes: sizeof(struct prefix_sum_constants)
                                                                                 for: @"_mMetalPrefixSumConstantsLayer3"     ];
+    }
+    if ( _mPrefixSumConfiguration == 4 ) {
+
+        _mMetalPrefixSumGridPrefixSumLayer4In  = [ self getPrivateMTLBufferForBytes: sizeof(int)*_mPrefixSumParamsLayer4.num_threadgroups_per_grid_
+                                                                                for: @"_mMetalPrefixSumGridPrefixSumLayer4In" ];
+        _mMetalPrefixSumGridPrefixSumLayer4Out = [ self getPrivateMTLBufferForBytes: sizeof(int)*_mPrefixSumParamsLayer4.num_threadgroups_per_grid_
+                                                                                for: @"_mMetalPrefixSumGridPrefixSumLayer4Out" ];
+        _mMetalPrefixSumConstantsLayer4        = [ self getSharedMTLBufferForBytes: sizeof(struct prefix_sum_constants)
+                                                                                for: @"_mMetalPrefixSumConstantsLayer4"     ];
     }
 
     _mMetalConstRadixSortConstants_01          = [ self getSharedMTLBufferForBytes:  sizeof(struct radix_sort_constants)      for:@"_mMetalConstRadixSortConstants_01" ];
@@ -280,7 +342,7 @@ class PrefixSumLayerParams {
     memcpy( _mMetalConstRadixSortConstants.contents, &c, sizeof(struct radix_sort_constants) );
 
 
-    if ( _mPrefixSumConfiguration == 1 || _mPrefixSumConfiguration == 2 || _mPrefixSumConfiguration == 3 ) {
+    if ( _mPrefixSumConfiguration == 1 || _mPrefixSumConfiguration == 2 || _mPrefixSumConfiguration == 3 || _mPrefixSumConfiguration == 4 ) {
 
             struct prefix_sum_constants c;
 
@@ -291,7 +353,7 @@ class PrefixSumLayerParams {
             memcpy( _mMetalPrefixSumConstantsLayer1.contents, &c, sizeof(struct prefix_sum_constants) );
     }
 
-    if ( _mPrefixSumConfiguration == 2 || _mPrefixSumConfiguration == 3 ) {
+    if ( _mPrefixSumConfiguration == 2 || _mPrefixSumConfiguration == 3 || _mPrefixSumConfiguration == 4 ) {
 
             struct prefix_sum_constants c;
 
@@ -302,7 +364,7 @@ class PrefixSumLayerParams {
             memcpy( _mMetalPrefixSumConstantsLayer2.contents, &c, sizeof(struct prefix_sum_constants) );
     }
 
-    if ( _mPrefixSumConfiguration == 3 ) {
+    if ( _mPrefixSumConfiguration == 3 || _mPrefixSumConfiguration == 4 ) {
 
             struct prefix_sum_constants c;
 
@@ -311,6 +373,17 @@ class PrefixSumLayerParams {
             c.num_elements = _mPrefixSumParamsLayer3.num_elements_;
 
             memcpy( _mMetalPrefixSumConstantsLayer3.contents, &c, sizeof(struct prefix_sum_constants) );
+    }
+
+    if ( _mPrefixSumConfiguration == 4 ) {
+
+            struct prefix_sum_constants c;
+
+            memset( &c, (uint)0, sizeof(struct prefix_sum_constants) );
+
+            c.num_elements = _mPrefixSumParamsLayer4.num_elements_;
+
+            memcpy( _mMetalPrefixSumConstantsLayer4.contents, &c, sizeof(struct prefix_sum_constants) );
     }
 }
 
@@ -326,26 +399,38 @@ class PrefixSumLayerParams {
     else {
         _mPSO_uncoalesced_block_mapping_for_the_n_chunk_input = [ self getPipelineStateForFunction: @"uncoalesced_block_mapping_for_the_n_chunk_input" ];
     }
-    _mPSO_is_sorted_within_threadgroups                   = [ self getPipelineStateForFunction: @"is_sorted_within_threadgroups" ];
-    _mPSO_are_all_less_than_equal                         = [ self getPipelineStateForFunction: @"are_all_less_than_equal" ];
-    _mPSO_scan_threadgroupwise_intermediate_32_32         = [ self getPipelineStateForFunction: @"scan_threadgroupwise_intermediate_32_32" ];
-    _mPSO_sum_threadgroup_32_32                           = [ self getPipelineStateForFunction: @"sum_threadgroup_32_32" ];
-    _mPSO_scan_with_base_threadgroupwise_32_32            = [ self getPipelineStateForFunction: @"scan_with_base_threadgroupwise_32_32" ];
+    if ( _mForFloat ) {
+        _mPSO_is_sorted_within_threadgroups                   = [ self getPipelineStateForFunction: @"is_sorted_within_threadgroups_float" ];
+        _mPSO_are_all_less_than_equal                         = [ self getPipelineStateForFunction: @"are_all_less_than_equal_float" ];
+    }
+    else {
+        _mPSO_is_sorted_within_threadgroups                   = [ self getPipelineStateForFunction: @"is_sorted_within_threadgroups_int" ];
+        _mPSO_are_all_less_than_equal                         = [ self getPipelineStateForFunction: @"are_all_less_than_equal_int" ];
+    }
+    _mPSO_scan_threadgroupwise_intermediate_32_X          = [ self getPipelineStateForFunction: @"scan_threadgroupwise_intermediate_32_X_int" ];
+    _mPSO_sum_threadgroup_32_X                            = [ self getPipelineStateForFunction: @"sum_threadgroup_32_X_int" ];
+    _mPSO_scan_with_base_threadgroupwise_32_X             = [ self getPipelineStateForFunction: @"scan_with_base_threadgroupwise_32_X_int" ];
 }
 
 
-- (instancetype) initWithNumElements:(size_t) num_elements forFloat:(bool) for_float CoalescedWrite:(bool) coalesced_write EarlyOut:(bool) early_out InOneCommit:(bool) in_one_commit
+- (instancetype) initWithNumElements:(size_t)  num_elements 
+                            forFloat:(bool)    for_float 
+                      CoalescedWrite:(bool)    coalesced_write 
+                            EarlyOut:(bool)    early_out
+                         InOneCommit:(bool)    in_one_commit
+           NumThreadsPerThreadgrouop:(size_t)  num_threads_per_threadgroup
 {
     self = [super init];
     if (self) {
 
-        _mResultOn1       = false;
-        _mNumElements     = num_elements;
-        _mNumThreadgroups = alignUpAndDivide( num_elements, 1024 );
-        _mForFloat        = for_float;
-        _mCoalescedWrite  = coalesced_write;
-        _mEarlyOut        = early_out;
-        _mInOneCommit     = in_one_commit;
+        _mResultOn1                = false;
+        _mNumElements              = num_elements;
+        _mNumThreadgroups          = alignUpAndDivide( num_elements, num_threads_per_threadgroup );
+        _mForFloat                 = for_float;
+        _mCoalescedWrite           = coalesced_write;
+        _mEarlyOut                 = early_out;
+        _mInOneCommit              = in_one_commit;
+        _mNumThreadsPerThreadgroup = num_threads_per_threadgroup;
 
         [ self createMetalPipelineStates ];
 
@@ -399,16 +484,16 @@ class PrefixSumLayerParams {
 }
 
 
-- (void) encodeMetalPrefixSumForEncoder:(id<MTLComputeCommandEncoder>) encoder Buffer:(id<MTLBuffer>) inout_buffer
+- (void) encodeMetalPrefixSumForEncoder:(id<MTLComputeCommandEncoder>) encoder InBuffer:(id<MTLBuffer>) in_buffer  OutBuffer:(id<MTLBuffer>) out_buffer
 {
     if ( _mPrefixSumConfiguration == 1 ) {
 
-        [ encoder setComputePipelineState: _mPSO_scan_threadgroupwise_intermediate_32_32 ];
+        [ encoder setComputePipelineState: _mPSO_scan_threadgroupwise_intermediate_32_X ];
 
-        [ encoder setBuffer: inout_buffer                        offset:0 atIndex:0 ];
-        [ encoder setBuffer: inout_buffer                        offset:0 atIndex:1 ];
-        [ encoder setBuffer: _mMetalPrefixSumGridPrefixSumLayer1 offset:0 atIndex:2 ];
-        [ encoder setBuffer: _mMetalPrefixSumConstantsLayer1     offset:0 atIndex:3 ];
+        [ encoder setBuffer: in_buffer                             offset:0 atIndex:0 ];
+        [ encoder setBuffer: out_buffer                            offset:0 atIndex:1 ];
+        [ encoder setBuffer: _mMetalPrefixSumGridPrefixSumLayer1In offset:0 atIndex:2 ];
+        [ encoder setBuffer: _mMetalPrefixSumConstantsLayer1       offset:0 atIndex:3 ];
 
         [ encoder setThreadgroupMemoryLength: alignUp(sizeof(int) * _mPrefixSumParamsLayer1.num_threads_per_threadgroup_, 16) atIndex:0 ];
 
@@ -418,11 +503,11 @@ class PrefixSumLayerParams {
 
     else if ( _mPrefixSumConfiguration == 2 ) {
 
-        [ encoder setComputePipelineState: _mPSO_sum_threadgroup_32_32 ];
+        [ encoder setComputePipelineState: _mPSO_sum_threadgroup_32_X ];
 
-        [ encoder setBuffer: inout_buffer                        offset:0 atIndex:0 ];
-        [ encoder setBuffer: _mMetalPrefixSumGridPrefixSumLayer1 offset:0 atIndex:1 ];
-        [ encoder setBuffer: _mMetalPrefixSumConstantsLayer1     offset:0 atIndex:2 ];
+        [ encoder setBuffer: in_buffer                             offset:0 atIndex:0 ];
+        [ encoder setBuffer: _mMetalPrefixSumGridPrefixSumLayer1In offset:0 atIndex:1 ];
+        [ encoder setBuffer: _mMetalPrefixSumConstantsLayer1       offset:0 atIndex:2 ];
 
         [ encoder setThreadgroupMemoryLength: alignUp(sizeof(int) * _mPrefixSumParamsLayer1.num_threads_per_threadgroup_, 16) atIndex:0 ];
 
@@ -431,11 +516,11 @@ class PrefixSumLayerParams {
 
         [ encoder memoryBarrierWithScope:MTLBarrierScopeBuffers ];
 
-        [ encoder setComputePipelineState: _mPSO_scan_threadgroupwise_intermediate_32_32 ];
+        [ encoder setComputePipelineState: _mPSO_scan_threadgroupwise_intermediate_32_X ];
 
-        [ encoder setBuffer: _mMetalPrefixSumGridPrefixSumLayer1 offset:0 atIndex:0 ];
-        [ encoder setBuffer: _mMetalPrefixSumGridPrefixSumLayer1 offset:0 atIndex:1 ];
-        [ encoder setBuffer: _mMetalPrefixSumGridPrefixSumLayer2 offset:0 atIndex:2 ];
+        [ encoder setBuffer: _mMetalPrefixSumGridPrefixSumLayer1In  offset:0 atIndex:0 ];
+        [ encoder setBuffer: _mMetalPrefixSumGridPrefixSumLayer1Out offset:0 atIndex:1 ];
+        [ encoder setBuffer: _mMetalPrefixSumGridPrefixSumLayer2In  offset:0 atIndex:2 ];
         [ encoder setBuffer: _mMetalPrefixSumConstantsLayer2     offset:0 atIndex:3 ];
 
         [ encoder setThreadgroupMemoryLength: alignUp(sizeof(int) * _mPrefixSumParamsLayer2.num_threads_per_threadgroup_, 16) atIndex:0 ];
@@ -445,12 +530,12 @@ class PrefixSumLayerParams {
 
         [ encoder memoryBarrierWithScope:MTLBarrierScopeBuffers ];
 
-        [ encoder setComputePipelineState: _mPSO_scan_with_base_threadgroupwise_32_32 ];
+        [ encoder setComputePipelineState: _mPSO_scan_with_base_threadgroupwise_32_X ];
 
-        [ encoder setBuffer: inout_buffer                        offset:0 atIndex:0 ];
-        [ encoder setBuffer: inout_buffer                        offset:0 atIndex:1 ];
-        [ encoder setBuffer: _mMetalPrefixSumGridPrefixSumLayer1 offset:0 atIndex:2 ];
-        [ encoder setBuffer: _mMetalPrefixSumConstantsLayer1     offset:0 atIndex:3 ];
+        [ encoder setBuffer: in_buffer                              offset:0 atIndex:0 ];
+        [ encoder setBuffer: out_buffer                             offset:0 atIndex:1 ];
+        [ encoder setBuffer: _mMetalPrefixSumGridPrefixSumLayer1Out offset:0 atIndex:2 ];
+        [ encoder setBuffer: _mMetalPrefixSumConstantsLayer1        offset:0 atIndex:3 ];
 
         [ encoder setThreadgroupMemoryLength: alignUp(sizeof(int) * _mPrefixSumParamsLayer1.num_threads_per_threadgroup_, 16) atIndex:0 ];
 
@@ -459,11 +544,11 @@ class PrefixSumLayerParams {
     }
     else if ( _mPrefixSumConfiguration == 3 ) {
 
-        [ encoder setComputePipelineState: _mPSO_sum_threadgroup_32_32 ];
+        [ encoder setComputePipelineState: _mPSO_sum_threadgroup_32_X ];
 
-        [ encoder setBuffer: inout_buffer                        offset:0 atIndex:0 ];
-        [ encoder setBuffer: _mMetalPrefixSumGridPrefixSumLayer1 offset:0 atIndex:1 ];
-        [ encoder setBuffer: _mMetalPrefixSumConstantsLayer1     offset:0 atIndex:2 ];
+        [ encoder setBuffer: in_buffer                             offset:0 atIndex:0 ];
+        [ encoder setBuffer: _mMetalPrefixSumGridPrefixSumLayer1In offset:0 atIndex:1 ];
+        [ encoder setBuffer: _mMetalPrefixSumConstantsLayer1       offset:0 atIndex:2 ];
 
         [ encoder setThreadgroupMemoryLength: alignUp(sizeof(int) * _mPrefixSumParamsLayer1.num_threads_per_threadgroup_, 16) atIndex:0 ];
 
@@ -472,9 +557,9 @@ class PrefixSumLayerParams {
 
         [ encoder memoryBarrierWithScope:MTLBarrierScopeBuffers ];
 
-        [ encoder setBuffer: _mMetalPrefixSumGridPrefixSumLayer1 offset:0 atIndex:0 ];
-        [ encoder setBuffer: _mMetalPrefixSumGridPrefixSumLayer2 offset:0 atIndex:1 ];
-        [ encoder setBuffer: _mMetalPrefixSumConstantsLayer2     offset:0 atIndex:2 ];
+        [ encoder setBuffer: _mMetalPrefixSumGridPrefixSumLayer1In  offset:0 atIndex:0 ];
+        [ encoder setBuffer: _mMetalPrefixSumGridPrefixSumLayer2In  offset:0 atIndex:1 ];
+        [ encoder setBuffer: _mMetalPrefixSumConstantsLayer2        offset:0 atIndex:2 ];
 
         [ encoder setThreadgroupMemoryLength: alignUp(sizeof(int) * _mPrefixSumParamsLayer2.num_threads_per_threadgroup_, 16) atIndex:0 ];
 
@@ -483,11 +568,11 @@ class PrefixSumLayerParams {
 
         [ encoder memoryBarrierWithScope:MTLBarrierScopeBuffers ];
 
-        [ encoder setComputePipelineState: _mPSO_scan_threadgroupwise_intermediate_32_32 ];
+        [ encoder setComputePipelineState: _mPSO_scan_threadgroupwise_intermediate_32_X ];
 
-        [ encoder setBuffer: _mMetalPrefixSumGridPrefixSumLayer2 offset:0 atIndex:0 ];
-        [ encoder setBuffer: _mMetalPrefixSumGridPrefixSumLayer2 offset:0 atIndex:1 ];
-        [ encoder setBuffer: _mMetalPrefixSumGridPrefixSumLayer3 offset:0 atIndex:2 ];
+        [ encoder setBuffer: _mMetalPrefixSumGridPrefixSumLayer2In  offset:0 atIndex:0 ];
+        [ encoder setBuffer: _mMetalPrefixSumGridPrefixSumLayer2Out offset:0 atIndex:1 ];
+        [ encoder setBuffer: _mMetalPrefixSumGridPrefixSumLayer3In  offset:0 atIndex:2 ];
         [ encoder setBuffer: _mMetalPrefixSumConstantsLayer3     offset:0 atIndex:3 ];
 
         [ encoder setThreadgroupMemoryLength: alignUp(sizeof(int) * _mPrefixSumParamsLayer3.num_threads_per_threadgroup_, 16) atIndex:0 ];
@@ -497,13 +582,13 @@ class PrefixSumLayerParams {
 
         [ encoder memoryBarrierWithScope:MTLBarrierScopeBuffers ];
 
-        [ encoder setComputePipelineState: _mPSO_scan_with_base_threadgroupwise_32_32 ];
+        [ encoder setComputePipelineState: _mPSO_scan_with_base_threadgroupwise_32_X ];
 
 
-        [ encoder setBuffer: _mMetalPrefixSumGridPrefixSumLayer1 offset:0 atIndex:0 ];
-        [ encoder setBuffer: _mMetalPrefixSumGridPrefixSumLayer1 offset:0 atIndex:1 ];
-        [ encoder setBuffer: _mMetalPrefixSumGridPrefixSumLayer2 offset:0 atIndex:2 ];
-        [ encoder setBuffer: _mMetalPrefixSumConstantsLayer3     offset:0 atIndex:3 ];
+        [ encoder setBuffer: _mMetalPrefixSumGridPrefixSumLayer1In  offset:0 atIndex:0 ];
+        [ encoder setBuffer: _mMetalPrefixSumGridPrefixSumLayer1Out offset:0 atIndex:1 ];
+        [ encoder setBuffer: _mMetalPrefixSumGridPrefixSumLayer2Out offset:0 atIndex:2 ];
+        [ encoder setBuffer: _mMetalPrefixSumConstantsLayer2     offset:0 atIndex:3 ];
 
         [ encoder setThreadgroupMemoryLength: alignUp(sizeof(int) * _mPrefixSumParamsLayer2.num_threads_per_threadgroup_, 16) atIndex:0 ];
 
@@ -512,10 +597,97 @@ class PrefixSumLayerParams {
 
         [ encoder memoryBarrierWithScope:MTLBarrierScopeBuffers ];
 
-        [ encoder setBuffer: inout_buffer                        offset:0 atIndex:0 ];
-        [ encoder setBuffer: inout_buffer                        offset:0 atIndex:1 ];
-        [ encoder setBuffer: _mMetalPrefixSumGridPrefixSumLayer1 offset:0 atIndex:2 ];
-        [ encoder setBuffer: _mMetalPrefixSumConstantsLayer1     offset:0 atIndex:3 ];
+        [ encoder setBuffer: in_buffer                              offset:0 atIndex:0 ];
+        [ encoder setBuffer: out_buffer                             offset:0 atIndex:1 ];
+        [ encoder setBuffer: _mMetalPrefixSumGridPrefixSumLayer1Out offset:0 atIndex:2 ];
+        [ encoder setBuffer: _mMetalPrefixSumConstantsLayer1        offset:0 atIndex:3 ];
+
+        [ encoder setThreadgroupMemoryLength: alignUp(sizeof(int) * _mPrefixSumParamsLayer1.num_threads_per_threadgroup_, 16) atIndex:0 ];
+
+        [ encoder dispatchThreadgroups:MTLSizeMake( _mPrefixSumParamsLayer1.num_threadgroups_per_grid_,   1, 1 )
+                 threadsPerThreadgroup:MTLSizeMake( _mPrefixSumParamsLayer1.num_threads_per_threadgroup_, 1, 1 ) ];
+    }
+    else if ( _mPrefixSumConfiguration == 4 ) {
+
+        [ encoder setComputePipelineState: _mPSO_sum_threadgroup_32_X ];
+
+        [ encoder setBuffer: in_buffer                             offset:0 atIndex:0 ];
+        [ encoder setBuffer: _mMetalPrefixSumGridPrefixSumLayer1In offset:0 atIndex:1 ];
+        [ encoder setBuffer: _mMetalPrefixSumConstantsLayer1       offset:0 atIndex:2 ];
+
+        [ encoder setThreadgroupMemoryLength: alignUp(sizeof(int) * _mPrefixSumParamsLayer1.num_threads_per_threadgroup_, 16) atIndex:0 ];
+
+        [ encoder dispatchThreadgroups:MTLSizeMake( _mPrefixSumParamsLayer1.num_threadgroups_per_grid_,   1, 1 )
+                 threadsPerThreadgroup:MTLSizeMake( _mPrefixSumParamsLayer1.num_threads_per_threadgroup_, 1, 1 ) ];
+
+        [ encoder memoryBarrierWithScope:MTLBarrierScopeBuffers ];
+
+        [ encoder setBuffer: _mMetalPrefixSumGridPrefixSumLayer1In  offset:0 atIndex:0 ];
+        [ encoder setBuffer: _mMetalPrefixSumGridPrefixSumLayer2In  offset:0 atIndex:1 ];
+        [ encoder setBuffer: _mMetalPrefixSumConstantsLayer2        offset:0 atIndex:2 ];
+
+        [ encoder setThreadgroupMemoryLength: alignUp(sizeof(int) * _mPrefixSumParamsLayer2.num_threads_per_threadgroup_, 16) atIndex:0 ];
+
+        [ encoder dispatchThreadgroups:MTLSizeMake( _mPrefixSumParamsLayer2.num_threadgroups_per_grid_,   1, 1 )
+                 threadsPerThreadgroup:MTLSizeMake( _mPrefixSumParamsLayer2.num_threads_per_threadgroup_, 1, 1 ) ];
+
+        [ encoder memoryBarrierWithScope:MTLBarrierScopeBuffers ];
+
+        [ encoder setBuffer: _mMetalPrefixSumGridPrefixSumLayer2In  offset:0 atIndex:0 ];
+        [ encoder setBuffer: _mMetalPrefixSumGridPrefixSumLayer3In  offset:0 atIndex:1 ];
+        [ encoder setBuffer: _mMetalPrefixSumConstantsLayer3        offset:0 atIndex:2 ];
+
+        [ encoder setThreadgroupMemoryLength: alignUp(sizeof(int) * _mPrefixSumParamsLayer3.num_threads_per_threadgroup_, 16) atIndex:0 ];
+
+        [ encoder dispatchThreadgroups:MTLSizeMake( _mPrefixSumParamsLayer3.num_threadgroups_per_grid_,   1, 1 )
+                 threadsPerThreadgroup:MTLSizeMake( _mPrefixSumParamsLayer3.num_threads_per_threadgroup_, 1, 1 ) ];
+
+        [ encoder memoryBarrierWithScope:MTLBarrierScopeBuffers ];
+
+        [ encoder setComputePipelineState: _mPSO_scan_threadgroupwise_intermediate_32_X ];
+
+        [ encoder setBuffer: _mMetalPrefixSumGridPrefixSumLayer3In  offset:0 atIndex:0 ];
+        [ encoder setBuffer: _mMetalPrefixSumGridPrefixSumLayer3Out offset:0 atIndex:1 ];
+        [ encoder setBuffer: _mMetalPrefixSumGridPrefixSumLayer4In  offset:0 atIndex:2 ];
+        [ encoder setBuffer: _mMetalPrefixSumConstantsLayer4     offset:0 atIndex:3 ];
+
+        [ encoder setThreadgroupMemoryLength: alignUp(sizeof(int) * _mPrefixSumParamsLayer4.num_threads_per_threadgroup_, 16) atIndex:0 ];
+
+        [ encoder dispatchThreadgroups:MTLSizeMake( _mPrefixSumParamsLayer4.num_threadgroups_per_grid_,   1, 1 )
+                 threadsPerThreadgroup:MTLSizeMake( _mPrefixSumParamsLayer4.num_threads_per_threadgroup_, 1, 1 ) ];
+
+        [ encoder memoryBarrierWithScope:MTLBarrierScopeBuffers ];
+
+        [ encoder setComputePipelineState: _mPSO_scan_with_base_threadgroupwise_32_X ];
+
+        [ encoder setBuffer: _mMetalPrefixSumGridPrefixSumLayer2In  offset:0 atIndex:0 ];
+        [ encoder setBuffer: _mMetalPrefixSumGridPrefixSumLayer2Out offset:0 atIndex:1 ];
+        [ encoder setBuffer: _mMetalPrefixSumGridPrefixSumLayer3Out offset:0 atIndex:2 ];
+        [ encoder setBuffer: _mMetalPrefixSumConstantsLayer3     offset:0 atIndex:3 ];
+
+        [ encoder setThreadgroupMemoryLength: alignUp(sizeof(int) * _mPrefixSumParamsLayer3.num_threads_per_threadgroup_, 16) atIndex:0 ];
+
+        [ encoder dispatchThreadgroups:MTLSizeMake( _mPrefixSumParamsLayer3.num_threadgroups_per_grid_,   1, 1 )
+                 threadsPerThreadgroup:MTLSizeMake( _mPrefixSumParamsLayer3.num_threads_per_threadgroup_, 1, 1 ) ];
+
+        [ encoder memoryBarrierWithScope:MTLBarrierScopeBuffers ];
+
+        [ encoder setBuffer: _mMetalPrefixSumGridPrefixSumLayer1In  offset:0 atIndex:0 ];
+        [ encoder setBuffer: _mMetalPrefixSumGridPrefixSumLayer1Out offset:0 atIndex:1 ];
+        [ encoder setBuffer: _mMetalPrefixSumGridPrefixSumLayer2Out offset:0 atIndex:2 ];
+        [ encoder setBuffer: _mMetalPrefixSumConstantsLayer2     offset:0 atIndex:3 ];
+
+        [ encoder setThreadgroupMemoryLength: alignUp(sizeof(int) * _mPrefixSumParamsLayer2.num_threads_per_threadgroup_, 16) atIndex:0 ];
+
+        [ encoder dispatchThreadgroups:MTLSizeMake( _mPrefixSumParamsLayer2.num_threadgroups_per_grid_,   1, 1 )
+                 threadsPerThreadgroup:MTLSizeMake( _mPrefixSumParamsLayer2.num_threads_per_threadgroup_, 1, 1 ) ];
+
+        [ encoder memoryBarrierWithScope:MTLBarrierScopeBuffers ];
+
+        [ encoder setBuffer: in_buffer                              offset:0 atIndex:0 ];
+        [ encoder setBuffer: out_buffer                             offset:0 atIndex:1 ];
+        [ encoder setBuffer: _mMetalPrefixSumGridPrefixSumLayer1Out offset:0 atIndex:2 ];
+        [ encoder setBuffer: _mMetalPrefixSumConstantsLayer1        offset:0 atIndex:3 ];
 
         [ encoder setThreadgroupMemoryLength: alignUp(sizeof(int) * _mPrefixSumParamsLayer1.num_threads_per_threadgroup_, 16) atIndex:0 ];
 
@@ -527,6 +699,7 @@ class PrefixSumLayerParams {
 
 - (bool) isArraySorted
 {
+
     struct parallel_order_checking_constants c;
     memset( &c, (uint)0, sizeof(struct parallel_order_checking_constants) );
     c.total_num_elements = _mNumElements;
@@ -551,14 +724,15 @@ class PrefixSumLayerParams {
     else {
         [ metal_encoder setBuffer: _mMetalArray1 offset:0 atIndex:0 ];
     }
+
     [ metal_encoder setBuffer: _mMetalArrayIsUnsorted                     offset:0 atIndex:1 ];
     [ metal_encoder setBuffer: _mMetalThreadgroupBoundariesPrevLast       offset:0 atIndex:2 ];
     [ metal_encoder setBuffer: _mMetalThreadgroupBoundariesFirst          offset:0 atIndex:3 ];
     [ metal_encoder setBuffer: _mMetalConstParallelOrderCheckingConstants offset:0 atIndex:4 ];
 
-    [ metal_encoder dispatchThreadgroups:MTLSizeMake( _mNumThreadgroups, 1, 1)
-                   threadsPerThreadgroup:MTLSizeMake(              1024, 1, 1) ];
-
+    [ metal_encoder dispatchThreadgroups:MTLSizeMake( _mNumThreadgroups,          1, 1)
+                   threadsPerThreadgroup:MTLSizeMake( _mNumThreadsPerThreadgroup, 1, 1) ];
+ 
     [ metal_encoder endEncoding ];
 
     [ metal_command_buffer commit ];
@@ -572,11 +746,10 @@ class PrefixSumLayerParams {
     if ( _mNumThreadgroups <= 1 ) {
         return true;
     }
-    return false;
 
-    const uint num_elements2         = alignUpAndDivide( _mNumElements, 1024 );
-    const uint num_mNumThreadgroups2 = alignUpAndDivide( num_elements2, 1024 );
-    const uint num_threads2          = ( num_elements2 < 1024 ) ? num_elements2 : 1024;
+    const uint num_elements2         = alignUpAndDivide( _mNumElements, _mNumThreadsPerThreadgroup );
+    const uint num_mNumThreadgroups2 = alignUpAndDivide( num_elements2, _mNumThreadsPerThreadgroup );
+    const uint num_threads2          = ( num_elements2 < _mNumThreadsPerThreadgroup ) ? num_elements2 : _mNumThreadsPerThreadgroup;
 
     memset( &c, (uint)0, sizeof(struct parallel_order_checking_constants) );
     c.total_num_elements = num_elements2;
@@ -643,29 +816,36 @@ class PrefixSumLayerParams {
     else {
         [ metal_encoder setBuffer: _mMetalArray1 offset:0 atIndex:0 ];
     }
-    [ metal_encoder setBuffer: _mMetalPartialSumsPerThreadgroupLane0 offset:0 atIndex:1 ];
-    [ metal_encoder setBuffer: _mMetalPartialSumsPerThreadgroupLane1 offset:0 atIndex:2 ];
-    [ metal_encoder setBuffer: _mMetalPartialSumsPerThreadgroupLane2 offset:0 atIndex:3 ];
-    [ metal_encoder setBuffer: _mMetalPartialSumsPerThreadgroupLane3 offset:0 atIndex:4 ];
-    [ metal_encoder setBuffer: _mMetalStartPosWithinThreadgroupLane1 offset:0 atIndex:5 ];
-    [ metal_encoder setBuffer: _mMetalStartPosWithinThreadgroupLane2 offset:0 atIndex:6 ];
-    [ metal_encoder setBuffer: _mMetalStartPosWithinThreadgroupLane3 offset:0 atIndex:7 ];
+    [ metal_encoder setBuffer: _mMetalPartialSumsPerThreadgroupLane0In offset:0 atIndex:  1 ];
+    [ metal_encoder setBuffer: _mMetalPartialSumsPerThreadgroupLane1In offset:0 atIndex:  2 ];
+    [ metal_encoder setBuffer: _mMetalPartialSumsPerThreadgroupLane2In offset:0 atIndex:  3 ];
+    [ metal_encoder setBuffer: _mMetalPartialSumsPerThreadgroupLane3In offset:0 atIndex:  4 ];
+    [ metal_encoder setBuffer: _mMetalStartPosWithinThreadgroupLane1   offset:0 atIndex:  5 ];
+    [ metal_encoder setBuffer: _mMetalStartPosWithinThreadgroupLane2   offset:0 atIndex:  6 ];
+    [ metal_encoder setBuffer: _mMetalStartPosWithinThreadgroupLane3   offset:0 atIndex:  7 ];
+    [ metal_encoder setBuffer: _mMetalConstRadixSortConstants          offset:0 atIndex:  8 ];
 
-    [ metal_encoder setBuffer: _mMetalConstRadixSortConstants        offset:0 atIndex:8 ];
-    [ metal_encoder dispatchThreadgroups:MTLSizeMake( _mNumThreadgroups, 1, 1)
-                   threadsPerThreadgroup:MTLSizeMake(              1024, 1, 1) ];
+    [ metal_encoder setThreadgroupMemoryLength: sizeof(unsigned short) * _mNumThreadsPerThreadgroup atIndex:0 ]; // lane_counts_lane0
+    [ metal_encoder setThreadgroupMemoryLength: sizeof(unsigned short) * _mNumThreadsPerThreadgroup atIndex:1 ]; // lane_counts_lane1
+    [ metal_encoder setThreadgroupMemoryLength: sizeof(unsigned short) * _mNumThreadsPerThreadgroup atIndex:2 ]; // lane_counts_lane2
+    [ metal_encoder setThreadgroupMemoryLength: sizeof(unsigned short) * _mNumThreadsPerThreadgroup atIndex:3 ]; // lane_counts_lane3
+    [ metal_encoder setThreadgroupMemoryLength: sizeof(int)            * _mNumThreadsPerThreadgroup atIndex:4 ]; // target_array
+
+    [ metal_encoder dispatchThreadgroups:MTLSizeMake( _mNumThreadgroups,          1, 1)
+                   threadsPerThreadgroup:MTLSizeMake( _mNumThreadsPerThreadgroup, 1, 1) ];
 
     [ metal_encoder memoryBarrierWithScope:MTLBarrierScopeBuffers ];
 
-    [ self encodeMetalPrefixSumForEncoder:metal_encoder Buffer:_mMetalPartialSumsPerThreadgroupLane0 ];
-    [ self encodeMetalPrefixSumForEncoder:metal_encoder Buffer:_mMetalPartialSumsPerThreadgroupLane1 ];
-    [ self encodeMetalPrefixSumForEncoder:metal_encoder Buffer:_mMetalPartialSumsPerThreadgroupLane2 ];
-    [ self encodeMetalPrefixSumForEncoder:metal_encoder Buffer:_mMetalPartialSumsPerThreadgroupLane3 ];
+    [ self encodeMetalPrefixSumForEncoder:metal_encoder InBuffer:_mMetalPartialSumsPerThreadgroupLane0In OutBuffer:_mMetalPartialSumsPerThreadgroupLane0Out ];
+    [ self encodeMetalPrefixSumForEncoder:metal_encoder InBuffer:_mMetalPartialSumsPerThreadgroupLane1In OutBuffer:_mMetalPartialSumsPerThreadgroupLane1Out ];
+    [ self encodeMetalPrefixSumForEncoder:metal_encoder InBuffer:_mMetalPartialSumsPerThreadgroupLane2In OutBuffer:_mMetalPartialSumsPerThreadgroupLane2Out ];
+    [ self encodeMetalPrefixSumForEncoder:metal_encoder InBuffer:_mMetalPartialSumsPerThreadgroupLane3In OutBuffer:_mMetalPartialSumsPerThreadgroupLane3Out ];
 
     [ metal_encoder memoryBarrierWithScope:MTLBarrierScopeBuffers ];
 
     if ( _mCoalescedWrite  ) {
         [ metal_encoder setComputePipelineState: _mPSO_coalesced_block_mapping_for_the_n_chunk_input ];
+        [ metal_encoder setThreadgroupMemoryLength: sizeof(int) * _mNumThreadsPerThreadgroup atIndex:0 ]; // copy_src_array
     }
     else {
         [ metal_encoder setComputePipelineState: _mPSO_uncoalesced_block_mapping_for_the_n_chunk_input ];
@@ -678,18 +858,18 @@ class PrefixSumLayerParams {
         [ metal_encoder setBuffer: _mMetalArray1 offset:0 atIndex:0 ];
         [ metal_encoder setBuffer: _mMetalArray2 offset:0 atIndex:1 ];
     }
-    [ metal_encoder setBuffer: _mMetalPartialSumsPerThreadgroupLane0 offset:0 atIndex:2 ];
-    [ metal_encoder setBuffer: _mMetalPartialSumsPerThreadgroupLane1 offset:0 atIndex:3 ];
-    [ metal_encoder setBuffer: _mMetalPartialSumsPerThreadgroupLane2 offset:0 atIndex:4 ];
-    [ metal_encoder setBuffer: _mMetalPartialSumsPerThreadgroupLane3 offset:0 atIndex:5 ];
-    [ metal_encoder setBuffer: _mMetalStartPosWithinThreadgroupLane1 offset:0 atIndex:6 ];
-    [ metal_encoder setBuffer: _mMetalStartPosWithinThreadgroupLane2 offset:0 atIndex:7 ];
-    [ metal_encoder setBuffer: _mMetalStartPosWithinThreadgroupLane3 offset:0 atIndex:8 ];
+    [ metal_encoder setBuffer: _mMetalPartialSumsPerThreadgroupLane0Out offset:0 atIndex:2 ];
+    [ metal_encoder setBuffer: _mMetalPartialSumsPerThreadgroupLane1Out offset:0 atIndex:3 ];
+    [ metal_encoder setBuffer: _mMetalPartialSumsPerThreadgroupLane2Out offset:0 atIndex:4 ];
+    [ metal_encoder setBuffer: _mMetalPartialSumsPerThreadgroupLane3Out offset:0 atIndex:5 ];
+    [ metal_encoder setBuffer: _mMetalStartPosWithinThreadgroupLane1    offset:0 atIndex:6 ];
+    [ metal_encoder setBuffer: _mMetalStartPosWithinThreadgroupLane2    offset:0 atIndex:7 ];
+    [ metal_encoder setBuffer: _mMetalStartPosWithinThreadgroupLane3    offset:0 atIndex:8 ];
 
     [ metal_encoder setBuffer: _mMetalConstRadixSortConstants        offset:0 atIndex:9 ];
 
-    [ metal_encoder dispatchThreadgroups:MTLSizeMake( _mNumThreadgroups, 1, 1)
-                   threadsPerThreadgroup:MTLSizeMake(              1024, 1, 1) ];
+    [ metal_encoder dispatchThreadgroups:MTLSizeMake( _mNumThreadgroups,          1, 1)
+                   threadsPerThreadgroup:MTLSizeMake( _mNumThreadsPerThreadgroup, 1, 1) ];
 
     [ metal_encoder endEncoding ];
 
@@ -714,12 +894,11 @@ class PrefixSumLayerParams {
 
                 if ( [ self isArraySorted ] ) {
 
-                    _mResultOn1 = ! _mResultOn1;
-
                     // early out
                     NSLog(@"Early out at %d.", i );
 
                     // NOTE: comment out 'return' for time measurements.
+                    // _mResultOn1 = ! _mResultOn1;
                     //return;
                 }
             }
@@ -820,9 +999,11 @@ class PrefixSumLayerParams {
 
     assert( metal_encoder != nil );
 
-    [ metal_encoder setComputePipelineState: _mPSO_four_way_prefix_sum_with_inblock_shuffle ];
-
     for ( int i = 0; i < 16; i++ ) {
+
+        _mResultOn1 = ( (i%2) == 0 ) ? false : true;
+
+        [ metal_encoder setComputePipelineState: _mPSO_four_way_prefix_sum_with_inblock_shuffle ];
 
         if ( _mResultOn1 ) {
             [ metal_encoder setBuffer: _mMetalArray2 offset:0 atIndex:0 ];
@@ -831,13 +1012,13 @@ class PrefixSumLayerParams {
             [ metal_encoder setBuffer: _mMetalArray1 offset:0 atIndex:0 ];
         }
 
-        [ metal_encoder setBuffer: _mMetalPartialSumsPerThreadgroupLane0 offset:0 atIndex:1 ];
-        [ metal_encoder setBuffer: _mMetalPartialSumsPerThreadgroupLane1 offset:0 atIndex:2 ];
-        [ metal_encoder setBuffer: _mMetalPartialSumsPerThreadgroupLane2 offset:0 atIndex:3 ];
-        [ metal_encoder setBuffer: _mMetalPartialSumsPerThreadgroupLane3 offset:0 atIndex:4 ];
-        [ metal_encoder setBuffer: _mMetalStartPosWithinThreadgroupLane1 offset:0 atIndex:5 ];
-        [ metal_encoder setBuffer: _mMetalStartPosWithinThreadgroupLane2 offset:0 atIndex:6 ];
-        [ metal_encoder setBuffer: _mMetalStartPosWithinThreadgroupLane3 offset:0 atIndex:7 ];
+        [ metal_encoder setBuffer: _mMetalPartialSumsPerThreadgroupLane0In offset:0 atIndex:1 ];
+        [ metal_encoder setBuffer: _mMetalPartialSumsPerThreadgroupLane1In offset:0 atIndex:2 ];
+        [ metal_encoder setBuffer: _mMetalPartialSumsPerThreadgroupLane2In offset:0 atIndex:3 ];
+        [ metal_encoder setBuffer: _mMetalPartialSumsPerThreadgroupLane3In offset:0 atIndex:4 ];
+        [ metal_encoder setBuffer: _mMetalStartPosWithinThreadgroupLane1   offset:0 atIndex:5 ];
+        [ metal_encoder setBuffer: _mMetalStartPosWithinThreadgroupLane2   offset:0 atIndex:6 ];
+        [ metal_encoder setBuffer: _mMetalStartPosWithinThreadgroupLane3   offset:0 atIndex:7 ];
 
         switch (i) {
 
@@ -906,20 +1087,28 @@ class PrefixSumLayerParams {
             [ metal_encoder setBuffer: _mMetalConstRadixSortConstants_16        offset:0 atIndex:8 ];
             break;
         }
-        [ metal_encoder dispatchThreadgroups:MTLSizeMake( _mNumThreadgroups, 1, 1)
-                       threadsPerThreadgroup:MTLSizeMake(              1024, 1, 1) ];
+
+        [ metal_encoder setThreadgroupMemoryLength: sizeof(unsigned short) * _mNumThreadsPerThreadgroup atIndex:0 ]; // lane_counts_lane0
+        [ metal_encoder setThreadgroupMemoryLength: sizeof(unsigned short) * _mNumThreadsPerThreadgroup atIndex:1 ]; // lane_counts_lane1
+        [ metal_encoder setThreadgroupMemoryLength: sizeof(unsigned short) * _mNumThreadsPerThreadgroup atIndex:2 ]; // lane_counts_lane2
+        [ metal_encoder setThreadgroupMemoryLength: sizeof(unsigned short) * _mNumThreadsPerThreadgroup atIndex:3 ]; // lane_counts_lane3
+        [ metal_encoder setThreadgroupMemoryLength: sizeof(int)            * _mNumThreadsPerThreadgroup atIndex:4 ]; // target_array
+
+        [ metal_encoder dispatchThreadgroups:MTLSizeMake( _mNumThreadgroups,          1, 1)
+                       threadsPerThreadgroup:MTLSizeMake( _mNumThreadsPerThreadgroup, 1, 1) ];
 
         [ metal_encoder memoryBarrierWithScope:MTLBarrierScopeBuffers ];
 
-        [ self encodeMetalPrefixSumForEncoder:metal_encoder Buffer:_mMetalPartialSumsPerThreadgroupLane0 ];
-        [ self encodeMetalPrefixSumForEncoder:metal_encoder Buffer:_mMetalPartialSumsPerThreadgroupLane1 ];
-        [ self encodeMetalPrefixSumForEncoder:metal_encoder Buffer:_mMetalPartialSumsPerThreadgroupLane2 ];
-        [ self encodeMetalPrefixSumForEncoder:metal_encoder Buffer:_mMetalPartialSumsPerThreadgroupLane3 ];
+        [ self encodeMetalPrefixSumForEncoder:metal_encoder InBuffer:_mMetalPartialSumsPerThreadgroupLane0In OutBuffer:_mMetalPartialSumsPerThreadgroupLane0Out ];
+        [ self encodeMetalPrefixSumForEncoder:metal_encoder InBuffer:_mMetalPartialSumsPerThreadgroupLane1In OutBuffer:_mMetalPartialSumsPerThreadgroupLane1Out ];
+        [ self encodeMetalPrefixSumForEncoder:metal_encoder InBuffer:_mMetalPartialSumsPerThreadgroupLane2In OutBuffer:_mMetalPartialSumsPerThreadgroupLane2Out ];
+        [ self encodeMetalPrefixSumForEncoder:metal_encoder InBuffer:_mMetalPartialSumsPerThreadgroupLane3In OutBuffer:_mMetalPartialSumsPerThreadgroupLane3Out ];
 
         [ metal_encoder memoryBarrierWithScope:MTLBarrierScopeBuffers ];
 
         if ( _mCoalescedWrite  ) {
             [ metal_encoder setComputePipelineState: _mPSO_coalesced_block_mapping_for_the_n_chunk_input ];
+            [ metal_encoder setThreadgroupMemoryLength: sizeof(int) * _mNumThreadsPerThreadgroup atIndex:0 ]; // copy_src_array
         }
         else {
             [ metal_encoder setComputePipelineState: _mPSO_uncoalesced_block_mapping_for_the_n_chunk_input ];
@@ -932,13 +1121,13 @@ class PrefixSumLayerParams {
             [ metal_encoder setBuffer: _mMetalArray1 offset:0 atIndex:0 ];
             [ metal_encoder setBuffer: _mMetalArray2 offset:0 atIndex:1 ];
         }
-        [ metal_encoder setBuffer: _mMetalPartialSumsPerThreadgroupLane0 offset:0 atIndex:2 ];
-        [ metal_encoder setBuffer: _mMetalPartialSumsPerThreadgroupLane1 offset:0 atIndex:3 ];
-        [ metal_encoder setBuffer: _mMetalPartialSumsPerThreadgroupLane2 offset:0 atIndex:4 ];
-        [ metal_encoder setBuffer: _mMetalPartialSumsPerThreadgroupLane3 offset:0 atIndex:5 ];
-        [ metal_encoder setBuffer: _mMetalStartPosWithinThreadgroupLane1 offset:0 atIndex:6 ];
-        [ metal_encoder setBuffer: _mMetalStartPosWithinThreadgroupLane2 offset:0 atIndex:7 ];
-        [ metal_encoder setBuffer: _mMetalStartPosWithinThreadgroupLane3 offset:0 atIndex:8 ];
+        [ metal_encoder setBuffer: _mMetalPartialSumsPerThreadgroupLane0Out offset:0 atIndex:2 ];
+        [ metal_encoder setBuffer: _mMetalPartialSumsPerThreadgroupLane1Out offset:0 atIndex:3 ];
+        [ metal_encoder setBuffer: _mMetalPartialSumsPerThreadgroupLane2Out offset:0 atIndex:4 ];
+        [ metal_encoder setBuffer: _mMetalPartialSumsPerThreadgroupLane3Out offset:0 atIndex:5 ];
+        [ metal_encoder setBuffer: _mMetalStartPosWithinThreadgroupLane1    offset:0 atIndex:6 ];
+        [ metal_encoder setBuffer: _mMetalStartPosWithinThreadgroupLane2    offset:0 atIndex:7 ];
+        [ metal_encoder setBuffer: _mMetalStartPosWithinThreadgroupLane3    offset:0 atIndex:8 ];
 
         switch (i) {
 
@@ -1008,11 +1197,11 @@ class PrefixSumLayerParams {
             break;
         }
 
-        [ metal_encoder dispatchThreadgroups:MTLSizeMake( _mNumThreadgroups, 1, 1)
-                       threadsPerThreadgroup:MTLSizeMake(              1024, 1, 1) ];
-
+        [ metal_encoder dispatchThreadgroups:MTLSizeMake( _mNumThreadgroups,          1, 1)
+                       threadsPerThreadgroup:MTLSizeMake( _mNumThreadsPerThreadgroup, 1, 1) ];
 
         [ metal_encoder memoryBarrierWithScope:MTLBarrierScopeBuffers ];
+
     }
 
     [ metal_encoder endEncoding ];

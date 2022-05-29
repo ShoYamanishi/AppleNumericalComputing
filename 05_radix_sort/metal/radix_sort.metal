@@ -62,28 +62,41 @@ static inline void make_prefix_sum_simdgroup_wise_4lanes(
 }
 
 
-static inline void make_prefix_sum_threadgrouop_wise_4lanes(
+static inline void make_prefix_sum_threadgroup_wise_4lanes(
 
-    threadgroup unsigned short  lane_counts[ 4 ][ 1024 ],
+    threadgroup unsigned short*  simdgroup_sums0,
+    threadgroup unsigned short*  simdgroup_sums1,
+    threadgroup unsigned short*  simdgroup_sums2,
+    threadgroup unsigned short*  simdgroup_sums3,
 
-    // scratch memory for this function.
-    threadgroup unsigned short simdgroup_sums0[ 32 ],
-    threadgroup unsigned short simdgroup_sums1[ 32 ],
-    threadgroup unsigned short simdgroup_sums2[ 32 ],
-    threadgroup unsigned short simdgroup_sums3[ 32 ],
+    threadgroup unsigned short*  lane_counts_lane0,
+    threadgroup unsigned short*  lane_counts_lane1,
+    threadgroup unsigned short*  lane_counts_lane2,
+    threadgroup unsigned short*  lane_counts_lane3,
 
-    const       uint thread_position_in_threadgroup,
-    const       uint thread_index_in_simdgroup,
-    const       uint simdgroup_index_in_threadgroup
-
+    const       uint             thread_position_in_threadgroup,
+    const       uint             thread_index_in_simdgroup,
+    const       uint             simdgroup_index_in_threadgroup,
+    const       uint             simdgroups_per_threadgroup
 ) {
 
-    // within-simggroup prefix sum
+    // Reset all the 32 elements in case threads_per_threadgroup < 1024.
+    if ( simdgroup_index_in_threadgroup == 0 ) {
 
-    thread unsigned short local_sum0 = lane_counts[0][ thread_position_in_threadgroup ];
-    thread unsigned short local_sum1 = lane_counts[1][ thread_position_in_threadgroup ];
-    thread unsigned short local_sum2 = lane_counts[2][ thread_position_in_threadgroup ];
-    thread unsigned short local_sum3 = lane_counts[3][ thread_position_in_threadgroup ];
+        simdgroup_sums0[ thread_index_in_simdgroup ] = 0;
+        simdgroup_sums1[ thread_index_in_simdgroup ] = 0;
+        simdgroup_sums2[ thread_index_in_simdgroup ] = 0;
+        simdgroup_sums3[ thread_index_in_simdgroup ] = 0;
+    }
+
+    threadgroup_barrier( mem_flags::mem_threadgroup );
+
+    // within-simdgroup prefix sum
+
+    thread unsigned short local_sum0 = lane_counts_lane0[ thread_position_in_threadgroup ];
+    thread unsigned short local_sum1 = lane_counts_lane1[ thread_position_in_threadgroup ];
+    thread unsigned short local_sum2 = lane_counts_lane2[ thread_position_in_threadgroup ];
+    thread unsigned short local_sum3 = lane_counts_lane3[ thread_position_in_threadgroup ];
 
     make_prefix_sum_simdgroup_wise_4lanes( local_sum0,  local_sum1,  local_sum2,  local_sum3, thread_index_in_simdgroup );
 
@@ -102,7 +115,7 @@ static inline void make_prefix_sum_threadgrouop_wise_4lanes(
             simdgroup_sums2[ simdgroup_index_in_threadgroup ] = 0;
             simdgroup_sums3[ simdgroup_index_in_threadgroup ] = 0;
         }
-        if ( simdgroup_index_in_threadgroup < 31 ) {
+        if ( simdgroup_index_in_threadgroup < simdgroups_per_threadgroup - 1 ) {
 
             simdgroup_sums0[ simdgroup_index_in_threadgroup + 1 ] = local_sum0;
             simdgroup_sums1[ simdgroup_index_in_threadgroup + 1 ] = local_sum1;
@@ -115,7 +128,7 @@ static inline void make_prefix_sum_threadgrouop_wise_4lanes(
 
     if ( simdgroup_index_in_threadgroup == 0 ) {
 
-        // use the simdgroup zero to make prefix-sum of simgroups.
+        // use the simdgroup zero to make prefix-sum of simdgroups.
 
         thread unsigned short local_sum_sg0 = simdgroup_sums0[ thread_index_in_simdgroup ];
         thread unsigned short local_sum_sg1 = simdgroup_sums1[ thread_index_in_simdgroup ];
@@ -134,10 +147,10 @@ static inline void make_prefix_sum_threadgrouop_wise_4lanes(
 
     // threadgroup-wise per-thread prefix sum
 
-    lane_counts[ 0 ][ thread_position_in_threadgroup ] = local_sum0 + simdgroup_sums0[ simdgroup_index_in_threadgroup ];
-    lane_counts[ 1 ][ thread_position_in_threadgroup ] = local_sum1 + simdgroup_sums1[ simdgroup_index_in_threadgroup ];
-    lane_counts[ 2 ][ thread_position_in_threadgroup ] = local_sum2 + simdgroup_sums2[ simdgroup_index_in_threadgroup ];
-    lane_counts[ 3 ][ thread_position_in_threadgroup ] = local_sum3 + simdgroup_sums3[ simdgroup_index_in_threadgroup ];
+    lane_counts_lane0[ thread_position_in_threadgroup ] = local_sum0 + simdgroup_sums0[ simdgroup_index_in_threadgroup ];
+    lane_counts_lane1[ thread_position_in_threadgroup ] = local_sum1 + simdgroup_sums1[ simdgroup_index_in_threadgroup ];
+    lane_counts_lane2[ thread_position_in_threadgroup ] = local_sum2 + simdgroup_sums2[ simdgroup_index_in_threadgroup ];
+    lane_counts_lane3[ thread_position_in_threadgroup ] = local_sum3 + simdgroup_sums3[ simdgroup_index_in_threadgroup ];
 
     threadgroup_barrier( mem_flags::mem_threadgroup );
 }
@@ -153,57 +166,65 @@ static inline thread unsigned short calc_lane(thread const int v, const device s
 
 static inline void count_up_lane(
 
-    threadgroup unsigned short lane_counts[4][ 1024 ], 
+    threadgroup unsigned short* lane_counts_lane0, 
+    threadgroup unsigned short* lane_counts_lane1, 
+    threadgroup unsigned short* lane_counts_lane2, 
+    threadgroup unsigned short* lane_counts_lane3,
+    const       unsigned short  lane,
 
-    const       unsigned short lane,
-
-    const       uint           thread_position_in_threadgroup
+    const       uint            thread_position_in_threadgroup
 ) {
 
     switch( lane ) {
 
       case 0:
-        lane_counts[ 0 ][ thread_position_in_threadgroup ] = 1;
-        lane_counts[ 1 ][ thread_position_in_threadgroup ] = 0;
-        lane_counts[ 2 ][ thread_position_in_threadgroup ] = 0;
-        lane_counts[ 3 ][ thread_position_in_threadgroup ] = 0;
+        lane_counts_lane0[ thread_position_in_threadgroup ] = 1;
+        lane_counts_lane1[ thread_position_in_threadgroup ] = 0;
+        lane_counts_lane2[ thread_position_in_threadgroup ] = 0;
+        lane_counts_lane3[ thread_position_in_threadgroup ] = 0;
         break;
 
       case 1:
-        lane_counts[ 0 ][ thread_position_in_threadgroup ] = 0;
-        lane_counts[ 1 ][ thread_position_in_threadgroup ] = 1;
-        lane_counts[ 2 ][ thread_position_in_threadgroup ] = 0;
-        lane_counts[ 3 ][ thread_position_in_threadgroup ] = 0;
+        lane_counts_lane0[ thread_position_in_threadgroup ] = 0;
+        lane_counts_lane1[ thread_position_in_threadgroup ] = 1;
+        lane_counts_lane2[ thread_position_in_threadgroup ] = 0;
+        lane_counts_lane3[ thread_position_in_threadgroup ] = 0;
         break;
 
       case 2:
-        lane_counts[ 0 ][ thread_position_in_threadgroup ] = 0;
-        lane_counts[ 1 ][ thread_position_in_threadgroup ] = 0;
-        lane_counts[ 2 ][ thread_position_in_threadgroup ] = 1;
-        lane_counts[ 3 ][ thread_position_in_threadgroup ] = 0;
+        lane_counts_lane0[ thread_position_in_threadgroup ] = 0;
+        lane_counts_lane1[ thread_position_in_threadgroup ] = 0;
+        lane_counts_lane2[ thread_position_in_threadgroup ] = 1;
+        lane_counts_lane3[ thread_position_in_threadgroup ] = 0;
         break;
 
       case 3:
-        lane_counts[ 0 ][ thread_position_in_threadgroup ] = 0;
-        lane_counts[ 1 ][ thread_position_in_threadgroup ] = 0;
-        lane_counts[ 2 ][ thread_position_in_threadgroup ] = 0;
-        lane_counts[ 3 ][ thread_position_in_threadgroup ] = 1;
+        lane_counts_lane0[ thread_position_in_threadgroup ] = 0;
+        lane_counts_lane1[ thread_position_in_threadgroup ] = 0;
+        lane_counts_lane2[ thread_position_in_threadgroup ] = 0;
+        lane_counts_lane3[ thread_position_in_threadgroup ] = 1;
         break;
 
       default:
-        lane_counts[ 0 ][ thread_position_in_threadgroup ] = 0;
-        lane_counts[ 1 ][ thread_position_in_threadgroup ] = 0;
-        lane_counts[ 2 ][ thread_position_in_threadgroup ] = 0;
-        lane_counts[ 3 ][ thread_position_in_threadgroup ] = 0;
+        lane_counts_lane0[ thread_position_in_threadgroup ] = 0;
+        lane_counts_lane1[ thread_position_in_threadgroup ] = 0;
+        lane_counts_lane2[ thread_position_in_threadgroup ] = 0;
+        lane_counts_lane3[ thread_position_in_threadgroup ] = 0;
+        break;
     }
 }
 
 
 static inline thread unsigned short get_base_pos_of_lane_in_sorted_array(
 
-    const threadgroup unsigned short lane_counts[4][ 1024 ],
+    const threadgroup unsigned short* lane_counts_lane0,
+    const threadgroup unsigned short* lane_counts_lane1,
+    const threadgroup unsigned short* lane_counts_lane2,
+    const threadgroup unsigned short* lane_counts_lane3,
 
-    const thread      unsigned short lane
+    const thread      unsigned short  lane,
+
+    const             uint            threads_per_threadgroup
 ) {
     unsigned short base;
 
@@ -214,15 +235,15 @@ static inline thread unsigned short get_base_pos_of_lane_in_sorted_array(
         break;
 
       case 1:
-        base = lane_counts[0][1023];
+        base = lane_counts_lane0[ threads_per_threadgroup - 1 ];
         break;
 
       case 2:
-        base = lane_counts[0][1023] + lane_counts[1][1023];
+        base = lane_counts_lane0[ threads_per_threadgroup - 1 ] + lane_counts_lane1[ threads_per_threadgroup - 1 ];
         break;
 
       case 3:
-        base = lane_counts[0][1023] + lane_counts[1][1023] + lane_counts[2][1023];
+        base = lane_counts_lane0[ threads_per_threadgroup - 1 ] + lane_counts_lane1[ threads_per_threadgroup - 1 ] + lane_counts_lane2[ threads_per_threadgroup - 1 ];
         break;
 
       default:
@@ -235,35 +256,74 @@ static inline thread unsigned short get_base_pos_of_lane_in_sorted_array(
 
 static inline thread unsigned short get_prefix_sum_for_this_thread(
 
-    const threadgroup unsigned short lane_counts[4][ 1024 ],
+    const threadgroup unsigned short* lane_counts_lane0,
+    const threadgroup unsigned short* lane_counts_lane1,
+    const threadgroup unsigned short* lane_counts_lane2,
+    const threadgroup unsigned short* lane_counts_lane3,
 
-    const thread      unsigned short lane,
+    const thread      unsigned short  lane,
 
-    const             uint     thread_position_in_threadgroup
+    const             uint            thread_position_in_threadgroup
 ) {
-    return   ( thread_position_in_threadgroup > 0 )
-           ? ( lane_counts[ lane ][ thread_position_in_threadgroup ] - 1 )
-           : 0
-           ;
+    switch (lane) {
+
+      case 0:
+        return   ( thread_position_in_threadgroup > 0 )
+               ? ( lane_counts_lane0[ thread_position_in_threadgroup ] - 1 )
+               : 0
+               ;
+        break;
+
+      case 1:
+        return   ( thread_position_in_threadgroup > 0 )
+               ? ( lane_counts_lane1[ thread_position_in_threadgroup ] - 1 )
+               : 0
+               ;
+        break;
+
+      case 2:
+        return   ( thread_position_in_threadgroup > 0 )
+               ? ( lane_counts_lane2[ thread_position_in_threadgroup ] - 1 )
+               : 0
+               ;
+        break;
+
+      case 3:
+        return   ( thread_position_in_threadgroup > 0 )
+               ? ( lane_counts_lane3[ thread_position_in_threadgroup ] - 1 )
+               : 0
+               ;
+        break;
+
+      default:
+        return 0;
+    }
 }
 
 
 // algorithm 2 of Ha Krüger, Silva 2009
 kernel void four_way_prefix_sum_with_inblock_shuffle(
 
-    device       int*            target_array                               [[ buffer(0) ]], // after the call target_array will be locally sorted per threadgroup.
+    device       int*            target_array                               [[ buffer( 0) ]], // after the call target_array will be locally sorted per threadgroup.
 
-    device       int*            partial_sums_per_threadgroup_lane0         [[ buffer(1) ]],
-    device       int*            partial_sums_per_threadgroup_lane1         [[ buffer(2) ]],
-    device       int*            partial_sums_per_threadgroup_lane2         [[ buffer(3) ]],
-    device       int*            partial_sums_per_threadgroup_lane3         [[ buffer(4) ]],
+    device       int*            partial_sums_per_threadgroup_lane0         [[ buffer( 1) ]],
+    device       int*            partial_sums_per_threadgroup_lane1         [[ buffer( 2) ]],
+    device       int*            partial_sums_per_threadgroup_lane2         [[ buffer( 3) ]],
+    device       int*            partial_sums_per_threadgroup_lane3         [[ buffer( 4) ]],
 
-    device       unsigned short* start_pos_within_threadgroups_lane1        [[ buffer(5) ]],
-    device       unsigned short* start_pos_within_threadgroups_lane2        [[ buffer(6) ]],
-    device       unsigned short* start_pos_within_threadgroups_lane3        [[ buffer(7) ]],
-                                                                    
+    device       unsigned short* start_pos_within_threadgroups_lane1        [[ buffer( 5) ]],
+    device       unsigned short* start_pos_within_threadgroups_lane2        [[ buffer( 6) ]],
+    device       unsigned short* start_pos_within_threadgroups_lane3        [[ buffer( 7) ]],
+
     device const struct radix_sort_constants& 
-                                 constants                                  [[ buffer(8) ]],
+                                 constants                                  [[ buffer( 8) ]],
+
+    threadgroup  unsigned short* lane_counts_lane0                          [[ threadgroup(0) ]], // prefix-sum of occurrence counts per lane for this threadgroup is calculated.
+    threadgroup  unsigned short* lane_counts_lane1                          [[ threadgroup(1) ]],
+    threadgroup  unsigned short* lane_counts_lane2                          [[ threadgroup(2) ]],
+    threadgroup  unsigned short* lane_counts_lane3                          [[ threadgroup(3) ]],
+    
+    threadgroup  int*            values_sorted                              [[ threadgroup(4) ]], // used to make the write-back to target_array coalesced.
 
     const        uint            thread_position_in_grid                    [[ thread_position_in_grid ]],
 
@@ -275,53 +335,51 @@ kernel void four_way_prefix_sum_with_inblock_shuffle(
 
     const        uint            thread_index_in_simdgroup                  [[ thread_index_in_simdgroup ]],
 
-    const        uint            simdgroup_index_in_threadgroup             [[ simdgroup_index_in_threadgroup ]]
+    const        uint            simdgroup_index_in_threadgroup             [[ simdgroup_index_in_threadgroup ]],
 
+    const        uint            threads_per_threadgroup                    [[ threads_per_threadgroup ]],
+
+    const        uint            simdgroups_per_threadgroup                 [[ simdgroups_per_threadgroup ]],
+
+    const        uint            thread_execution_width                     [[ thread_execution_width ]]
 ) {
-    // prefix-sum of occurrence counts per lane for this threadgroup is calculated.
-    threadgroup unsigned short lane_counts[4][ 1024 ];
 
-    // used to make the write-back to target_array coalesced.
-    threadgroup int values_sorted[ 1024 ]; 
-
-    // scratch memory for make_prefix_sum_threadgrouop_wise_4lanes
+    // scratch memory for make_prefix_sum_threadgroup_wise_4lanes
     threadgroup unsigned short simdgroup_sums0[ 32 ];
     threadgroup unsigned short simdgroup_sums1[ 32 ];
     threadgroup unsigned short simdgroup_sums2[ 32 ];
     threadgroup unsigned short simdgroup_sums3[ 32 ];
 
-    lane_counts[0][ thread_position_in_threadgroup ] = 0;
-    lane_counts[1][ thread_position_in_threadgroup ] = 0;
-    lane_counts[2][ thread_position_in_threadgroup ] = 0;
-    lane_counts[3][ thread_position_in_threadgroup ] = 0;
+    // The SIMD group size must be 32.
+    if ( thread_execution_width != 32 ) {
+        return;
+    }
 
     thread const bool is_valid_element = thread_position_in_grid < constants.total_num_elements;
 
     thread const int lane =   is_valid_element
                             ? calc_lane( target_array[ thread_position_in_grid ],  constants )
-                            : -1
+                            : 0xFF
                             ;
 
     threadgroup_barrier( mem_flags::mem_threadgroup );
 
-    count_up_lane( lane_counts, lane, thread_position_in_threadgroup );
+    count_up_lane( lane_counts_lane0, lane_counts_lane1, lane_counts_lane2, lane_counts_lane3, (unsigned short)lane, thread_position_in_threadgroup );
 
     threadgroup_barrier( mem_flags::mem_threadgroup );
 
-    make_prefix_sum_threadgrouop_wise_4lanes(
+    make_prefix_sum_threadgroup_wise_4lanes(
 
-        lane_counts, 
-
-        simdgroup_sums0, simdgroup_sums1, simdgroup_sums2, simdgroup_sums3,
-
-        thread_position_in_threadgroup, thread_index_in_simdgroup, simdgroup_index_in_threadgroup
+        simdgroup_sums0,   simdgroup_sums1,   simdgroup_sums2,   simdgroup_sums3,
+        lane_counts_lane0, lane_counts_lane1, lane_counts_lane2, lane_counts_lane3, 
+        thread_position_in_threadgroup, thread_index_in_simdgroup, simdgroup_index_in_threadgroup, simdgroups_per_threadgroup
     );
 
     if ( is_valid_element ) {
 
-        unsigned short dist_base   = get_base_pos_of_lane_in_sorted_array( lane_counts, lane ); 
+        unsigned short dist_base   = get_base_pos_of_lane_in_sorted_array( lane_counts_lane0, lane_counts_lane1, lane_counts_lane2, lane_counts_lane3, lane, threads_per_threadgroup ); 
 
-        unsigned short dist_offset = get_prefix_sum_for_this_thread( lane_counts, lane, thread_position_in_threadgroup  );
+        unsigned short dist_offset = get_prefix_sum_for_this_thread( lane_counts_lane0, lane_counts_lane1, lane_counts_lane2, lane_counts_lane3, lane, thread_position_in_threadgroup  );
 
         values_sorted [ dist_base + dist_offset ] = target_array[ thread_position_in_grid ];
     }
@@ -336,10 +394,10 @@ kernel void four_way_prefix_sum_with_inblock_shuffle(
 
     if( thread_position_in_threadgroup == 0 ) {
 
-        const unsigned short sum_lane0 = lane_counts[0][ 1023 ];
-        const unsigned short sum_lane1 = lane_counts[1][ 1023 ];
-        const unsigned short sum_lane2 = lane_counts[2][ 1023 ];
-        const unsigned short sum_lane3 = lane_counts[3][ 1023 ];
+        const unsigned short sum_lane0 = lane_counts_lane0[ threads_per_threadgroup - 1 ];
+        const unsigned short sum_lane1 = lane_counts_lane1[ threads_per_threadgroup - 1 ];
+        const unsigned short sum_lane2 = lane_counts_lane2[ threads_per_threadgroup - 1 ];
+        const unsigned short sum_lane3 = lane_counts_lane3[ threads_per_threadgroup - 1 ];
 
         start_pos_within_threadgroups_lane1[threadgroup_position_in_grid ] = sum_lane0;                         // start pos of lane 1
         start_pos_within_threadgroups_lane2[threadgroup_position_in_grid ] = sum_lane0 + sum_lane1;             // start pos of lane 2
@@ -373,18 +431,24 @@ kernel void coalesced_block_mapping_for_the_n_chunk_input(
     device const struct radix_sort_constants& 
                                  constants                                  [[ buffer(9) ]],
 
+    // used to make the write-back to target_array coalesced.
+    threadgroup  int*            copy_src_array                             [[ threadgroup(0) ]],
+
     const        uint            thread_position_in_threadgroup             [[ thread_position_in_threadgroup ]],
 
     const        uint            thread_position_in_grid                    [[ thread_position_in_grid ]],
 
     const        uint            threadgroup_position_in_grid               [[ threadgroup_position_in_grid ]],
 
-    const        uint            threadgroups_per_grid                      [[ threadgroups_per_grid ]]
+    const        uint            threadgroups_per_grid                      [[ threadgroups_per_grid ]],
 
+    const        uint            threads_per_threadgroup                    [[ threads_per_threadgroup ]],
+
+    const        uint            simdgroups_per_threadgroup                 [[ simdgroups_per_threadgroup ]],
+
+    const        uint            thread_execution_width                     [[ thread_execution_width ]]
 ) {
 
-    // used to make the write-back to target_array coalesced.
-    threadgroup int copy_src_array[1024];
 
     threadgroup uint           lane_start_dst[4];
     threadgroup unsigned short lane_start_src_in_threadgroup[5]; // 5th element is sentinel.
@@ -412,7 +476,7 @@ kernel void coalesced_block_mapping_for_the_n_chunk_input(
         lane_start_src_in_threadgroup[1] = start_pos_within_threadgroups_lane1[ threadgroup_position_in_grid ];
         lane_start_src_in_threadgroup[2] = start_pos_within_threadgroups_lane2[ threadgroup_position_in_grid ];
         lane_start_src_in_threadgroup[3] = start_pos_within_threadgroups_lane3[ threadgroup_position_in_grid ];
-        lane_start_src_in_threadgroup[4] = 1024; // sentinel
+        lane_start_src_in_threadgroup[4] = threads_per_threadgroup; // sentinel
     }
 
     if ( thread_position_in_grid < constants.total_num_elements ) {
@@ -436,11 +500,11 @@ kernel void coalesced_block_mapping_for_the_n_chunk_input(
             const int _lane_start_dst = lane2_start_dst - lane_start_dst[lane] - 1;
 
             const int simd_group_align_offset = _lane_start_dst % 32;
-            const int index_src = ( thread_position_in_threadgroup + simd_group_align_offset ) % 1024;
+            const int index_src = ( thread_position_in_threadgroup + simd_group_align_offset ) % threads_per_threadgroup;
 
             const bool valid_src =    ( threadgroup_position_in_grid < (threadgroups_per_grid - 1)  )
-                                   || ( index_src < (int)(constants.total_num_elements % 1024) )
-                                   || ( (constants.total_num_elements % 1024) == 0 )
+                                   || ( index_src < (int)(constants.total_num_elements % threads_per_threadgroup) )
+                                   || ( (constants.total_num_elements % threads_per_threadgroup) == 0 )
                                ;
             if ( valid_src ) {
 
@@ -477,12 +541,12 @@ kernel void coalesced_block_mapping_for_the_n_chunk_input(
 
             const int index_src =   (index_src_candidate >=0) 
                                   ? index_src_candidate 
-                                  : index_src_candidate + 1024
+                                  : index_src_candidate + threads_per_threadgroup
                                   ;
 
             const bool valid_src =    ( threadgroup_position_in_grid < (threadgroups_per_grid - 1)  )
-                                   || ( index_src < (int)(constants.total_num_elements % 1024) )
-                                   || ( (constants.total_num_elements % 1024) == 0 )
+                                   || ( index_src < (int)(constants.total_num_elements % threads_per_threadgroup) )
+                                   || ( (constants.total_num_elements % threads_per_threadgroup) == 0 )
                                    ;
             if ( valid_src ) {
 
@@ -517,12 +581,12 @@ kernel void coalesced_block_mapping_for_the_n_chunk_input(
 
         const int index_src =   (index_src_candidate >=0) 
                               ? index_src_candidate 
-                              : index_src_candidate + 1024
+                              : index_src_candidate + threads_per_threadgroup
                               ;
 
         const bool valid_src =    ( threadgroup_position_in_grid < (threadgroups_per_grid - 1)  )
-                               || ( index_src < (int)(constants.total_num_elements % 1024) )
-                               || ( (constants.total_num_elements % 1024) == 0 )
+                               || ( index_src < (int)(constants.total_num_elements % threads_per_threadgroup) )
+                               || ( (constants.total_num_elements % threads_per_threadgroup) == 0 )
                                ;
 
         if ( valid_src ) {
@@ -547,6 +611,7 @@ kernel void coalesced_block_mapping_for_the_n_chunk_input(
         }
     }
 }
+
 
 kernel void uncoalesced_block_mapping_for_the_n_chunk_input(
 
@@ -577,7 +642,7 @@ kernel void uncoalesced_block_mapping_for_the_n_chunk_input(
 ) {
 
     threadgroup uint           lane_start_dst[4];
-    threadgroup unsigned short lane_start_src_in_threadgroup[5]; // 5th element is sentinel.
+    threadgroup unsigned short lane_start_src_in_threadgroup[4];
 
     if ( thread_position_in_threadgroup == 0 ) {
 
@@ -602,7 +667,6 @@ kernel void uncoalesced_block_mapping_for_the_n_chunk_input(
         lane_start_src_in_threadgroup[1] = start_pos_within_threadgroups_lane1[ threadgroup_position_in_grid ];
         lane_start_src_in_threadgroup[2] = start_pos_within_threadgroups_lane2[ threadgroup_position_in_grid ];
         lane_start_src_in_threadgroup[3] = start_pos_within_threadgroups_lane3[ threadgroup_position_in_grid ];
-        lane_start_src_in_threadgroup[4] = 1024; // sentinel
     }
 
     threadgroup_barrier( mem_flags::mem_threadgroup );
@@ -621,10 +685,10 @@ kernel void uncoalesced_block_mapping_for_the_n_chunk_input(
 
             const int _lane_start_dst = lane2_start_dst - lane_start_dst[lane] - 1;
 
-            target_array[ _lane_start_dst - src_offset ] = src_array_sorted_within_threadgroups[ thread_position_in_grid ];
+            target_array[ _lane_start_dst - src_offset ] = val;
         }
         else {
-            target_array[ lane_start_dst[lane] + src_offset ] = src_array_sorted_within_threadgroups[ thread_position_in_grid ];
+            target_array[ lane_start_dst[lane] + src_offset ] = val;
         }
     }
 

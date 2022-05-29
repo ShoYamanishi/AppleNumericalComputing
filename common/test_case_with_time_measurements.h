@@ -805,7 +805,7 @@ class TestCaseWithTimeMeasurements {
         os << "\t";
         switch ( m_configuration.verificationType() ) {
           case TRUE_FALSE:
-            os << (m_verification_true_false?"TRUE":"FALSE");
+            os << ( m_verification_true_false ? "TRUE" : "FALSE" );
             break;
           case RMS:
             os << m_verification_rms;

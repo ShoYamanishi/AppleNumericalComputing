@@ -7,7 +7,13 @@ class RadixSortMetalCppImpl
 {
 
   public:
-    RadixSortMetalCppImpl( const size_t num_elements, const bool for_float, const bool coalesced_write, const bool early_out, const bool in_one_commit );
+    RadixSortMetalCppImpl(
+        const size_t num_elements, 
+        const bool   for_float, 
+        const bool   coalesced_write, 
+        const bool   early_out, 
+        const bool   in_one_commit,
+        const size_t num_threads_per_threadgroup );
 
     virtual ~RadixSortMetalCppImpl();
 
