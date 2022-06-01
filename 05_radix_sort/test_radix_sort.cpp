@@ -5,6 +5,7 @@
 #include <boost/sort/sort.hpp>
 
 #include "radix_sort_metal_cpp.h"
+#include "bitonic_sort_metal_cpp.h"
 
 template<class T>
 class TestCaseRadixSort : public TestCaseWithTimeMeasurements {
@@ -172,6 +173,40 @@ class TestCaseRadixSort_Metal : public TestCaseRadixSort<T> {
 };
 
 
+template<class T>
+class TestCaseBitonicSort_Metal : public TestCaseRadixSort<T> {
+
+  private:
+    BitonicSortMetalCpp m_metal;
+
+  public:
+    TestCaseBitonicSort_Metal(
+        const size_t num_elements, 
+        const size_t num_threads_per_threadgroup )
+        :TestCaseRadixSort<T>( num_elements )
+        ,m_metal( num_elements, is_same<float, T>::value, num_threads_per_threadgroup )
+    {
+        static_assert( std::is_same<int, T>::value || std::is_same<float,T>::value );
+
+        this->setMetal( BITONIC_SORT, 1, num_threads_per_threadgroup );
+    }
+
+    virtual ~TestCaseBitonicSort_Metal(){;}
+
+    void setArray( T* const x ) {
+        memcpy( m_metal.getRawPointerInOut(), x, this->m_num_elements*sizeof(T) );
+    }
+
+    T* getArray() {
+        return (T*)m_metal.getRawPointerInOut();
+    }
+
+    void run() {
+        m_metal.performComputation();
+    }
+};
+
+
 template <class T>
 class TestExecutorRadixSort : public TestExecutor {
 
@@ -226,8 +261,7 @@ static const size_t NUM_TRIALS = 10;
 
 #if TARGET_OS_OSX
 
-//size_t nums_elements[]{ 32, 128, 512, 2*1024, 8*1024, 32*1024, 128*1024, 512*1024, 2*1024*1024, 8*1024*1024, 32*1024*1024, 128*1024*1024 };
-size_t nums_elements[]{ 32, 128, 512, 2*1024, 8*1024, 32*1024, 128*1024, 512*1024, 2*1024*1024, 8*1024*1024 };
+size_t nums_elements[]{ 32, 128, 512, 2*1024, 8*1024, 32*1024, 128*1024, 512*1024, 2*1024*1024, 8*1024*1024, 32*1024*1024, 128*1024*1024 };
 uint num_threads_per_threadgroup = 1024;
 int num_iterations_per_commit = 16;
 #else
@@ -255,6 +289,7 @@ void testSuitePerType () {
         e.addTestCase( make_shared< TestCaseRadixSort_Metal              <T> > ( num_elements , true,  false , 1, num_threads_per_threadgroup ) );
         e.addTestCase( make_shared< TestCaseRadixSort_Metal              <T> > ( num_elements , false, false , num_iterations_per_commit, num_threads_per_threadgroup ) );
         e.addTestCase( make_shared< TestCaseRadixSort_Metal              <T> > ( num_elements , true,  false , num_iterations_per_commit, num_threads_per_threadgroup ) );
+        e.addTestCase( make_shared< TestCaseBitonicSort_Metal            <T> > ( num_elements , num_threads_per_threadgroup ) );
 
         e.execute();
     }

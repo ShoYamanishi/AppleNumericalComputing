@@ -240,6 +240,7 @@ enum MetalImplementationType {
     UNCOALESCED_WRITE_EARLY_OUT,
     COALESCED_WRITE_IN_ONE_COMMIT,
     UNCOALESCED_WRITE_IN_ONE_COMMIT,
+    BITONIC_SORT,
     THREADS_OVER_ROWS,
     THREADS_OVER_COLUMNS,
     NAIVE,
@@ -339,6 +340,10 @@ inline ostream& printMetalImplementationType( ostream& os, const  MetalImplement
 
       case UNCOALESCED_WRITE_IN_ONE_COMMIT:
         os << "UNCOALESCED_WRITE_IN_ONE_COMMIT";
+        break;
+
+      case BITONIC_SORT:
+        os << "BITONIC_SORT";
         break;
 
       case THREADS_OVER_ROWS:

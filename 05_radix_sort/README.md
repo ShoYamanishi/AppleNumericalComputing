@@ -1,5 +1,5 @@
 # Numerical Sort in Int and Float
-Radix sort in Metal as an application of prefix-scan compared with `std::sort`, `boost::sort::spreadsort`,
+Bitonic and Radix sort in Metal as an application of prefix-scan compared with `std::sort`, `boost::sort::spreadsort`,
 and `boost::sort::block_indirect_sort`.
 
 ## 0. Instruction for iOS
@@ -52,7 +52,7 @@ As far as I know, there is no other Metal implementation of Radix sort.
 
 # 3. Purpose
 The purpose is to implement one of the best GPGPU radix sort algorithms [HKS 09] on Metal, and measure the performance 
-against the popular implementations on CPU. Since [HKS 09] is designed for CUDA, some modification had to be made to adapt to Metal.
+against the Bitonic sort and the popular implementations on CPU. Since [HKS 09] is designed for CUDA, some modification had to be made to adapt to Metal.
 
 Another purpose is to study the effect of non-coalesced writes to the device memory.
 The algorithm writes frequently to the output device memory,
@@ -382,7 +382,7 @@ boost::sort::spreadsort::float_sort ( array, array + N );
 boost::sort::block_indirect_sort( array, array + N , X );
 ```
 
-## 5.4. METAL Implementations
+## 5.4. METAL Radix Sort Implementations
 [**class TestCaseRadixSort_Metal** in test_radix_sort.cpp](./test_radix_sort.cpp)
 
 The top-level routine of the radix sort is the following loop in [metal/radix_sort_metal_objc.mm](./metal/radix_sort_metal_objc.mm).
@@ -425,6 +425,13 @@ The early-out is performed in the function `isArraySorted:`, which uses two kern
 It uses a similar technique with the log-step reduction described in *'Algorithm 5 Build 4 ways sum tree'* and *'Algorithm 6 Down-Sweep 4 ways'* in [HKS 09].
 
 Please refer to the code in [metal/](./metal/), and the literature [[HKS 09]](https://onlinelibrary.wiley.com/doi/10.1111/j.1467-8659.2009.01542.x) for details.
+
+## 5.5. METAL Bitonic Sort Implementations
+[**class TestCaseBitonicSort_Metal** in test_radix_sort.cpp](./test_radix_sort.cpp)
+
+The kernel functions are found in [metal/bitonic_sort.metal](./metal/bitonic_sort.metal).
+
+Please refer to the code in [metal/](./metal/) for details.
 
 # 6. Reference:
 

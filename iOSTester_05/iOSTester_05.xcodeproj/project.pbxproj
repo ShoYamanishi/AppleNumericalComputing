@@ -20,6 +20,10 @@
 		EF4F8E22280F3F2800CCAAB1 /* radix_sort.metal in Sources */ = {isa = PBXBuildFile; fileRef = EF4F8E1A280F3F2700CCAAB1 /* radix_sort.metal */; };
 		EF4F8E23280F3F2800CCAAB1 /* radix_sort_metal_objc.mm in Sources */ = {isa = PBXBuildFile; fileRef = EF4F8E1B280F3F2700CCAAB1 /* radix_sort_metal_objc.mm */; };
 		EF4F8E25280F3F3300CCAAB1 /* test_radix_sort.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EF4F8E24280F3F3300CCAAB1 /* test_radix_sort.cpp */; };
+		EF7270D62847FB0500554286 /* bitonic_sort_metal_cpp_impl.mm in Sources */ = {isa = PBXBuildFile; fileRef = EF7270CF2847FB0400554286 /* bitonic_sort_metal_cpp_impl.mm */; };
+		EF7270D72847FB0500554286 /* bitonic_sort.metal in Sources */ = {isa = PBXBuildFile; fileRef = EF7270D22847FB0500554286 /* bitonic_sort.metal */; };
+		EF7270D82847FB0500554286 /* bitonic_sort_metal_cpp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EF7270D32847FB0500554286 /* bitonic_sort_metal_cpp.cpp */; };
+		EF7270D92847FB0500554286 /* bitonic_sort_metal_objc.mm in Sources */ = {isa = PBXBuildFile; fileRef = EF7270D42847FB0500554286 /* bitonic_sort_metal_objc.mm */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -46,6 +50,13 @@
 		EF4F8E1C280F3F2800CCAAB1 /* radix_sort_metal_cpp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = radix_sort_metal_cpp.h; path = ../../05_radix_sort/metal/radix_sort_metal_cpp.h; sourceTree = "<group>"; };
 		EF4F8E1D280F3F2800CCAAB1 /* radix_sort_metal_objc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = radix_sort_metal_objc.h; path = ../../05_radix_sort/metal/radix_sort_metal_objc.h; sourceTree = "<group>"; };
 		EF4F8E24280F3F3300CCAAB1 /* test_radix_sort.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = test_radix_sort.cpp; path = ../../05_radix_sort/test_radix_sort.cpp; sourceTree = "<group>"; };
+		EF7270CF2847FB0400554286 /* bitonic_sort_metal_cpp_impl.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = bitonic_sort_metal_cpp_impl.mm; path = ../../05_radix_sort/metal/bitonic_sort_metal_cpp_impl.mm; sourceTree = "<group>"; };
+		EF7270D02847FB0400554286 /* bitonic_sort_metal_cpp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = bitonic_sort_metal_cpp.h; path = ../../05_radix_sort/metal/bitonic_sort_metal_cpp.h; sourceTree = "<group>"; };
+		EF7270D12847FB0400554286 /* bitonic_sort_metal_objc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = bitonic_sort_metal_objc.h; path = ../../05_radix_sort/metal/bitonic_sort_metal_objc.h; sourceTree = "<group>"; };
+		EF7270D22847FB0500554286 /* bitonic_sort.metal */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.metal; name = bitonic_sort.metal; path = ../../05_radix_sort/metal/bitonic_sort.metal; sourceTree = "<group>"; };
+		EF7270D32847FB0500554286 /* bitonic_sort_metal_cpp.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = bitonic_sort_metal_cpp.cpp; path = ../../05_radix_sort/metal/bitonic_sort_metal_cpp.cpp; sourceTree = "<group>"; };
+		EF7270D42847FB0500554286 /* bitonic_sort_metal_objc.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = bitonic_sort_metal_objc.mm; path = ../../05_radix_sort/metal/bitonic_sort_metal_objc.mm; sourceTree = "<group>"; };
+		EF7270D52847FB0500554286 /* bitonic_sort_metal_cpp_impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = bitonic_sort_metal_cpp_impl.h; path = ../../05_radix_sort/metal/bitonic_sort_metal_cpp_impl.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -78,6 +89,13 @@
 		EF4F8DFC280F3C7B00CCAAB1 /* iOSTester_05 */ = {
 			isa = PBXGroup;
 			children = (
+				EF7270D52847FB0500554286 /* bitonic_sort_metal_cpp_impl.h */,
+				EF7270CF2847FB0400554286 /* bitonic_sort_metal_cpp_impl.mm */,
+				EF7270D32847FB0500554286 /* bitonic_sort_metal_cpp.cpp */,
+				EF7270D02847FB0400554286 /* bitonic_sort_metal_cpp.h */,
+				EF7270D12847FB0400554286 /* bitonic_sort_metal_objc.h */,
+				EF7270D42847FB0500554286 /* bitonic_sort_metal_objc.mm */,
+				EF7270D22847FB0500554286 /* bitonic_sort.metal */,
 				EF4F8E24280F3F3300CCAAB1 /* test_radix_sort.cpp */,
 				EF4F8E18280F3F2700CCAAB1 /* parallel_order_checking.metal */,
 				EF4F8E16280F3F2700CCAAB1 /* prefix_sum.metal */,
@@ -183,11 +201,15 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EF7270D92847FB0500554286 /* bitonic_sort_metal_objc.mm in Sources */,
 				EF4F8E22280F3F2800CCAAB1 /* radix_sort.metal in Sources */,
 				EF4F8E21280F3F2800CCAAB1 /* radix_sort_metal_cpp_impl.mm in Sources */,
+				EF7270D82847FB0500554286 /* bitonic_sort_metal_cpp.cpp in Sources */,
+				EF7270D62847FB0500554286 /* bitonic_sort_metal_cpp_impl.mm in Sources */,
 				EF4F8E0E280F3E7000CCAAB1 /* test_radix_sort_objc.mm in Sources */,
 				EF4F8E20280F3F2800CCAAB1 /* parallel_order_checking.metal in Sources */,
 				EF4F8E23280F3F2800CCAAB1 /* radix_sort_metal_objc.mm in Sources */,
+				EF7270D72847FB0500554286 /* bitonic_sort.metal in Sources */,
 				EF4F8E00280F3C7B00CCAAB1 /* ContentView.swift in Sources */,
 				EF4F8E25280F3F3300CCAAB1 /* test_radix_sort.cpp in Sources */,
 				EF4F8E1E280F3F2800CCAAB1 /* radix_sort_metal_cpp.cpp in Sources */,
