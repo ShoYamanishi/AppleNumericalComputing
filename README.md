@@ -75,11 +75,13 @@ For example, if you have to implement a variant of the projected Gauss-Seidel it
 
 # Status
 
-* **Oct 2021** : The version (this repo) for Apple M1 using Mac mini (M1, 2020), 8GB Memory has been converged.
+* **Jun 2022** : 14_lcp/ for the linear complementarity problem solvers added.
+
+* **Apr 2022** : Results from iPhone 13 Mini, Apple A15 Bionic added.
 
 * **Apr 2022** : New Metal implementations with one commit for all the iterations/shifts are added for 05_radix_sort, 11_jacobi_solver, and 12_gauss_seidel_solver.
 
-* **Apr 2022** : Results from iPhone 13 Mini, Apple A15 Bionic added.
+* **Oct 2021** : The version for Apple M1 using Mac mini (M1, 2020), 8GB Memory has been converged.
 
 # Technical Summary
 
