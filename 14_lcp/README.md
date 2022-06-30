@@ -138,7 +138,7 @@ For the charts with the randomly genearted data sets, all the plots in 5 differe
 
 <a href="doc/FLOAT_REAL_SYMMETRIC_Running_time_for_real_contact_constraints_(symmetric_matrices).png"><img src="doc/FLOAT_REAL_SYMMETRIC_Running_time_for_real_contact_constraints_(symmetric_matrices).png" alt="Running time for real contact constraints (symmetric matrices)" width="1000"/></a>
 
-<a href="doc/FLOAT_RANDOM_DIAGONALLY_DOMINANT_SKEWSYMMETRIC_Running_time_for_randomly_generated_diagnoally_dominant_skew-symmetric_matrices.png	"><img src="doc/FLOAT_RANDOM_DIAGONALLY_DOMINANT_SKEWSYMMETRIC_Running_time_for_randomly_generated_diagnoally_dominant_skew-symmetric_matrices.png	" alt="Running time for randomly generated diagnoally dominant skew-symmetric_matrices" width="1000"/></a>
+<a href="doc/FLOAT_RANDOM_DIAGONALLY_DOMINANT_SKEWSYMMETRIC_Running_time_for_randomly_generated_diagnoally_dominant_skew-symmetric_matrices.png"><img src="doc/FLOAT_RANDOM_DIAGONALLY_DOMINANT_SKEWSYMMETRIC_Running_time_for_randomly_generated_diagnoally_dominant_skew-symmetric_matrices.png" alt="Running time for randomly generated diagnoally dominant skew-symmetric_matrices" width="1000"/></a>
 
 <a href="doc/FLOAT_RANDOM_DIAGONALLY_DOMINANT_SYMMETRIC_Running_time_for_randomly_generated_diagnoally_dominant_symmetric_matrices.png"><img src="doc/FLOAT_RANDOM_DIAGONALLY_DOMINANT_SYMMETRIC_Running_time_for_randomly_generated_diagnoally_dominant_symmetric_matrices.png" alt="Running time for randomly generated diagnoally dominant symmetric matrices" width="1000"/></a>
 
@@ -151,7 +151,7 @@ For the charts with the randomly genearted data sets, all the plots in 5 differe
 
 <a href="doc_ios/FLOAT_REAL_SYMMETRIC_Running_time_for_real_contact_constraints_(symmetric_matrices).png"><img src="doc_ios/FLOAT_REAL_SYMMETRIC_Running_time_for_real_contact_constraints_(symmetric_matrices).png" alt="Running time for real contact constraints (symmetric matrices)" width="1000"/></a>
 
-<a href="doc_ios/FLOAT_RANDOM_DIAGONALLY_DOMINANT_SKEWSYMMETRIC_Running_time_for_randomly_generated_diagnoally_dominant_skew-symmetric_matrices.png	"><img src="doc_ios/FLOAT_RANDOM_DIAGONALLY_DOMINANT_SKEWSYMMETRIC_Running_time_for_randomly_generated_diagnoally_dominant_skew-symmetric_matrices.png	" alt="Running time for randomly generated diagnoally dominant skew-symmetric_matrices" width="1000"/></a>
+<a href="doc_ios/FLOAT_RANDOM_DIAGONALLY_DOMINANT_SKEWSYMMETRIC_Running_time_for_randomly_generated_diagnoally_dominant_skew-symmetric_matrices.png"><img src="doc_ios/FLOAT_RANDOM_DIAGONALLY_DOMINANT_SKEWSYMMETRIC_Running_time_for_randomly_generated_diagnoally_dominant_skew-symmetric_matrices.png" alt="Running time for randomly generated diagnoally dominant skew-symmetric_matrices" width="1000"/></a>
 
 <a href="doc_ios/FLOAT_RANDOM_DIAGONALLY_DOMINANT_SYMMETRIC_Running_time_for_randomly_generated_diagnoally_dominant_symmetric_matrices.png"><img src="doc_ios/FLOAT_RANDOM_DIAGONALLY_DOMINANT_SYMMETRIC_Running_time_for_randomly_generated_diagnoally_dominant_symmetric_matrices.png" alt="Running time for randomly generated diagnoally dominant symmetric matrices" width="1000"/></a>
 
@@ -187,7 +187,7 @@ For the charts with the randomly genearted data sets, all the plots in 5 differe
 
 <a href="doc/DOUBLE_REAL_SYMMETRIC_Running_time_for_real_contact_constraints_(symmetric_matrices).png"><img src="doc/DOUBLE_REAL_SYMMETRIC_Running_time_for_real_contact_constraints_(symmetric_matrices).png" alt="Running time for real contact constraints (symmetric matrices)" width="1000"/></a>
 
-<a href="doc/DOUBLE_RANDOM_DIAGONALLY_DOMINANT_SKEWSYMMETRIC_Running_time_for_randomly_generated_diagnoally_dominant_skew-symmetric_matrices.png	"><img src="doc/DOUBLE_RANDOM_DIAGONALLY_DOMINANT_SKEWSYMMETRIC_Running_time_for_randomly_generated_diagnoally_dominant_skew-symmetric_matrices.png	" alt="Running time for randomly generated diagnoally dominant skew-symmetric_matrices" width="1000"/></a>
+<a href="doc/DOUBLE_RANDOM_DIAGONALLY_DOMINANT_SKEWSYMMETRIC_Running_time_for_randomly_generated_diagnoally_dominant_skew-symmetric_matrices.png"><img src="doc/DOUBLE_RANDOM_DIAGONALLY_DOMINANT_SKEWSYMMETRIC_Running_time_for_randomly_generated_diagnoally_dominant_skew-symmetric_matrices.png" alt="Running time for randomly generated diagnoally dominant skew-symmetric_matrices" width="1000"/></a>
 
 <a href="doc/DOUBLE_RANDOM_DIAGONALLY_DOMINANT_SYMMETRIC_Running_time_for_randomly_generated_diagnoally_dominant_symmetric_matrices.png"><img src="doc/DOUBLE_RANDOM_DIAGONALLY_DOMINANT_SYMMETRIC_Running_time_for_randomly_generated_diagnoally_dominant_symmetric_matrices.png" alt="Running time for randomly generated diagnoally dominant symmetric matrices" width="1000"/></a>
 
@@ -200,7 +200,7 @@ For the charts with the randomly genearted data sets, all the plots in 5 differe
 
 <a href="doc_ios/DOUBLE_REAL_SYMMETRIC_Running_time_for_real_contact_constraints_(symmetric_matrices).png"><img src="doc_ios/DOUBLE_REAL_SYMMETRIC_Running_time_for_real_contact_constraints_(symmetric_matrices).png" alt="Running time for real contact constraints (symmetric matrices)" width="1000"/></a>
 
-<a href="doc_ios/DOUBLE_RANDOM_DIAGONALLY_DOMINANT_SKEWSYMMETRIC_Running_time_for_randomly_generated_diagnoally_dominant_skew-symmetric_matrices.png	"><img src="doc_ios/DOUBLE_RANDOM_DIAGONALLY_DOMINANT_SKEWSYMMETRIC_Running_time_for_randomly_generated_diagnoally_dominant_skew-symmetric_matrices.png	" alt="Running time for randomly generated diagnoally dominant skew-symmetric_matrices" width="1000"/></a>
+<a href="doc_ios/DOUBLE_RANDOM_DIAGONALLY_DOMINANT_SKEWSYMMETRIC_Running_time_for_randomly_generated_diagnoally_dominant_skew-symmetric_matrices.png"><img src="doc_ios/DOUBLE_RANDOM_DIAGONALLY_DOMINANT_SKEWSYMMETRIC_Running_time_for_randomly_generated_diagnoally_dominant_skew-symmetric_matrices.png" alt="Running time for randomly generated diagnoally dominant skew-symmetric_matrices" width="1000"/></a>
 
 <a href="doc_ios/DOUBLE_RANDOM_DIAGONALLY_DOMINANT_SYMMETRIC_Running_time_for_randomly_generated_diagnoally_dominant_symmetric_matrices.png"><img src="doc_ios/DOUBLE_RANDOM_DIAGONALLY_DOMINANT_SYMMETRIC_Running_time_for_randomly_generated_diagnoally_dominant_symmetric_matrices.png" alt="Running time for randomly generated diagnoally dominant symmetric matrices" width="1000"/></a>
 
