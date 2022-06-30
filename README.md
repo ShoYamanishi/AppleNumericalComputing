@@ -1,18 +1,4 @@
 # Numerical Computing on Apple M1 : Study and Implementations
-01_memcpy
-  drwxr-xr-x  10 shoichiroyamanishi  staff    320 Apr 25 09:55 02_saxpy
-  drwxr-xr-x   9 shoichiroyamanishi  staff    288 Apr 25 09:55 03_dot
-  drwxr-xr-x   9 shoichiroyamanishi  staff    288 Jun 15 05:38 04_prefix_sum
-  drwxr-xr-x   9 shoichiroyamanishi  staff    288 Jun 15 05:38 05_radix_sort
-  drwxr-xr-x  11 shoichiroyamanishi  staff    352 Apr 25 09:55 06_nbody
-  drwxr-xr-x  10 shoichiroyamanishi  staff    320 Apr 25 09:55 07_2d_filter
-  drwxr-xr-x   9 shoichiroyamanishi  staff    288 Apr 25 09:55 08_sparse_matrix_vector_mul
-  drwxr-xr-x  13 shoichiroyamanishi  staff    416 Apr 25 09:55 09_dense_matrix_vector_mul
-  drwxr-xr-x  16 shoichiroyamanishi  staff    512 Apr 25 09:55 10_cholesky_decomp
-  drwxr-xr-x  13 shoichiroyamanishi  staff    416 Apr 25 09:55 11_jacobi_solver
-  drwxr-xr-x   9 shoichiroyamanishi  staff    288 Apr 25 09:55 12_gauss_seidel_solver
-  drwxr-xr-x   9 shoichiroyamanishi  staff    288 Apr 25 09:55 13_fft
-  drwxr-xr-x  35 shoichiroyamanishi  staff   1120 Jun 29 23:22 14_lcp
 
 Study and Implementations of Numerical Algorithms on Apple M1 and A* Devices
 
@@ -31,6 +17,7 @@ Study and Implementations of Numerical Algorithms on Apple M1 and A* Devices
 * [Jacobi Iterative Solver](./11_jacobi_solver)
 * [Gauss-Seidel Iterative Solver](./12_gauss_seidel_solver)
 * [512-point FFT](./13_fft)
+* [Linear Complementarity Problem Solvers(Lemke & PGS-SM)](./14_lcp)
 
 # Background Context
 
