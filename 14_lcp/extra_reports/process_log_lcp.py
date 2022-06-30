@@ -105,9 +105,12 @@ def get_mean_times( df, et, est, comb ):
         for i, r in enumerate(vector_rows):
             c = vector_cols[i]
             vector_lengths.append(r*c)
-
-    mean_times     = [ float(r['mean time milliseconds'])   for i, r in df_row_filtered.iterrows() ]
-
+    
+#    mean_times     = [ float(r['mean time milliseconds'])   for i, r in df_row_filtered.iterrows() ]
+#    mean_times     = [ float(r['vefirication value'])   for i, r in df_row_filtered.iterrows() ]
+#    mean_times     = [ float(r['feasibility error'])   for i, r in df_row_filtered.iterrows() ]
+#    mean_times     = [ float(r['num pivots'])   for i, r in df_row_filtered.iterrows() ]
+    mean_times     = [ float(r['num iterations'])   for i, r in df_row_filtered.iterrows() ]
     return get_best_times_for_impl( vector_lengths, mean_times )
 
 def get_x_label(est):
@@ -117,11 +120,11 @@ def get_x_label(est):
 
     elif est == 'MATRIX_COL_MAJOR' or est == 'MATRIX_ROW_MAJOR':
 
-        return '|Mat|'
+        return '|dim x dim|'
 
     elif est == 'RANDOM_DIAGONALLY_DOMINANT_SYMMETRIC' or est == 'RANDOM_DIAGONALLY_DOMINANT_SKEWSYMMETRIC' or est == 'REAL_NONSYMMETRIC_MU02' or est == 'REAL_NONSYMMETRIC_MU08' or est == 'REAL_SYMMETRIC':
 
-        return '|Mat|'
+        return '|dim x dim|'
 
     elif est == 'MATRIX_SPARSE':
 
@@ -141,6 +144,31 @@ def plot_log_log( element_type, element_subtype, width, height, title, lengths, 
         my_time = times[i]
         label  = labels[i]
         ax1.plot( length, my_time, label=label, marker='o' )
+
+    ax_handles, ax_labels = ax1.get_legend_handles_labels()
+    lgd = ax1.legend(ax_handles, ax_labels)
+    ax1.grid('on')
+
+    plt.savefig(base_dir + element_type + '_' + element_subtype + '_' + title.replace(' ','_').replace('+', 'P') + '.png')
+    plt.clf()
+
+
+def plot_log_lin( element_type, element_subtype, width, height, title, lengths, times, labels, base_dir ):
+
+    fig = plt.figure( figsize = (width, height) )
+    ax1 = fig.add_subplot(111)
+
+    ax1.set_yscale('linear')
+    ax1.set_xscale('log', base=10)
+    ax1.set_title(title)
+    plt.xlabel( get_x_label(element_subtype) )
+    plt.ylabel("num iterations")
+#    plt.ylabel("number of pivots")
+#    plt.ylabel("residual error")
+    for i, length in enumerate(lengths):
+        my_time = times[i]
+        label  = labels[i]
+        ax1.scatter( length, my_time, label=label, marker='o' )
 
     ax_handles, ax_labels = ax1.get_legend_handles_labels()
     lgd = ax1.legend(ax_handles, ax_labels)
@@ -326,6 +354,8 @@ def plot_charts( df, js, base_dir ):
             plot_log_log( det, des, width, height, title, list_lengths, list_times, list_labels, base_dir )
         elif  pt == 'LIN-LIN':
             plot_lin_lin( det, des, width, height, title, list_lengths, list_times, list_labels, base_dir )
+        elif  pt == 'LOG-LIN':
+            plot_log_lin( det, des, width, height, title, list_lengths, list_times, list_labels, base_dir )
 
 def main():
 

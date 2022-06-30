@@ -280,6 +280,79 @@ static void generateRandomPDMat( T* A, const int dim, const T cond_num, std::def
 
 
 template<class T>
+static void generateRandomCopositiveMat( T* A, const int dim, const T cond_num, std::default_random_engine& e )
+{
+    std::uniform_real_distribution<T> dist_positive {  1.001,  cond_num };
+    std::uniform_real_distribution<T> dist_any      { -0.9999, 0.9999   };
+
+
+    T* D = new T[ dim ];
+    T* Q = new T[ dim * dim ];
+
+    for ( int i = 0; i < dim; i++ ) {
+
+        D[i] = dist_positive( e );
+    }
+
+    for ( int i = 0; i < dim; i++ ) {
+
+        for ( int j = 0; j <= i; j++ ) {
+
+            const T val = dist_any( e );
+
+            Q  [ i * dim + j ] = val;
+        }
+    }
+
+    // Make A skew symmetric to make the final matrix co-positive
+    for ( int i = 0 ; i < dim ; i++ ) {
+
+        for ( int j = 0; j <= i; j++ ) {
+
+            T sum = 0.0;
+
+            for ( int k = 0; k < dim; k++ ) {
+
+                const T Q_ik  = (i>=k) ? Q[ i * dim + k ] : Q[ k * dim + i ];
+                const T Qt_kj = (j>=k) ? Q[ j * dim + k ] : Q[ k * dim + j ];
+
+                sum += ( Q_ik * Qt_kj );
+            }
+
+            A [ i * dim + j ] =        sum;
+            A [ j * dim + i ] = -1.0 * sum; // if this is sum, then A is PSD
+//            A [ j * dim + i ] = sum;
+        }
+    }
+
+    // check and correct strict diagonal dominance.
+    // add diagonal elements.
+    for ( int i = 0 ; i < dim ; i++ ) {
+
+        T sum = 0.0;
+        for ( int j = 0; j < dim; j++ ) {
+            if ( j != i ) {
+                sum += abs( A[ i*dim + j ] );
+            }
+        }
+
+        const T diff = A[ i*dim + i ] - sum;
+
+        if ( diff < 0.0 ) {
+
+            A[ i*dim + i ] -= diff;
+        }
+
+        A[ i*dim + i ] *= D[i];
+    }
+
+    delete[] D;
+    delete[] Q;
+}
+
+
+
+template<class T>
 static void generateRandomTimeVector512( T* re, T*im, const T max_amp, const int num_sines, std::default_random_engine& e )
 {
     uniform_real_distribution<T>  dist_amp   { 1.0, max_amp };

@@ -1,4 +1,18 @@
-MIT License
+MIT License for the following directories
+
+  - 01_memcpy
+  - 02_saxpy
+  - 03_dot
+  - 04_prefix_sum
+  - 05_radix_sort
+  - 06_nbody
+  - 07_2d_filter
+  - 08_sparse_matrix_vector_mul
+  - 09_dense_matrix_vector_mul
+  - 10_cholesky_decomp
+  - 11_jacobi_solver
+  - 12_gauss_seidel_solver
+  - 13_fft
 
 Copyright (c) 2021 Shoichiro Yamanishi
 

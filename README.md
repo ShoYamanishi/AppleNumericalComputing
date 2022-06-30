@@ -1,4 +1,18 @@
 # Numerical Computing on Apple M1 : Study and Implementations
+01_memcpy
+  drwxr-xr-x  10 shoichiroyamanishi  staff    320 Apr 25 09:55 02_saxpy
+  drwxr-xr-x   9 shoichiroyamanishi  staff    288 Apr 25 09:55 03_dot
+  drwxr-xr-x   9 shoichiroyamanishi  staff    288 Jun 15 05:38 04_prefix_sum
+  drwxr-xr-x   9 shoichiroyamanishi  staff    288 Jun 15 05:38 05_radix_sort
+  drwxr-xr-x  11 shoichiroyamanishi  staff    352 Apr 25 09:55 06_nbody
+  drwxr-xr-x  10 shoichiroyamanishi  staff    320 Apr 25 09:55 07_2d_filter
+  drwxr-xr-x   9 shoichiroyamanishi  staff    288 Apr 25 09:55 08_sparse_matrix_vector_mul
+  drwxr-xr-x  13 shoichiroyamanishi  staff    416 Apr 25 09:55 09_dense_matrix_vector_mul
+  drwxr-xr-x  16 shoichiroyamanishi  staff    512 Apr 25 09:55 10_cholesky_decomp
+  drwxr-xr-x  13 shoichiroyamanishi  staff    416 Apr 25 09:55 11_jacobi_solver
+  drwxr-xr-x   9 shoichiroyamanishi  staff    288 Apr 25 09:55 12_gauss_seidel_solver
+  drwxr-xr-x   9 shoichiroyamanishi  staff    288 Apr 25 09:55 13_fft
+  drwxr-xr-x  35 shoichiroyamanishi  staff   1120 Jun 29 23:22 14_lcp
 
 Study and Implementations of Numerical Algorithms on Apple M1 and A* Devices
 
@@ -212,16 +226,32 @@ They are mainly for the test framework, sample data generation, output inspectio
 
 * Any corrections, advice, and suggestions are appreciated.
 
-* Indy developers, small businesses, and students, please use the materials provided here under MIT license.
+* Indy developers, small businesses, and students, please use the materials provided here under MIT license (except for 14_lcp/).
 I also try to answer questions and give support as much as possible, but without any warranty.
 
 * Further study on particular device, for particular type of problem and applications in a commercial setting can be arranged upon request for fee.
 
 * Donation of the latest Apple devices are very welcome.
 
-# License
+# Licenses
 
-MIT License
+* MIT License for the code in the following directories:
+
+  - 01_memcpy
+  - 02_saxpy
+  - 03_dot
+  - 04_prefix_sum
+  - 05_radix_sort
+  - 06_nbody
+  - 07_2d_filter
+  - 08_sparse_matrix_vector_mul
+  - 09_dense_matrix_vector_mul
+  - 10_cholesky_decomp
+  - 11_jacobi_solver
+  - 12_gauss_seidel_solver
+  - 13_fft
+
+* **GPL v3** (& Zlib for Bullet3 code) for the code in the directory **14_lcp**.
 
 # References
 The references are listed in the README.md in each section (subdirectory).

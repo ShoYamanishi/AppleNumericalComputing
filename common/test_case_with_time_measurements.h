@@ -55,7 +55,19 @@ inline ostream& printTestDataElementType( ostream& os, const TestDataElementType
     return os;
 }
 
-enum TestDataElementSubtype { VECTOR, MATRIX_COL_MAJOR, MATRIX_ROW_MAJOR, MATRIX_SPARSE, STRUCTURE_OF_ARRAYS, ARRAY_OF_STRUCTURES };
+enum TestDataElementSubtype {
+    VECTOR,
+    MATRIX_COL_MAJOR,
+    MATRIX_ROW_MAJOR,
+    MATRIX_SPARSE,
+    STRUCTURE_OF_ARRAYS,
+    ARRAY_OF_STRUCTURES,
+    RANDOM_DIAGONALLY_DOMINANT_SKEWSYMMETRIC,
+    RANDOM_DIAGONALLY_DOMINANT_SYMMETRIC,
+    REAL_NONSYMMETRIC_MU02,
+    REAL_NONSYMMETRIC_MU08,
+    REAL_SYMMETRIC
+};
 
 inline ostream& printTestDataElementSubtype( ostream& os, const TestDataElementSubtype t ) {
     switch (t) {
@@ -83,6 +95,27 @@ inline ostream& printTestDataElementSubtype( ostream& os, const TestDataElementS
       case  ARRAY_OF_STRUCTURES:
         os << "ARRAY_OF_STRUCTURES";
         break;
+
+      case RANDOM_DIAGONALLY_DOMINANT_SKEWSYMMETRIC:
+        os << "RANDOM_DIAGONALLY_DOMINANT_SKEWSYMMETRIC";
+        break;
+
+      case RANDOM_DIAGONALLY_DOMINANT_SYMMETRIC:
+        os << "RANDOM_DIAGONALLY_DOMINANT_SYMMETRIC";
+        break;
+
+      case REAL_NONSYMMETRIC_MU02:
+        os << "REAL_NONSYMMETRIC_MU02";
+        break;
+
+      case REAL_NONSYMMETRIC_MU08:
+        os << "REAL_NONSYMMETRIC_MU08";
+        break;
+
+      case REAL_SYMMETRIC:
+        os << "REAL_SYMMETRIC";
+        break;
+
       default:
         break;
     }
@@ -133,7 +166,7 @@ inline ostream& printExecConfigInterpretationForCharts( ostream& os, const ExecC
     return os;
 }
 
-enum ImplementationType { CPP_BLOCK, CPP_INTERLEAVED, CPP_STDLIB, NEON, MEMCPY, VDSP, BLAS, VDSP_BLAS, BOOST_SPREAD_SORT, BOOST_SAMPLE_SORT, CIIMAGE_CPU, CIIMAGE_GPU, EIGEN3, GSL, LAPACK, METAL, CPP_COLUMN_CHOLESKY, CPP_SUBMATRIX_CHOLESKY };
+enum ImplementationType { CPP_BLOCK, CPP_INTERLEAVED, CPP_STDLIB, NEON, MEMCPY, VDSP, BLAS, VDSP_BLAS, BOOST_SPREAD_SORT, BOOST_SAMPLE_SORT, CIIMAGE_CPU, CIIMAGE_GPU, EIGEN3, GSL, LAPACK, METAL, CPP_COLUMN_CHOLESKY, CPP_SUBMATRIX_CHOLESKY, ACCELERATE, LEMKE_CPP, LEMKE_NEON, LEMKE_VDSP, LEMKE_BULLET_ORIGINAL, LEMKE_BULLET_IMPROVED_LEXICO_MINIMUM, FIXED_POINT_VDSP, PGS_VDSP, PGS_SM_VDSP };
 
 inline ostream& printImplementationType( ostream& os, const  ImplementationType t ) {
 
@@ -210,6 +243,41 @@ inline ostream& printImplementationType( ostream& os, const  ImplementationType 
         os << "CPP_SUBMATRIX_CHOLESKY";
         break;
 
+      case ACCELERATE:
+        os << "ACCELERATE";
+        break;
+
+      case LEMKE_CPP:
+        os << "LEMKE_CPP";
+        break;
+
+      case LEMKE_NEON:
+        os << "LEMKE_NEON";
+        break;
+
+      case LEMKE_VDSP:
+        os << "LEMKE_VDSP";
+        break;
+
+      case LEMKE_BULLET_ORIGINAL:
+        os << "LEMKE_BULLET_ORIGINAL";
+        break;
+
+      case LEMKE_BULLET_IMPROVED_LEXICO_MINIMUM:
+        os << "LEMKE_BULLET_IMPROVED_LEXICO_MINIMUM";
+        break;
+            
+      case FIXED_POINT_VDSP:
+        os << "FIXED_POINT_VDSP";
+        break;
+
+      case PGS_VDSP:
+        os << "PGS_VDSP";
+        break;
+
+      case PGS_SM_VDSP:
+        os << "PGS_SM_VDSP";
+        break;
 
       default:
         break;
@@ -540,6 +608,31 @@ class TestCaseConfiguration {
         m_dimension.setVectorSize( dimension );
     }
 
+    void setRandomDiagonallyDominantSkewSymmetric( const int dimension ) {
+        m_data_subtype = RANDOM_DIAGONALLY_DOMINANT_SKEWSYMMETRIC;
+        m_dimension.setMatrixDimension( dimension, dimension );
+    }
+
+    void setRandomDiagonallyDominantSymmetric( const int dimension ) {
+        m_data_subtype = RANDOM_DIAGONALLY_DOMINANT_SYMMETRIC;
+        m_dimension.setMatrixDimension( dimension, dimension );
+    }
+
+    void setRealNonsymmetricMu02( const int dimension ) {
+        m_data_subtype = REAL_NONSYMMETRIC_MU02;
+        m_dimension.setMatrixDimension( dimension, dimension );
+    }
+
+    void setRealNonsymmetricMu08( const int dimension ) {
+        m_data_subtype = REAL_NONSYMMETRIC_MU08;
+        m_dimension.setMatrixDimension( dimension, dimension );
+    }
+
+    void setRealSymmetric( const int dimension ) {
+        m_data_subtype = REAL_SYMMETRIC;
+        m_dimension.setMatrixDimension( dimension, dimension );
+    }
+
     void setVerificationType( const TestDataVerificationType t ) {
         m_verification_type = t;
     }
@@ -715,6 +808,21 @@ class TestCaseWithTimeMeasurements {
     void setAOS( const int dimension ) {
         m_configuration.setAOS(dimension);
     }
+    void setRandomDiagonallyDominantSkewSymmetric( const int dimension ) {
+        m_configuration.setRandomDiagonallyDominantSkewSymmetric( dimension );
+    }
+    void setRandomDiagonallyDominantSymmetric( const int dimension ) {
+        m_configuration.setRandomDiagonallyDominantSymmetric( dimension );
+    }
+    void setRealNonsymmetricMu02( const int dimension ) {
+        m_configuration.setRealNonsymmetricMu02( dimension );
+    }
+    void setRealNonsymmetricMu08( const int dimension ) {
+        m_configuration.setRealNonsymmetricMu08( dimension );
+    }
+    void setRealSymmetric( const int dimension ) {
+        m_configuration.setRealSymmetric( dimension );
+    }
     void setVerificationType( const TestDataVerificationType t ) {
         m_configuration.setVerificationType( t );
     }
@@ -804,6 +912,8 @@ class TestCaseWithTimeMeasurements {
         return os;
     }
 
+    virtual void printExtra(ostream& os) { }
+
     virtual ostream& print( ostream& os ) {
         os << setprecision(8);
         m_configuration.print( os );
@@ -825,12 +935,16 @@ class TestCaseWithTimeMeasurements {
         os << ( m_mean_times   * 1000.0 );
         os << "\t";
         os << ( m_stddev_times * 1000.0 );
+        printExtra( os );
         os << "\n";
 
         return os;
     }
 
     virtual void run() = 0;
+
+    virtual void prologue() {}
+    virtual void epilogue() {}
 };
 
 
@@ -877,11 +991,15 @@ class TestExecutor {
 
                 prepareForRun(i, j);
 
+                test_case->prologue();
+
                 auto time_begin = chrono::high_resolution_clock::now();        
 
                 test_case->run();
 
                 auto time_end = chrono::high_resolution_clock::now();        
+
+                test_case->epilogue();
 
                 cleanupAfterRun(i, j);
 
@@ -906,6 +1024,7 @@ class TestExecutor {
 
             t->print( m_os );
         }
+        m_os << "\n";
     }
 };
 

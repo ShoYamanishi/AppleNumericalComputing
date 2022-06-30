@@ -1,0 +1,87 @@
+[
+{
+    "DataElementType": "FLOAT",
+    "DataElementSubtype": "RANDOM_DIAGONALLY_DOMINANT_SYMMETRIC",
+    "Width" : 13,
+    "Height" : 8,
+    "Title": "Number of pivots for randomly generated diagnoally dominant symmetric matrices",
+    "PlotType": "LOG-LIN",
+    "PlotBase": "LEMKE_CPP 1 1",
+    "UpperLimit" : 1.2,
+    "PlotCases": [
+        "LEMKE_CPP 1 1", 
+        "LEMKE_NEON 4 4", 
+        "LEMKE_VDSP 1 4", 
+        "LEMKE_BULLET_ORIGINAL 1 1", 
+        "LEMKE_BULLET_IMPROVED_LEXICO_MINIMUM 1 1"
+    ]
+},
+{
+    "DataElementType": "FLOAT",
+    "DataElementSubtype": "RANDOM_DIAGONALLY_DOMINANT_SKEWSYMMETRIC",
+    "Width" : 13,
+    "Height" : 8,
+    "Title": "Number of pivots for randomly generated diagnoally dominant skew-symmetric matrices",
+    "PlotType": "LOG-LIN",
+    "PlotBase": "LEMKE_CPP 1 1",
+    "UpperLimit" : 1.2,
+    "PlotCases": [
+        "LEMKE_CPP 1 1", 
+        "LEMKE_NEON 4 4", 
+        "LEMKE_VDSP 1 4", 
+        "LEMKE_BULLET_ORIGINAL 1 1", 
+        "LEMKE_BULLET_IMPROVED_LEXICO_MINIMUM 1 1"
+    ]
+},
+{
+    "DataElementType": "FLOAT",
+    "DataElementSubtype": "REAL_NONSYMMETRIC_MU02",
+    "Width" : 13,
+    "Height" : 8,
+    "Title": "Number of pivots for real contact dry frictional cone constraints with mu=0.2",
+    "PlotType": "LOG-LIN",
+    "PlotBase": "LEMKE_CPP 1 1",
+    "UpperLimit" : 1.2,
+    "PlotCases": [
+        "LEMKE_CPP 1 1", 
+        "LEMKE_NEON 4 4", 
+        "LEMKE_VDSP 1 4", 
+        "LEMKE_BULLET_ORIGINAL 1 1", 
+        "LEMKE_BULLET_IMPROVED_LEXICO_MINIMUM 1 1"
+    ]
+},
+{
+    "DataElementType": "FLOAT",
+    "DataElementSubtype": "REAL_NONSYMMETRIC_MU08",
+    "Title": "Number of pivots for real contact dry frictional cone constraints with mu=0.8",
+    "Width" : 13,
+    "Height" : 8,
+    "PlotType": "LOG-LIN",
+    "PlotBase": "LEMKE_CPP 1 1",
+    "UpperLimit" : 1.2,
+    "PlotCases": [
+        "LEMKE_CPP 1 1", 
+        "LEMKE_NEON 4 4", 
+        "LEMKE_VDSP 1 4", 
+        "LEMKE_BULLET_ORIGINAL 1 1", 
+        "LEMKE_BULLET_IMPROVED_LEXICO_MINIMUM 1 1"
+    ]
+},
+{
+    "DataElementType": "FLOAT",
+    "DataElementSubtype": "REAL_SYMMETRIC",
+    "Width" : 13,
+    "Height" : 8,
+    "Title": "Number of pivots for real contact constraints (symmetric matrices)",
+    "PlotType": "LOG-LIN",
+    "PlotBase": "LEMKE_CPP 1 1",
+    "UpperLimit" : 1.2,
+    "PlotCases": [
+        "LEMKE_CPP 1 1", 
+        "LEMKE_NEON 4 4", 
+        "LEMKE_VDSP 1 4", 
+        "LEMKE_BULLET_ORIGINAL 1 1", 
+        "LEMKE_BULLET_IMPROVED_LEXICO_MINIMUM 1 1"
+    ]
+}
+]
