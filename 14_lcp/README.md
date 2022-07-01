@@ -19,8 +19,7 @@ Some literature suggests use of some heuristics, e.g., impulse propagation again
 
 * The collision detection is done on GPU(Metal) with a spatial subdivision algorithm.
 
-* Contratints generation and the configuration (location, orientation, velocities, etc.) updates are done on GPU.
-
+* Constraints generation and the phase-space (location, orientation, velocities, etc.) updates are done on GPU.
 
 # 1. Problem description
 
