@@ -561,7 +561,7 @@ The material in this directory are provided in two types of licenses.
 # Appendix A. Instruction for iOS
 So far this has been tested on iPhone 13 mini 256GB.
 
-- Open `AppleNumericalComputing/iOSTester_10/iOSTester_10.xcodeproj` with Xcode
+- Open `AppleNumericalComputing/iOSTester_14/iOSTester_14.xcodeproj` with Xcode
 
 - Build a release build
 
@@ -571,7 +571,7 @@ So far this has been tested on iPhone 13 mini 256GB.
 
 - Wait until App finished with 'finished!' on the log output.
 
-- Copy and paste the log into `10_cholesky_decomp/doc_ios/make_log.txt`.
+- Copy and paste the log into `14_lcp/doc_ios/make_log.txt`.
 
 - Run the following in the terminal.
 ```
@@ -579,5 +579,5 @@ $ cd 10_cholesky_decomp
 $ grep '\(^INT\|^FLOAT\|^DOUBLE\|data element type\)' doc_ios/make_log.txt > doc_ios/make_log_cleaned.txt
 $ python ../common/process_log.py -logfile doc_ios/make_log_cleaned.txt -specfile doc_ios/plot_spec.json -show_impl -plot_charts -base_dir doc_ios/
 ```
-- You will get the PNG files in  `10_cholesky_decomp/doc_ios/`.
+- You will get the PNG files in  `14_lcp/doc_ios/`.
 
