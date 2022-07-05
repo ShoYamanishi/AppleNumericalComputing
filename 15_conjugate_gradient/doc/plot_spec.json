@@ -1,0 +1,31 @@
+[
+{
+    "DataElementType": "FLOAT",
+    "DataElementSubtype": "MATRIX_ROW_MAJOR",
+    "Width" : 13,
+    "Height" : 8,
+    "Title": "Running time for PD Matrix with Cond Num 1.0 - 100000.0",
+    "PlotType": "LOG-LOG",
+    "PlotBase": "CPP_BLOCK 1 1",
+    "UpperLimit" : 1.2,
+    "PlotCases": [
+        "CPP_BLOCK 1 1", 
+        "VDSP 1 1", 
+        "METAL ONE_PASS_ATOMIC_SIMD_SUM 1 1"
+    ]
+},
+{
+    "DataElementType": "DOUBLE",
+    "DataElementSubtype": "MATRIX_ROW_MAJOR",
+    "Width" : 13,
+    "Height" : 8,
+    "Title": "Running time for PD Matrix with Cond Num 1.0 - 100000.0",
+    "PlotType": "LOG-LOG",
+    "PlotBase": "CPP_BLOCK 1 1",
+    "UpperLimit" : 1.2,
+    "PlotCases": [
+        "CPP_BLOCK 1 1", 
+        "VDSP 1 1"
+    ]
+}
+]

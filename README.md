@@ -18,6 +18,7 @@ Study and Implementations of Numerical Algorithms on Apple M1 and A* Devices
 * [Gauss-Seidel Iterative Solver](./12_gauss_seidel_solver)
 * [512-point FFT](./13_fft)
 * [Linear Complementarity Problem Solvers(Lemke & PGS-SM)](./14_lcp)
+* [Conjugate Gradient Solvers](./15_conjugate_gradient)
 
 # Background Context
 
@@ -74,6 +75,8 @@ It can also be used as a guideline on how to implement custom numerical solution
 For example, if you have to implement a variant of the projected Gauss-Seidel iterative solver, for which there is no direct routine is provided by either LAPACK, BLAS, or GNU Scientific Library, you can use this as a guideline for your own implementation in C++.
 
 # Status
+
+* **Jul 2022** : 15_conjugate_gradient/ for the conjugate gradient solvers added.
 
 * **Jun 2022** : 14_lcp/ for the linear complementarity problem solvers added.
 
@@ -239,6 +242,7 @@ I also try to answer questions and give support as much as possible, but without
   - 11_jacobi_solver
   - 12_gauss_seidel_solver
   - 13_fft
+  - 15_conjugate_gradient
 
 * **GPL v3** (& Zlib for Bullet3 code) for the code in the directory **14_lcp**.
 
