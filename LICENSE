@@ -13,6 +13,7 @@ MIT License for the following directories
   - 11_jacobi_solver
   - 12_gauss_seidel_solver
   - 13_fft
+  - 15_conjugate_gradient
 
 Copyright (c) 2021 Shoichiro Yamanishi
 
