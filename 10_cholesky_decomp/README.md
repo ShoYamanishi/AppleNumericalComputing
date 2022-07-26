@@ -73,6 +73,8 @@ X-axis is *(M x N)*, and Y-axis is the time taken in milliseconds.
 
 * **MATRIX_COL_MAJOR:LAPACK 1 1** : col-major with **LAPACK sposv_()**.
 
+* **MATRIX_COL_MAJOR:LAPACK_WITH_MAT_INVERSE 1 1** : col-major with **LAPACK sposv_() with extra calculation of the matric inverse**.
+
 * **MATRIX_COL_MAJOR:METAL MPS 0 0** : col-major with **MPSMatrixDecompositionCholesky**.
 
 * **MATRIX_COL_MAJOR:METAL DEFAULT 0 0** : Metal shader, the algorithm is type *column*.
@@ -128,6 +130,8 @@ for each implementation in log-log scale. X-axis is *(M x N)*, and Y-axis is the
 * **MATRIX_COL_MAJOR:EIGEN3 1 1** : col-major with Eigen3 **Eigen::LLT**.
 
 * **MATRIX_COL_MAJOR:LAPACK 1 1** : col-major with LAPACK **sposv_()**.
+
+* **MATRIX_COL_MAJOR:LAPACK_WITH_MAT_INVERSE 1 1** : col-major with **LAPACK sposv_() with extra calculation of the matric inverse**.
 
 * **MATRIX_COL_MAJOR:GSL 1 1** : col-major with **gsl_linalg_cholesky_decomp()**.
 

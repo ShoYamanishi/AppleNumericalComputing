@@ -7,6 +7,7 @@
 #include "test_case_cholesky_gsl.h"
 #endif
 #include "test_case_cholesky_lapack.h"
+#include "test_case_cholesky_lapack_inverse.h"
 #include "test_case_cholesky_metal.h"
 
 
@@ -94,6 +95,7 @@ void testSuitePerType ( const T condition_num, const T gen_low, const T gen_high
             e.addTestCase( make_shared< TestCaseCholesky_eigen3  <T, IS_COL_MAJOR> > ( dim ) );
 #endif
             e.addTestCase( make_shared< TestCaseCholesky_lapack  <T, IS_COL_MAJOR> > ( dim ) );
+            e.addTestCase( make_shared< TestCaseCholesky_lapack_inverse  <T, IS_COL_MAJOR> > ( dim ) );
 
             if constexpr ( std::is_same< float,T >::value ) {
 
