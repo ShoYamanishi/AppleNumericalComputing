@@ -19,6 +19,7 @@ Study and Implementations of Numerical Algorithms on Apple M1 and A* Devices
 * [512-point FFT](./13_fft)
 * [Linear Complementarity Problem Solvers(Lemke & PGS-SM)](./14_lcp)
 * [Conjugate Gradient Solvers](./15_conjugate_gradient)
+* [Solving Non-Symmetric Linear Equations with LAPACK's sgbsv & dgbsv](./16_nonsymmetric_band_mat)
 
 # Background Context
 
@@ -75,6 +76,8 @@ It can also be used as a guideline on how to implement custom numerical solution
 For example, if you have to implement a variant of the projected Gauss-Seidel iterative solver, for which there is no direct routine is provided by either LAPACK, BLAS, or GNU Scientific Library, you can use this as a guideline for your own implementation in C++.
 
 # Status
+
+* **Aug 2022** : 16_nonsymmetric_band_mat/ for LAPACK's sgbsv & dgbsv added.
 
 * **Jul 2022** : 15_conjugate_gradient/ for the conjugate gradient solvers added.
 
@@ -243,6 +246,7 @@ I also try to answer questions and give support as much as possible, but without
   - 12_gauss_seidel_solver
   - 13_fft
   - 15_conjugate_gradient
+  - 16_nonsymmetric_band_mat
 
 * **GPL v3** (& Zlib for Bullet3 code) for the code in the directory **14_lcp**.
 
