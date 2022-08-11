@@ -1,0 +1,28 @@
+[
+{
+    "DataElementType": "FLOAT",
+    "DataElementSubtype": "MATRIX_ROW_MAJOR",
+    "Width" : 13,
+    "Height" : 8,
+    "Title": "Running time for Nonsymmetric Band Matrix Solver",
+    "PlotType": "LOG-LOG",
+    "PlotBase": "LAPACK 1 1",
+    "UpperLimit" : 1.2,
+    "PlotCases": [
+        "LAPACK 1 1"
+    ]
+},
+{
+    "DataElementType": "DOUBLE",
+    "DataElementSubtype": "MATRIX_ROW_MAJOR",
+    "Width" : 13,
+    "Height" : 8,
+    "Title": "Running time for Nonsymmetric Band Matrix Solver",
+    "PlotType": "LOG-LOG",
+    "PlotBase": "LAPACK 1 1",
+    "UpperLimit" : 1.2,
+    "PlotCases": [
+        "LAPACK 1 1"
+    ]
+}
+]
