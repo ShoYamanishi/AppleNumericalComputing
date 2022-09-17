@@ -24,55 +24,10 @@ class TestCaseLCP_lemke_neon : public TestCaseLCP<T, IS_COL_MAJOR> {
     // - All the constraints must be unilateral constraints, i.e., 0<=z cmpl. w>=0.
     // 
     // - Boxed contraints can be solved with the following reformulation of the problem.
-    //   (This is very inefficient and boxed constraints should be handled by PGS or other
-    //    iterative solver if the matrix is PSD.)
-    //   e.g.
-    //
-    //       |  A    B  |   |Zb|   |qb|    |Wb|
-    //   M = |          | x |  | + |  | >= |  |
-    //       |  C    D  |   |Zu|   |qz|    |Wu|
-    //
-    //   s.t.  lo_i < Zb_i < hi_i <=> Wb_i == 0
-    //            lo_i = Zb_i     <=> Wb_i > 0
-    //            hi_i = Zb_i     <=> Wb_i < 0
-    //
-    //         0 <= Zu cmpl. Wu >= 0
-    //
-    //   Expand the equations as follows
-    //
-    //       |  A  -A   B  |   |Zb1|   |qb - lo|    |Wb1|
-    //       |             |   |   |   |       |    |   |
-    //   M = | -A   A  -B  | x |Zb2| + |hi - qb| >= |Wb2|
-    //       |             |   |   |   |       |    |   |
-    //       |  C  -C   D  |   |Zu |   |  qz   |    |Wu |
-    //   
-    //   s.t.  0 <= Zb1 cmpl. Wb1 >= 0
-    //         0 <= Zb2 cmpl. Wb2 >= 0
-    //         0 <= Zu  cmpl. Wu  >= 0
-    //
-    //         Zb = Zb1 - Zb2
+    //   See NotesOnBoxedConstraintsForLemkeSolvers.md.
     //
     // - Mixed complementarity problem with some bilateral constraints can be solved as follows.
-    //   e.g. 
-    //       |  A    B  |   |Zb|   |qb| = |0 |
-    //   M = |          | x |  | + |  |   |  |
-    //       |  C    D  |   |Zu|   |qz|>= |Wu|
-    //
-    //   This can be decomposed into two parts: bilateral and unilateral as follows.
-    //
-    //   - A x Zb + B x Zu + qb = 0  (bilateral) - (1)
-    // 
-    //   - C x Zb + D x Zu + qz >= Wu (unilateral) - (2)
-    //
-    //                    -1            -1
-    //   from (1)  Zb = -A  x B x Zu - A  x qb  - (3)
-    //
-    //                            -1                      -1
-    //   from (2) and (3) ( -C x A  x B + D ) x Zu - C x A  x qb + qz >= Wu - (4)
-    // 
-    //   First, make the inverse of A (e.g. by cholesky decomposition if A is symmetric)
-    //   Then solve (4) with this Lemke solver for Wu and Zu.
-    //   Finally use (3) to solve Zb from Zu.
+    //   See NotesOnBilateralConstraintsForLemkeSolvers.md.
     //
 
     // Description of the table
