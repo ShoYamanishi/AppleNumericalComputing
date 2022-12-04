@@ -10,11 +10,7 @@ ConjugateGradientMetalCppImpl::ConjugateGradientMetalCppImpl( const int dim, con
                           Epsilon: epsilon                 ];
 }
 
-ConjugateGradientMetalCppImpl::~ConjugateGradientMetalCppImpl(){
-
-    //[ m_self dealloc ];
-    m_self = nil;
-}
+ConjugateGradientMetalCppImpl::~ConjugateGradientMetalCppImpl(){;}
 
 float* ConjugateGradientMetalCppImpl::getRawPointerA() {
     return [ m_self getRawPointerA ];

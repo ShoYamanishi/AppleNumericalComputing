@@ -371,8 +371,7 @@ class TestExecutorConvolution2D : public TestExecutor {
 };
 
 
-//static const size_t NUM_TRIALS = 10;
-static const size_t NUM_TRIALS = 1;
+static const size_t NUM_TRIALS = 10;
 
 struct image_dim {
     size_t width;

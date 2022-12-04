@@ -61,10 +61,8 @@ PrefixSumMetalCppImpl<float>::PrefixSumMetalCppImpl(
 template<>
 PrefixSumMetalCppImpl<int>::~PrefixSumMetalCppImpl(){;}
 
-
 template<>
 PrefixSumMetalCppImpl<float>::~PrefixSumMetalCppImpl(){;}
-
 
 template<>
 unsigned int PrefixSumMetalCppImpl<int>::numElements(unsigned int layer) {

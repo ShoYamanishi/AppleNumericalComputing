@@ -14,7 +14,7 @@ CholeskyMetalCppImpl::CholeskyMetalCppImpl( const int dim, const bool use_mps )
 
 }
 
-CholeskyMetalCppImpl::~CholeskyMetalCppImpl(){ m_self_own_shader = nullptr; m_self_mps = nullptr; }
+CholeskyMetalCppImpl::~CholeskyMetalCppImpl(){;}
 
 void CholeskyMetalCppImpl::setInitialStates( float* L, float* b )
 {

@@ -6,7 +6,7 @@ GaussSeidelSolverMetalCppImpl::GaussSeidelSolverMetalCppImpl( const int dim, con
     m_self = [ [ GaussSeidelSolverMetalObjC alloc ] initWithDim: dim Iteration: iteration oneCommit: one_commit ];
 }             
 
-GaussSeidelSolverMetalCppImpl::~GaussSeidelSolverMetalCppImpl(){ m_self = nullptr; }
+GaussSeidelSolverMetalCppImpl::~GaussSeidelSolverMetalCppImpl(){;}
 
 void GaussSeidelSolverMetalCppImpl::setInitialStates( float* A, float* D, float* b, float* x1, float* x2 )
 {
