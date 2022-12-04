@@ -52,7 +52,7 @@ $(METAL_SHADER_LIB): $(METAL_SHADER_BYTECODE)
 
 $(OBJ_DIR)/%.o: %.mm
 	$(DIR_GUARD)
-	$(CC) $(CCFLAGS) $(CC_INC) -c $< -o $@
+	$(CC) $(CCFLAGS) $(CC_INC) -fobjc-arc -c $< -o $@
 
 $(OBJ_DIR)/%.o: $(METAL_COMMON_DIR)/%.mm
 	$(DIR_GUARD)

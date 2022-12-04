@@ -131,7 +131,6 @@ struct memcpy_constants
     [commandBuffer waitUntilCompleted];
 }
 
-
 -(void) performComputationBlit
 {
 #if TARGET_OS_OSX

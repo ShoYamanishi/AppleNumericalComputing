@@ -33,12 +33,15 @@
     return self;
 }
 
-
 - (bool) loadLibraryWithName:(NSString*)name
 {
     NSError* error = nil;
 #if TARGET_OS_OSX
-    _mLibrary = [_mDevice newLibraryWithFile: name error: &error ];
+    NSFileManager* fileManager = [ NSFileManager defaultManager ];
+    NSString* path = [NSString stringWithFormat:@"%@/%@", [ fileManager currentDirectoryPath ], name ];
+    NSURL *url = [ [NSURL alloc] initFileURLWithPath: path ];
+
+    _mLibrary = [_mDevice newLibraryWithURL: url error: &error ];
 #else
     _mLibrary = [_mDevice newDefaultLibrary ];
 #endif

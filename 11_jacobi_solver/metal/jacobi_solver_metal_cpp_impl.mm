@@ -7,7 +7,7 @@ JacobiSolverMetalCppImpl::JacobiSolverMetalCppImpl( const int dim, const int ite
     m_self = [ [ JacobiSolverMetalObjC alloc ] initWithDim: dim Iteration: iteration Type: type OneCommit: one_commit ];
 }             
 
-JacobiSolverMetalCppImpl::~JacobiSolverMetalCppImpl(){ m_self = nullptr; }
+JacobiSolverMetalCppImpl::~JacobiSolverMetalCppImpl(){;}
 
 void JacobiSolverMetalCppImpl::setInitialStates( float* A, float* D, float* b, float* x1, float* x2 )
 {

@@ -14,7 +14,7 @@ DenseMatrixVectorMetalCppImpl::DenseMatrixVectorMetalCppImpl( const int m, const
     m_self_mps = [ [ DenseMatrixVectorMetalObjCMPS alloc ] initWithM: m N: n ]; // MPS
 }             
 
-DenseMatrixVectorMetalCppImpl::~DenseMatrixVectorMetalCppImpl(){ m_self_own_shader = nullptr; m_self_mps = nullptr; }
+DenseMatrixVectorMetalCppImpl::~DenseMatrixVectorMetalCppImpl(){;}
 
 void DenseMatrixVectorMetalCppImpl::setInitialStates( float* M, float* v )
 {

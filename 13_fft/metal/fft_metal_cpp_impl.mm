@@ -6,7 +6,7 @@ FFTMetalCppImpl::FFTMetalCppImpl()
     m_self = [ [ FFTMetalObjC alloc ] init ];
 }             
 
-FFTMetalCppImpl::~FFTMetalCppImpl(){ m_self = nullptr; }
+FFTMetalCppImpl::~FFTMetalCppImpl(){;}
 
 void FFTMetalCppImpl::setInitialStates( float* time_re, float* time_im )
 {

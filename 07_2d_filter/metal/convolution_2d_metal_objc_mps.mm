@@ -106,20 +106,13 @@ typedef unsigned int uint;
 
 // from https://developer.apple.com/documentation/metalperformanceshaders/mpscopyallocator?language=objc
 
-#if TARGET_OS_OSX
-MPSCopyAllocator myAllocator 
-    = ^id <MTLTexture>( MPSKernel * __nonnull filter,
-                        __nonnull id <MTLCommandBuffer> cmdBuf,
-                        __nonnull id <MTLTexture> sourceTexture
-) {
-#else
 MPSCopyAllocator myAllocator
     = ^id <MTLTexture> __nonnull NS_RETURNS_RETAINED (
                         MPSKernel * __nonnull filter,
                         id <MTLCommandBuffer> __nonnull cmdBuf,
                         id <MTLTexture> __nonnull sourceTexture
 ) {
-#endif
+
     MTLPixelFormat format = sourceTexture.pixelFormat;
 
     MTLTextureDescriptor* d

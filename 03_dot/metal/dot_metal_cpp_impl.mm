@@ -11,11 +11,7 @@ DotMetalCppImpl::DotMetalCppImpl( const size_t num_elements, const size_t num_th
             ];
 }
 
-DotMetalCppImpl::~DotMetalCppImpl(){
-
-    //[ m_self dealloc ];
-    m_self = nil;
-}
+DotMetalCppImpl::~DotMetalCppImpl(){;}
 
 float* DotMetalCppImpl::getRawPointerX() {
     return [ m_self getRawPointerX ];

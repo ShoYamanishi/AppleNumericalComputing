@@ -11,11 +11,8 @@ SaxpyMetalCppImpl::SaxpyMetalCppImpl( const size_t num_elements, const size_t nu
              ];
 }
 
-SaxpyMetalCppImpl::~SaxpyMetalCppImpl(){
+SaxpyMetalCppImpl::~SaxpyMetalCppImpl(){;}
 
-    //[ m_self dealloc ];
-    m_self = nil;
-}
 
 float* SaxpyMetalCppImpl::getRawPointerX() {
 
@@ -36,4 +33,3 @@ void SaxpyMetalCppImpl::performComputation() {
 
     return [ m_self performComputation ];
 }
-
